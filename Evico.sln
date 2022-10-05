@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evico", "Evico\Evico.csproj", "{A991D870-718C-4DCC-BB85-129E0299AFF2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evico.Web", "Evico.Web\Evico.Web.csproj", "{56F3A3CC-A782-486C-97B4-DA5CEE1777F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{A991D870-718C-4DCC-BB85-129E0299AFF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A991D870-718C-4DCC-BB85-129E0299AFF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A991D870-718C-4DCC-BB85-129E0299AFF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56F3A3CC-A782-486C-97B4-DA5CEE1777F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56F3A3CC-A782-486C-97B4-DA5CEE1777F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56F3A3CC-A782-486C-97B4-DA5CEE1777F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56F3A3CC-A782-486C-97B4-DA5CEE1777F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
