@@ -1,7 +1,4 @@
-using Evico.Web;
-
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.Configure<CommonConfiguration>(builder.Configuration.GetSection("CommonConfiguration"));
 
 // Add services to the container.
 
