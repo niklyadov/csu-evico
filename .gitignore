@@ -351,4 +351,9 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-# Evico/appsettings.Development.json
+
+Evico/appsettings.Development.json
+Evico.Web/appsettings.Development.json
+Evico.Web/ClientApp/package-lock.json
+Evico/Properties/launchSettings.json
+Evico.Web/Properties/launchSettings.json
