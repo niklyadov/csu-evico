@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {env} from "process";
 
 export class FetchData extends Component {
   static displayName = FetchData.name;
@@ -52,7 +53,11 @@ export class FetchData extends Component {
   }
 
   async populateWeatherData() {
-    const response = await fetch('weatherforecast');
+    // todo: это URL до API. Нужно где-то хранить в коде(или в конфиге) 
+    const apiUrl = 'http://localhost:61666'
+    if(!!!apiUrl) throw new Error("Api url is not presented")
+    
+    const response = await fetch(`${apiUrl}/weatherforecast`);
     const data = await response.json();
     this.setState({ forecasts: data, loading: false });
   }
