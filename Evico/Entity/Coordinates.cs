@@ -1,4 +1,4 @@
-namespace Evico.DAL.Entity;
+namespace Evico.Entity;
 
 public struct Coordinates
 {

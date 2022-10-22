@@ -1,6 +1,6 @@
-namespace Evico.DAL.Entity;
+namespace Evico.Entity;
 
-public record Profile : Entity
+public record ProfileRecord : EntityRecord
 {
     public string Name { get; set; }
     public string Lastname { get; set; }

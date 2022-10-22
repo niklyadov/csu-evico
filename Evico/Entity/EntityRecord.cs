@@ -1,4 +1,4 @@
-namespace Evico.DAL.Entity;
+namespace Evico.Entity;
 
 public interface IEntity
 {
@@ -7,7 +7,7 @@ public interface IEntity
     public DateTime? DeletedDateTime { get; set; }
 }
 
-public abstract record Entity : IEntity
+public abstract record EntityRecord : IEntity
 {
     public long Id { get; set; }
     public bool IsDeleted { get; set; }
