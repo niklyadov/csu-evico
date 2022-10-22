@@ -8,4 +8,5 @@ public record PlaceRecord : EntityRecord
     public Uri PhotoUri { get; set; }
     public List<Uri> PhotoUris { get; set; }
     public List<ReviewRecord> Reviews { get; set; }
+    public List<PlaceCategoryRecord> Categories { get; set; }
 }
