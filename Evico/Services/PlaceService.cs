@@ -1,17 +1,17 @@
 using Evico.Entity;
 using Evico.QueryBuilder;
-using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Services;
 
 public class PlaceService
 {
-    private readonly PlaceQueryBuilder _placeQueryBuilder;
+    private readonly ApplicationContext _context;
+    private PlaceQueryBuilder _placeQueryBuilder => new (_context);
 
-    public PlaceService(PlaceQueryBuilder placeQueryBuilder)
+    public PlaceService(ApplicationContext context)
     {
-        _placeQueryBuilder = placeQueryBuilder;
+        _context = context;
     }
     
     public async Task<IActionResult> AddAsync(PlaceRecord placeRecord)

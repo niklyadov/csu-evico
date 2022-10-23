@@ -6,11 +6,12 @@ namespace Evico.Services;
 
 public class EventService
 {
-    private readonly EventQueryBuilder _eventQueryBuilder;
+    private readonly ApplicationContext _context;
+    private EventQueryBuilder _eventQueryBuilder => new (_context);
 
-    public EventService(EventQueryBuilder eventQueryBuilder)
+    public EventService(ApplicationContext context)
     {
-        _eventQueryBuilder = eventQueryBuilder;
+        _context = context;
     }
 
     public async Task<IActionResult> AddAsync(EventRecord eventRecord)
