@@ -11,13 +11,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<ApplicationContext>(options =>
-    options.UseMySQL(builder.Configuration.GetConnectionString("Default")));
+    options.UseMySQL(builder.Configuration.GetConnectionString("Default"),
+        b => b.MigrationsAssembly("Evico")));
 
-builder.Services.AddTransient<EventQueryBuilder>();
-builder.Services.AddTransient<EventQueryBuilder>();
+builder.Services.AddScoped<EventQueryBuilder>();
+builder.Services.AddScoped<PlaceQueryBuilder>();
 
-builder.Services.AddSingleton<EventService>();
-builder.Services.AddSingleton<PlaceService>();
+builder.Services.AddScoped<EventService>();
+builder.Services.AddScoped<PlaceService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
