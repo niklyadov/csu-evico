@@ -6,8 +6,8 @@ public record PlaceRecord : EntityRecord
     public double LocationLongitude { get; set; } = default!;
     public ProfileRecord Owner { get; set; } = default!;
     public String Name { get; set; } = String.Empty;
-    public Uri PhotoUri { get; set; } = default!;
-    public List<Uri> PhotoUris { get; set; } = new();
-    public List<ReviewRecord> Reviews { get; set; } = new();
-    public List<PlaceCategoryRecord> Categories { get; set; } = new();
+    public ExternalPhoto? Photo { get; set; } = null;
+    public virtual List<ExternalPhoto> Photos { get; set; } = new();
+    public virtual List<ReviewRecord> Reviews { get; set; } = new();
+    public virtual List<PlaceCategoryRecord> Categories { get; set; } = new();
 }

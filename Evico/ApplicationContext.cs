@@ -3,14 +3,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Evico;
 
-public class ApplicationContext : DbContext
+public sealed class ApplicationContext : DbContext
 {
-    public virtual DbSet<EntityRecord> Entities { get; set; } = default!;
-    public virtual DbSet<PlaceRecord> Places { get; set; } = default!;
-    public virtual DbSet<ReviewRecord> Reviews { get; set; } = default!;
-    public virtual DbSet<ProfileRecord> Profiles { get; set; } = default!;
-    public virtual DbSet<EventCategoryRecord> EventCategories { get; set; } = default!;
-    public virtual DbSet<PlaceCategoryRecord> PlaceCategories { get; set; } = default!;
+    public DbSet<PlaceRecord> Places { get; set; } = default!;
+    public DbSet<PlaceCategoryRecord> PlaceCategories { get; set; } = default!;
+    
+    public DbSet<EventRecord> Events { get; set; } = default!;
+    public DbSet<EventCategoryRecord> EventCategories { get; set; } = default!;
+    
+    public DbSet<ReviewRecord> Reviews { get; set; } = default!;
+    public DbSet<ProfileRecord> Profiles { get; set; } = default!;
+    public DbSet<ExternalPhoto> Photos { get; set; } = default!;
     
     public ApplicationContext(DbContextOptions options) : base(options)
     {
@@ -20,6 +23,23 @@ public class ApplicationContext : DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<EventRecord>()
+            .HasOne(x => x.Owner)
+            .WithMany(y => y.OwnEvents);
         
+        modelBuilder.Entity<EventRecord>()
+            .HasMany(x => x.Organizers)
+            .WithMany(y => y.OrganizerEvents);
+        
+        modelBuilder.Entity<EventRecord>()
+            .HasMany(x => x.Participants)
+            .WithMany(y => y.ParticipantEvents);
+
+        modelBuilder.Entity<PlaceRecord>()
+            .HasOne(x => x.Owner)
+            .WithMany(y => y.OwnPlaces);
+
+
+        base.OnModelCreating(modelBuilder);
     }
 }
