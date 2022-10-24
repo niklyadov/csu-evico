@@ -1,14 +1,18 @@
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
-}
+/*
 
-code {
-  color: #E01A76;
-}
+    #266255 Eden
+    #fa8072 Salmon
+    #CE7B5B Brandied Melon
+    #96DFE4 Island Paradise
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+*/
+
+body {
+
+  margin: 0;
+  padding: 0;
+  background-image: repeating-radial-gradient(circle at 0 100%, rgba(27,27,30, 0.1), rgba(88,164,176, 0.15) 1px, rgba(216,219,226, 0.2) 2px, rgba(88,164,176, 0.15) 3px, rgba(27,27,30, 0.1) 4px), radial-gradient(circle at 0 100%, #0b1f21, #6fcbd0, #a7ecf1, #a9bcd0, #d8dbe2);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
 }
