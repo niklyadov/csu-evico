@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Evico.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20221023180348_Init")]
+    [Migration("20221023191934_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,9 +66,6 @@ namespace Evico.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<long>("OwnerId")
-                        .HasColumnType("bigint");
-
                     b.Property<long?>("PhotoId")
                         .HasColumnType("bigint");
 
@@ -79,8 +76,6 @@ namespace Evico.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
 
                     b.HasIndex("PhotoId");
 
@@ -142,9 +137,6 @@ namespace Evico.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<long>("OwnerId")
-                        .HasColumnType("bigint");
-
                     b.Property<long?>("PhotoId")
                         .HasColumnType("bigint");
 
@@ -154,8 +146,6 @@ namespace Evico.Migrations
                     b.HasKey("Id");
 
                     b.HasAlternateKey("TempId1");
-
-                    b.HasIndex("OwnerId");
 
                     b.HasIndex("PhotoId");
 
@@ -264,12 +254,6 @@ namespace Evico.Migrations
 
             modelBuilder.Entity("Evico.Entity.EventRecord", b =>
                 {
-                    b.HasOne("Evico.Entity.ProfileRecord", "Owner")
-                        .WithMany("OwnEvents")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Evico.Entity.ExternalPhoto", "Photo")
                         .WithMany()
                         .HasForeignKey("PhotoId");
@@ -279,8 +263,6 @@ namespace Evico.Migrations
                         .HasForeignKey("PlaceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Owner");
 
                     b.Navigation("Photo");
 
@@ -300,17 +282,9 @@ namespace Evico.Migrations
 
             modelBuilder.Entity("Evico.Entity.PlaceRecord", b =>
                 {
-                    b.HasOne("Evico.Entity.ProfileRecord", "Owner")
-                        .WithMany("OwnPlaces")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Evico.Entity.ExternalPhoto", "Photo")
                         .WithMany()
                         .HasForeignKey("PhotoId");
-
-                    b.Navigation("Owner");
 
                     b.Navigation("Photo");
                 });
@@ -353,13 +327,6 @@ namespace Evico.Migrations
                     b.Navigation("Photos");
 
                     b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("Evico.Entity.ProfileRecord", b =>
-                {
-                    b.Navigation("OwnEvents");
-
-                    b.Navigation("OwnPlaces");
                 });
 
             modelBuilder.Entity("Evico.Entity.ReviewRecord", b =>

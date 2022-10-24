@@ -23,9 +23,9 @@ public sealed class ApplicationContext : DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<EventRecord>()
-            .HasOne(x => x.Owner)
-            .WithMany(y => y.OwnEvents);
+        //modelBuilder.Entity<EventRecord>()
+        //    .HasOne(x => x.Owner)
+        //    .WithMany(y => y.OwnEvents);
         
         modelBuilder.Entity<EventRecord>()
             .HasMany(x => x.Organizers)
@@ -35,9 +35,9 @@ public sealed class ApplicationContext : DbContext
             .HasMany(x => x.Participants)
             .WithMany(y => y.ParticipantEvents);
 
-        modelBuilder.Entity<PlaceRecord>()
-            .HasOne(x => x.Owner)
-            .WithMany(y => y.OwnPlaces);
+        //modelBuilder.Entity<PlaceRecord>()
+        //    .HasOne(x => x.Owner)
+        //    .WithMany(y => y.OwnPlaces);
 
 
         base.OnModelCreating(modelBuilder);

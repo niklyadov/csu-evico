@@ -40,7 +40,6 @@ namespace Evico.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    OwnerId = table.Column<long>(type: "bigint", nullable: false),
                     PlaceId = table.Column<long>(type: "bigint", nullable: false),
                     Start = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     End = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -71,6 +70,31 @@ namespace Evico.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Places",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    LocationLatitude = table.Column<double>(type: "double", nullable: false),
+                    LocationLongitude = table.Column<double>(type: "double", nullable: false),
+                    Name = table.Column<string>(type: "longtext", nullable: false),
+                    PhotoId = table.Column<long>(type: "bigint", nullable: true),
+                    TempId1 = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    DeletedDateTime = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Places", x => x.Id);
+                    table.UniqueConstraint("AK_Places_TempId1", x => x.TempId1);
+                    table.ForeignKey(
+                        name: "FK_Places_Photos_PhotoId",
+                        column: x => x.PhotoId,
+                        principalTable: "Photos",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Profiles",
                 columns: table => new
                 {
@@ -91,38 +115,6 @@ namespace Evico.Migrations
                         column: x => x.PhotoId,
                         principalTable: "Photos",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Places",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    LocationLatitude = table.Column<double>(type: "double", nullable: false),
-                    LocationLongitude = table.Column<double>(type: "double", nullable: false),
-                    OwnerId = table.Column<long>(type: "bigint", nullable: false),
-                    Name = table.Column<string>(type: "longtext", nullable: false),
-                    PhotoId = table.Column<long>(type: "bigint", nullable: true),
-                    TempId1 = table.Column<int>(type: "int", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    DeletedDateTime = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Places", x => x.Id);
-                    table.UniqueConstraint("AK_Places_TempId1", x => x.TempId1);
-                    table.ForeignKey(
-                        name: "FK_Places_Photos_PhotoId",
-                        column: x => x.PhotoId,
-                        principalTable: "Photos",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Places_Profiles_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "Profiles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -170,11 +162,6 @@ namespace Evico.Migrations
                 column: "ParticipantsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Events_OwnerId",
-                table: "Events",
-                column: "OwnerId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Events_PhotoId",
                 table: "Events",
                 column: "PhotoId");
@@ -193,11 +180,6 @@ namespace Evico.Migrations
                 name: "IX_Photos_ReviewRecordId",
                 table: "Photos",
                 column: "ReviewRecordId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Places_OwnerId",
-                table: "Places",
-                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Places_PhotoId",
@@ -272,14 +254,6 @@ namespace Evico.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Events_Profiles_OwnerId",
-                table: "Events",
-                column: "OwnerId",
-                principalTable: "Profiles",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
                 name: "FK_Photos_Places_PlaceRecordId",
                 table: "Photos",
                 column: "PlaceRecordId",
@@ -299,10 +273,6 @@ namespace Evico.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Reviews_Events_EventRecordId",
                 table: "Reviews");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Places_Profiles_OwnerId",
-                table: "Places");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Reviews_Profiles_AuthorId",

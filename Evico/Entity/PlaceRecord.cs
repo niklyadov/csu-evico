@@ -4,7 +4,7 @@ public record PlaceRecord : EntityRecord
 {
     public double LocationLatitude { get; set; } = default!;
     public double LocationLongitude { get; set; } = default!;
-    public ProfileRecord Owner { get; set; } = default!;
+    //public ProfileRecord Owner { get; set; } = default!;
     public String Name { get; set; } = String.Empty;
     public ExternalPhoto? Photo { get; set; } = null;
     public virtual List<ExternalPhoto> Photos { get; set; } = new();
