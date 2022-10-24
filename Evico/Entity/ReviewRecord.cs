@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Evico.Entity;
 
+[NotMapped]
 public record ReviewRecord : EntityRecord
 {
     public ProfileRecord Author { get; set; } = default!;

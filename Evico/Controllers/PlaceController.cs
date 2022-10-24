@@ -1,4 +1,5 @@
 using Evico.Entity;
+using Evico.Models;
 using Evico.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +17,9 @@ public class PlaceController : BaseController
     }
     
     [HttpPost]
-    public async Task<IActionResult> Add([FromBody] PlaceRecord placeRecord)
+    public async Task<IActionResult> Add([FromBody] PlaceModel placeModel)
     {
-        return await _placeService.AddAsync(placeRecord);
+        return await _placeService.AddAsync(placeModel);
     }
 
     [HttpGet]

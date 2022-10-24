@@ -1,4 +1,5 @@
 using Evico.Entity;
+using Evico.Models;
 using Evico.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +17,9 @@ public class EventController : BaseController
     }
     
     [HttpPost]
-    public async Task<IActionResult> Add([FromBody] EventRecord eventRecord)
+    public async Task<IActionResult> Add([FromBody] EventModel eventModel)
     {
-        return await _eventService.AddAsync(eventRecord);
+        return await _eventService.AddAsync(eventModel);
     }
 
     [HttpGet]

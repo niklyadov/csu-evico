@@ -17,15 +17,19 @@ public sealed class ApplicationContext : DbContext
     
     public ApplicationContext(DbContextOptions options) : base(options)
     {
-        Database.EnsureDeleted();
+        //Database.EnsureDeleted();
         Database.EnsureCreated();
     }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         //modelBuilder.Entity<EventRecord>()
         //    .HasOne(x => x.Owner)
         //    .WithMany(y => y.OwnEvents);
+
+        //modelBuilder.Entity<PlaceRecord>()
+        //    .HasOne(x => x.Owner)
+        //    .WithMany(y => y.OwnPlaces);
         
         modelBuilder.Entity<EventRecord>()
             .HasMany(x => x.Organizers)
@@ -34,12 +38,23 @@ public sealed class ApplicationContext : DbContext
         modelBuilder.Entity<EventRecord>()
             .HasMany(x => x.Participants)
             .WithMany(y => y.ParticipantEvents);
+            
+        modelBuilder.Entity<EventRecord>()
+            .HasMany(x => x.Reviews)
+            .WithOne(y => y.Event);
 
-        //modelBuilder.Entity<PlaceRecord>()
-        //    .HasOne(x => x.Owner)
-        //    .WithMany(y => y.OwnPlaces);
+        modelBuilder.Entity<PlaceRecord>()
+            .HasMany(x => x.Reviews)
+            .WithOne(y => y.Place);
 
+        modelBuilder.Entity<EventRecord>()
+            .HasMany(x => x.Categories)
+            .WithMany(y => y.Events);
 
+        modelBuilder.Entity<PlaceRecord>()
+            .HasMany(x => x.Categories)
+            .WithMany(y => y.Places);
+        
         base.OnModelCreating(modelBuilder);
     }
 }

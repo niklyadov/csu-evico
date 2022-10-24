@@ -3,12 +3,16 @@ namespace Evico.Entity;
 public record EventRecord : EntityRecord
 {
     //public ProfileRecord Owner { get; set; } = default!;
+    public long PlaceId { get; set; }
     public PlaceRecord Place { get; set; } = default!;
+    public String Name { get; set; } = String.Empty;
+    public String Description { get; set; } = String.Empty;
     public DateTime? Start { get; set; } = null;
     public DateTime? End { get; set; } = null;
+    public long? PhotoId { get; set; } = null;
     public ExternalPhoto? Photo { get; set; } = null;
     public virtual List<ProfileRecord> Organizers { get; set; } = new();
     public virtual List<ProfileRecord> Participants { get; set; } = new();
-    public virtual List<ReviewRecord> Reviews { get; set; } = new();
+    public virtual List<EventReviewRecord> Reviews { get; set; } = new();
     public virtual List<EventCategoryRecord> Categories { get; set; } = new();
 }

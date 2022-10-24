@@ -1,4 +1,5 @@
 using Evico.Entity;
+using Evico.Models;
 using Evico.QueryBuilder;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,10 +15,18 @@ public class PlaceService
         _context = context;
     }
     
-    public async Task<IActionResult> AddAsync(PlaceRecord placeRecord)
+    public async Task<IActionResult> AddAsync(PlaceModel placeModel)
     {
         try
         {
+            var placeRecord = new PlaceRecord
+            {
+                LocationLatitude = placeModel.LocationLatitude,
+                LocationLongitude = placeModel.LocationLongitude,
+                Name = placeModel.Name,
+                Description = placeModel.Description
+            };
+            
             var result = await _placeQueryBuilder.AddAsync(placeRecord);
 
             return new OkObjectResult(result);
