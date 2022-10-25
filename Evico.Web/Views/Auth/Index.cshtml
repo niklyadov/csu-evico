@@ -1,0 +1,65 @@
+@model dynamic
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="vk_auth">VK Auth</button>
+
+    <script>
+        
+        function authCookieAwaiter() {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    reject('Auth error');
+                }, 60000);
+                
+                let awaiterInterval = setInterval(() => {
+                    const cookies = document.cookie.split(';').reduce((ac, str) => Object.assign(ac, {[str.split('=')[0].trim()]: str.split('=')[1]}), {});
+                    
+                    if(!!cookies['bearerToken'] && !!cookies['refreshToken']) {
+                        clearInterval(awaiterInterval)
+                        //console.log(cookies)
+                        return resolve();
+                    }
+                }, 500);
+            }); 
+        }
+        
+        window.onload = () => {
+            const authParams = {
+                client_id: 51458458,
+                redirect_uri: 'http://web.csu-evico.ru:60666/Auth/VkGateway'
+            }
+
+            const link = `https://oauth.vk.com/authorize?client_id=${authParams.client_id}&redirect_uri=${authParams.redirect_uri}&scope=12&display=mobile`
+
+            document.getElementById('vk_auth').onclick = () => {
+                const params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=800,height=500`;
+            
+                window.open(link, 'Auth', params);
+                
+                authCookieAwaiter().then(() => {
+                    
+                    alert('Успешная авторизация. Смотри куки.')
+                    
+                }).catch((reason) => {
+                    
+                    alert(reason)
+                    
+                })
+            }
+        }
+    </script>
+
+</body>
+</html>
