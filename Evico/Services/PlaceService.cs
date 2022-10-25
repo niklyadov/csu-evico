@@ -1,5 +1,5 @@
 using Evico.Entity;
-using Evico.Models;
+using Evico.InputModels;
 using Evico.QueryBuilder;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,25 +8,26 @@ namespace Evico.Services;
 public class PlaceService
 {
     private readonly ApplicationContext _context;
-    private PlaceQueryBuilder _placeQueryBuilder => new (_context);
 
     public PlaceService(ApplicationContext context)
     {
         _context = context;
     }
-    
-    public async Task<IActionResult> AddAsync(PlaceModel placeModel)
+
+    private PlaceQueryBuilder _placeQueryBuilder => new(_context);
+
+    public async Task<IActionResult> AddAsync(PlaceInputModel placeInputModel)
     {
         try
         {
             var placeRecord = new PlaceRecord
             {
-                LocationLatitude = placeModel.LocationLatitude,
-                LocationLongitude = placeModel.LocationLongitude,
-                Name = placeModel.Name,
-                Description = placeModel.Description
+                LocationLatitude = placeInputModel.LocationLatitude,
+                LocationLongitude = placeInputModel.LocationLongitude,
+                Name = placeInputModel.Name,
+                Description = placeInputModel.Description
             };
-            
+
             var result = await _placeQueryBuilder.AddAsync(placeRecord);
 
             return new OkObjectResult(result);

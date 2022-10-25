@@ -26,10 +26,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(allowAnyCorsOrigin, 
-        policy  => policy.WithOrigins("*"));
+    options.AddPolicy(allowAnyCorsOrigin,
+        policy => policy.WithOrigins("*"));
 });
-builder.Services.Configure<RouteOptions>(options => 
+builder.Services.Configure<RouteOptions>(options =>
     options.LowercaseUrls = true);
 
 var app = builder.Build();

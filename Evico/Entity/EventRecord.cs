@@ -5,8 +5,8 @@ public record EventRecord : EntityRecord
     //public ProfileRecord Owner { get; set; } = default!;
     public long PlaceId { get; set; }
     public PlaceRecord Place { get; set; } = default!;
-    public String Name { get; set; } = String.Empty;
-    public String Description { get; set; } = String.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public DateTime? Start { get; set; } = null;
     public DateTime? End { get; set; } = null;
     public long? PhotoId { get; set; } = null;

@@ -5,7 +5,7 @@ namespace Evico.Entity;
 [NotMapped]
 public abstract record CategoryRecord : EntityRecord
 {
-    public String Name { get; set; } = String.Empty;
-    public String Description { get; set; } = String.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public CategoryRecord? Parent { get; set; } = null;
 }

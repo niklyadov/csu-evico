@@ -1,5 +1,5 @@
 using Evico.Entity;
-using Evico.Models;
+using Evico.InputModels;
 using Evico.QueryBuilder;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,32 +8,33 @@ namespace Evico.Services;
 public class EventService
 {
     private readonly ApplicationContext _context;
-    private EventQueryBuilder _eventQueryBuilder => new (_context);
-    private PlaceQueryBuilder _placeQueryBuilder => new (_context);
 
     public EventService(ApplicationContext context)
     {
         _context = context;
     }
 
-    public async Task<IActionResult> AddAsync(EventModel eventModel)
+    private EventQueryBuilder _eventQueryBuilder => new(_context);
+    private PlaceQueryBuilder _placeQueryBuilder => new(_context);
+
+    public async Task<IActionResult> AddAsync(EventInputModel eventInputModel)
     {
         try
         {
-            var place = await _placeQueryBuilder.WithId(eventModel.PlaceId).FirstOrDefaultAsync();
+            var place = await _placeQueryBuilder.WithId(eventInputModel.PlaceId).FirstOrDefaultAsync();
 
             if (place == null)
-                throw new InvalidOperationException($"Place cannot be null. Place id: {eventModel.PlaceId}");
+                throw new InvalidOperationException($"Place cannot be null. Place id: {eventInputModel.PlaceId}");
 
             var eventRecord = new EventRecord
             {
-                Start = eventModel.Start,
-                End = eventModel.End,
-                PlaceId = eventModel.PlaceId,
-                Name = eventModel.Name,
-                Description = eventModel.Description
+                Start = eventInputModel.Start,
+                End = eventInputModel.End,
+                PlaceId = eventInputModel.PlaceId,
+                Name = eventInputModel.Name,
+                Description = eventInputModel.Description
             };
-            
+
             var result = await _eventQueryBuilder.AddAsync(eventRecord);
 
             return new OkObjectResult(result);

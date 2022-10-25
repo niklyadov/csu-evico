@@ -1,5 +1,4 @@
-using Evico.Entity;
-using Evico.Models;
+using Evico.InputModels;
 using Evico.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,16 +14,20 @@ public class EventController : BaseController
     {
         _eventService = eventService;
     }
-    
+
     [HttpPost]
-    public async Task<IActionResult> Add([FromBody] EventModel eventModel)
+    public async Task<IActionResult> Add([FromBody] EventInputModel eventModel)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         return await _eventService.AddAsync(eventModel);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         return await _eventService.GetAllAsync();
     }
 }

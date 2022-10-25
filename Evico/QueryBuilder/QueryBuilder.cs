@@ -68,7 +68,7 @@ public abstract class QueryBuilder<TEntity, TContext>
 
     public QueryBuilder<TEntity, TContext> Include(params Expression<Func<TEntity, object>>[] includeExpressions)
     {
-        foreach (var includeExpression in includeExpressions) 
+        foreach (var includeExpression in includeExpressions)
             Query = Query.Include(includeExpression);
 
         return this;
