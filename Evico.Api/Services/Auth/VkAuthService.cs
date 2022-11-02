@@ -111,6 +111,7 @@ public class VkProfileInfo
     [JsonPropertyName("domain")] 
     public String Domain { get; set; } = string.Empty;
     
+    [JsonConverter(typeof(JsonBoolCustomConverter))]
     [JsonPropertyName("has_photo")]
     public bool HasPhoto { get; set; }
     
