@@ -83,8 +83,7 @@ public class VkAuthService
             //vkProfileInfo.PhotoUri;
         }
                 
-        //return await _profileQb.AddAsync(newUser);
-        return newUser;
+        return await _profileQb.AddAsync(newUser);
     }
 }
 
