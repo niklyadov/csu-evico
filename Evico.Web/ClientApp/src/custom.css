@@ -1,14 +1,129 @@
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
+:root {
+
+    /* color */
+    --color-1: #266255;
+    --color-2: #fa8072;
+    --color-3: #CE7B5B;
+    --color-4: #96DFE4;
+    --color-5: #00c0b0;
+    /* font */
+    --font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    --font-color-dark: #000;
+    --font-color-light: #fff;
+    /* border */
+    --border-radius: 20px;
+    --border-color-dark: #000;
+    --border-color-light: #fff;
+    /* margin */
+    --margin: 10px;
+    /* width */
+    --width: 100%;
+    --width-min: min-content;
+    --width-max: 24%;
+    --width-min-image: 2em;
+    /* height */
+    --height: 100%;
+    --height-min: min-content;
+    --height-max: 18%;
+
 }
 
-code {
-  color: #E01A76;
+/* Переменные */
+#auth {
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: #fff;
+
+}
+#header {
+
+    background-color: #fff;
+
+}
+#img-auth__vk {
+
+    
+
+}
+#button-auth__vk {
+
+    
+
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+/* Классы */
+.a-brand {
+
+    
+
+}
+.div-flex-line {
+
+    display: flex;
+    justify-content: space-around;
+
+}
+.div-window {
+
+    display: flex;
+    width: var(--width);
+    min-width: var(--width-min);
+    max-width: var(--width-max);
+    justify-content: center;
+    text-align: center;
+    border-radius: var(--border-radius);
+
+}
+.div-window > * {
+
+    margin: var(--margin);
+
+}
+.img-icon {
+
+    width: var(--width-min-image);
+    box-shadow: 0 0 0 0px var(--color-5);
+    border-radius: var(--border-radius);
+    transition: box-shadow 0.5s;
+
+}
+.img-icon:hover {
+
+    box-shadow: 0 0 0 0.2em var(--color-5);
+
+}
+.button {
+
+    width: var(--width);
+    min-width: var(--width-min);
+    max-width: var(--width-max);
+    border-style: none;
+
+}
+.button:hover {
+
+    background-color: var(--color-5);
+
+}
+
+/* Типы */
+img {
+
+    
+
+}
+body {
+
+    background-image: linear-gradient(90deg, #70d2ff,#33beff,#33beff);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+}
+
+* {
+
+    font-family: var(--font-family);
+    
 }
