@@ -7,5 +7,6 @@ public record ReviewRecord : EntityRecord
 {
     public ProfileRecord Author { get; set; } = default!;
     public string Comment { get; set; } = string.Empty;
+    public int Rate { get; set; }
     public virtual List<ExternalPhoto> Photos { get; set; } = new();
 }

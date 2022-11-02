@@ -2,6 +2,7 @@ using Evico.Api.Entity;
 using Evico.Api.InputModels;
 using Evico.Api.QueryBuilder;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace Evico.Api.Services;
 
@@ -58,7 +59,7 @@ public class EventCategoryService
             if (category == null)
                 throw new InvalidOperationException($"Category cannot be null. Category id: {eventCategoryInputModel.CategoryId}");
 
-            category.Events = category.Events.Where(x => x.Id != eventRecord.Id);
+            category.Events = category.Events.Where(x => x.Id != eventRecord.Id).ToList();
             
             var result = _categoryQueryBuilder.UpdateAsync(category);
 
