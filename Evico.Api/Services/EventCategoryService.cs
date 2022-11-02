@@ -18,7 +18,7 @@ public class EventCategoryService
     private EventQueryBuilder _eventQueryBuilder => new(_context);
     private CategoryQueryBuilder _categoryQueryBuilder => new(_context);
 
-    public async Task<IActionResult> AddAsync(EventCategoryInputModel eventCategoryInputModel)
+    public async Task<IActionResult> AddAsync(CategoryInputModel eventCategoryInputModel)
     {
         try
         {
@@ -45,7 +45,7 @@ public class EventCategoryService
         }
     }
 
-    public async Task<IActionResult> RemoveAsync(EventCategoryInputModel eventCategoryInputModel)
+    public async Task<IActionResult> RemoveAsync(CategoryInputModel eventCategoryInputModel)
     {
         try
         {
