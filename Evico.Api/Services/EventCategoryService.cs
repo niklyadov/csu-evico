@@ -21,9 +21,9 @@ public class EventCategoryService
     {
         try
         {
-            var event = await _eventQueryBuilder.WithId(eventCategoryInputModel.EventId).FirstOrDefaultAsync();
+            var eventRecord = await _eventQueryBuilder.WithId(eventCategoryInputModel.EventId).FirstOrDefaultAsync();
 
-            if (event == null)
+            if (eventRecord == null)
                 throw new InvalidOperationException($"Event cannot be null. Event id: {eventCategoryInputModel.EventId}");
 
             var category = await _categoryQueryBuilder.WithId(eventCategoryInputModel.CategoryId).FirstOrDefaultAsync();
@@ -31,7 +31,7 @@ public class EventCategoryService
             if (category == null)
                 throw new InvalidOperationException($"Category cannot be null. Category id: {eventCategoryInputModel.CategoryId}");
 
-            category.Events.Add(event);
+            category.Events.Add(eventRecord);
             
             var result = _categoryQueryBuilder.UpdateAsync(category);
 
@@ -48,9 +48,9 @@ public class EventCategoryService
     {
         try
         {
-            var event = await _eventQueryBuilder.WithId(eventCategoryInputModel.EventId).FirstOrDefaultAsync();
+            var eventRecord = await _eventQueryBuilder.WithId(eventCategoryInputModel.EventId).FirstOrDefaultAsync();
 
-            if (event == null)
+            if (eventRecord == null)
                 throw new InvalidOperationException($"Event cannot be null. Event id: {eventCategoryInputModel.EventId}");
 
             var category = await _categoryQueryBuilder.WithId(eventCategoryInputModel.CategoryId).FirstOrDefaultAsync();
@@ -58,7 +58,7 @@ public class EventCategoryService
             if (category == null)
                 throw new InvalidOperationException($"Category cannot be null. Category id: {eventCategoryInputModel.CategoryId}");
 
-            category.Events = category.Events.Where(x => x.Id != event.Id);
+            category.Events = category.Events.Where(x => x.Id != eventRecord.Id);
             
             var result = _categoryQueryBuilder.UpdateAsync(category);
 
