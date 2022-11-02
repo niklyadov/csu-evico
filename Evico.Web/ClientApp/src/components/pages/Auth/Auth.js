@@ -21,7 +21,7 @@ export default function Auth() {
 
                 window.open(
 
-                    `https://oauth.vk.com/authorize?client_id=${clientId}&redirect_uri=${redirect_uri}&scope=12&display=mobile`,
+                    `https://oauth.vk.com/authorize?client_id=${clientId}&redirect_uri=${redirect_uri}&scope=12&display=mobile&response_type=token`,
                     'Auth',
                     `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=800,height=500`
 
