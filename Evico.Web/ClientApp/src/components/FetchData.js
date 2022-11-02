@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import {env} from "process";
 
 export class FetchData extends Component {
   static displayName = FetchData.name;
