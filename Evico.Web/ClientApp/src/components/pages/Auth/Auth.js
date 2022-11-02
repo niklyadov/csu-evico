@@ -3,7 +3,7 @@ import Icon from "../../elements/Icons/Icon";
 
 export default function Auth() {
 
-    const clientId = 51458458, redirect_uri = 'http://web.csu-evico.ru:60666/Auth/VkGateway';
+    const clientId = 51458458, redirect_uri = 'https://web.csu-evico.ru:62666/auth/vk-callback';
 
     return <div
 
@@ -19,7 +19,14 @@ export default function Auth() {
             src='https://play-lh.googleusercontent.com/GntsGclzheXXASOhjSF1lCOPOznM_OARDObiTW_NQZtpYVwPQr_0ARyRyiXB0_OocmI'
             onClick={_ => {
 
-                window.open(
+                // todo: перенести куда-то, в отдельный сервис?
+                function logout() {
+                    //todo: строковые константы лучше бы вынести (authBearerToken и authRefreshToken)
+                    localStorage.setItem('authBearerToken', null);
+                    localStorage.setItem('authRefreshToken', null);
+                }
+                
+                let handle = window.open(
 
                     `https://oauth.vk.com/authorize?client_id=${clientId}&redirect_uri=${redirect_uri}&scope=12&display=mobile`,
                     'Auth',
@@ -30,14 +37,16 @@ export default function Auth() {
                 (() => {
 
                     return new Promise((resolve, reject) => {
-
+                        
                         setTimeout(() => reject('Auth error'), 60000);
 
                         let awaiterInterval = setInterval(() => {
 
-                            const cookies = document.cookie.split(';').reduce((ac, str) => Object.assign(ac, { [str.split('=')[0].trim()]: str.split('=')[1] }), {});
-
-                            if (cookies['bearerToken'] && cookies['refreshToken']) {
+                            //todo: строковые константы лучше бы вынести (authBearerToken и authRefreshToken)
+                            let authBearerToken = localStorage.getItem('authBearerToken');
+                            let authRefreshToken = localStorage.getItem('authRefreshToken');
+                            
+                            if (!!authBearerToken && !!authRefreshToken) {
 
                                 clearInterval(awaiterInterval);
                                 return resolve();
@@ -50,7 +59,7 @@ export default function Auth() {
 
                 })().then(() => {
 
-                    alert('Успешная авторизация. Смотри куки.')
+                    alert('Успешная авторизация. Смотри localStorage.')
 
                 }).catch((reason) => {
 
