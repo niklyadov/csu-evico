@@ -1,6 +1,7 @@
 using Evico.Api;
 using Evico.Api.QueryBuilder;
 using Evico.Api.Services;
+using Evico.Api.Services.Auth;
 using Microsoft.EntityFrameworkCore;
 
 const string allowAnyCorsOrigin = "Allow any";
@@ -16,9 +17,13 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 
 builder.Services.AddScoped<EventQueryBuilder>();
 builder.Services.AddScoped<PlaceQueryBuilder>();
+builder.Services.AddScoped<ProfileQueryBuilder>();
 
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<PlaceService>();
+
+builder.Services.AddScoped<JwtTokensService>();
+builder.Services.AddScoped<VkAuthService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
