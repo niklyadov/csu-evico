@@ -2,6 +2,7 @@ using Evico.Api.Entity;
 using Evico.Api.InputModels;
 using Evico.Api.QueryBuilder;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace Evico.Api.Services;
 
