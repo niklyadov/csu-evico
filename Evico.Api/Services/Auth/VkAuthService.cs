@@ -18,9 +18,17 @@ public class VkAuthService
         _profileQb = profileQb;
     }
     
-    public async Task<ActionResult<BearerRefreshTokenPair>> AuthAsync(String accessToken)
+    public async Task<ActionResult<BearerRefreshTokenPair>> AuthAsync(String code)
     {
-        var vkProfileInfo = await GetVkProfileInfoAsync(accessToken);
+        var accessTokenResponse = await GetAccessTokenFromCode(code);
+
+        if (!string.IsNullOrEmpty(accessTokenResponse.Error))
+            throw new InvalidDataException($"{accessTokenResponse.Error}, {accessTokenResponse.ErrorDescription??"no-description"}");
+
+        if (string.IsNullOrEmpty(accessTokenResponse.AccessToken))
+            throw new InvalidOperationException("Access token is empty");
+        
+        var vkProfileInfo = await GetVkProfileInfoAsync(accessTokenResponse.AccessToken);
         var vkUser = await _profileQb.WithVkId(vkProfileInfo.UserId).FirstOrDefaultAsync();
         var userRegistered = false;
 
@@ -52,12 +60,32 @@ public class VkAuthService
         using HttpResponseMessage response = await new HttpClient().PostAsync(url, content).ConfigureAwait(false);
 
         var responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        var responseTokens = JsonSerializer.Deserialize<VkProfileInfoResponse>(responseString);
+        var responseVkProfileInfo = JsonSerializer.Deserialize<VkProfileInfoResponse>(responseString);
 
-        if (responseTokens == null)
+        if (responseVkProfileInfo == null)
             throw new InvalidOperationException("Can't parse vk response");
         
-        return responseTokens.Response.Single();
+        return responseVkProfileInfo.Response.Single();
+    }
+    
+    private async Task<VkAccessTokenResponse> GetAccessTokenFromCode(String code)
+    {
+        var clientId = "51458458";
+        var clientSecret = "GT5EbZ28T4SloETf8j0D";
+        var redirUri = "https://web.csu-evico.ru:62666/auth/vk-callback";
+
+        var url =
+            $"https://oauth.vk.com/access_token?client_id={clientId}&client_secret={clientSecret}&code={code}&redirect_uri={redirUri}";
+        
+        using HttpResponseMessage response = await new HttpClient().GetAsync(url).ConfigureAwait(false);
+
+        var responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        var responseAccessToken = JsonSerializer.Deserialize<VkAccessTokenResponse>(responseString);
+
+        if (responseAccessToken == null)
+            throw new InvalidOperationException("Can't parse vk response");
+
+        return responseAccessToken;
     }
 
     private async Task<ProfileRecord> RegisterVkUser(VkProfileInfo vkProfileInfo)
@@ -85,6 +113,16 @@ public class VkAuthService
                 
         return await _profileQb.AddAsync(newUser);
     }
+}
+
+public class VkAccessTokenResponse
+{
+    [JsonPropertyName("access_token")] 
+    public string? AccessToken { get; set; }
+    [JsonPropertyName("error")] 
+    public string? Error { get; set; }
+    [JsonPropertyName("error_description")] 
+    public string? ErrorDescription { get; set; }
 }
 
 public class VkProfileInfoResponse

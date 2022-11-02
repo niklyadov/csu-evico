@@ -15,12 +15,17 @@ public class VkAuthService
         using HttpContent content = new StringContent(JsonSerializer.Serialize(accessToken), Encoding.UTF8, "application/json");
         using HttpResponseMessage response = await new HttpClient().PostAsync(url, content).ConfigureAwait(false);
 
-        var responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        var responseTokens = JsonSerializer.Deserialize<BearerRefreshTokenPair>(responseString);
+        if (response.IsSuccessStatusCode)
+        {
+            var responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var responseTokens = JsonSerializer.Deserialize<BearerRefreshTokenPair>(responseString);
 
-        if (responseTokens == null)
-            throw new InvalidOperationException("Tokens is null");
+            if (responseTokens == null)
+                throw new InvalidOperationException("Tokens is null");
         
-        return responseTokens;
+            return responseTokens;
+        }
+
+        throw new Exception();
     }
 }
