@@ -1,8 +1,6 @@
-using Evico.Api.Entity;
 using Evico.Api.InputModels;
 using Evico.Api.QueryBuilder;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace Evico.Api.Services;
 
@@ -25,19 +23,20 @@ public class EventCategoryService
             var eventRecord = await _eventQueryBuilder.WithId(eventCategoryInputModel.EventId).FirstOrDefaultAsync();
 
             if (eventRecord == null)
-                throw new InvalidOperationException($"Event cannot be null. Event id: {eventCategoryInputModel.EventId}");
+                throw new InvalidOperationException(
+                    $"Event cannot be null. Event id: {eventCategoryInputModel.EventId}");
 
             var category = await _categoryQueryBuilder.WithId(eventCategoryInputModel.CategoryId).FirstOrDefaultAsync();
-            
+
             if (category == null)
-                throw new InvalidOperationException($"Category cannot be null. Category id: {eventCategoryInputModel.CategoryId}");
+                throw new InvalidOperationException(
+                    $"Category cannot be null. Category id: {eventCategoryInputModel.CategoryId}");
 
             category.Events.Add(eventRecord);
-            
+
             var result = _categoryQueryBuilder.UpdateAsync(category);
 
             return new OkObjectResult(result);
-
         }
         catch (Exception exception)
         {
@@ -52,19 +51,20 @@ public class EventCategoryService
             var eventRecord = await _eventQueryBuilder.WithId(eventCategoryInputModel.EventId).FirstOrDefaultAsync();
 
             if (eventRecord == null)
-                throw new InvalidOperationException($"Event cannot be null. Event id: {eventCategoryInputModel.EventId}");
+                throw new InvalidOperationException(
+                    $"Event cannot be null. Event id: {eventCategoryInputModel.EventId}");
 
             var category = await _categoryQueryBuilder.WithId(eventCategoryInputModel.CategoryId).FirstOrDefaultAsync();
-            
+
             if (category == null)
-                throw new InvalidOperationException($"Category cannot be null. Category id: {eventCategoryInputModel.CategoryId}");
+                throw new InvalidOperationException(
+                    $"Category cannot be null. Category id: {eventCategoryInputModel.CategoryId}");
 
             category.Events = category.Events.Where(x => x.Id != eventRecord.Id).ToList();
-            
+
             var result = _categoryQueryBuilder.UpdateAsync(category);
 
             return new OkObjectResult(result);
-
         }
         catch (Exception exception)
         {

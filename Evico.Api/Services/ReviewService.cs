@@ -31,7 +31,7 @@ public class ReviewService
                 throw new InvalidOperationException($"Event cannot be null. Event id: {reviewInputModel.AuthorId}");
 
             if (reviewInputModel.Rate < 1 || reviewInputModel.Rate > 5)
-                throw new InvalidOperationException($"Rate should be from 1 to 5");
+                throw new InvalidOperationException("Rate should be from 1 to 5");
 
             // todo Добавить фото
             var review = new EventReviewRecord
@@ -40,7 +40,7 @@ public class ReviewService
                 Author = authorRecord,
                 Rate = reviewInputModel.Rate,
                 Comment = reviewInputModel.Comment,
-                Photos = new()
+                Photos = new List<ExternalPhoto>()
             };
 
             var result = await _reviewQueryBuilder.AddAsync(review);

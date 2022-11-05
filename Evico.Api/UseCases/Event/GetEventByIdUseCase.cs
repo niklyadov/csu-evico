@@ -13,7 +13,7 @@ public class GetEventByIdUseCase
     {
         _eventService = eventService;
     }
-    
+
     public async Task<ActionResult<EventRecord>> GetById(long eventId)
     {
         var getByIdResult = await _eventService.GetByIdAsync(eventId);

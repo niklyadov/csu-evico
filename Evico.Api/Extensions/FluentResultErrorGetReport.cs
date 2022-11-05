@@ -5,7 +5,7 @@ namespace Evico.Api.Extensions;
 
 public static class FluentResultErrorGetReport
 {
-    public static String GetReport<T>(this Result<T> result)
+    public static string GetReport<T>(this Result<T> result)
     {
         var report = new ErrorReport<T?>
         {
@@ -14,7 +14,7 @@ public static class FluentResultErrorGetReport
             ResultType = typeof(T),
             ResultValue = result.ValueOrDefault
         };
-        
+
         return JsonConvert.SerializeObject(report, Formatting.Indented);
     }
 }

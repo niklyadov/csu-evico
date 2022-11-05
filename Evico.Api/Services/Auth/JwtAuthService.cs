@@ -1,6 +1,4 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Cryptography;
-using System.Text;
 using Evico.Api.Entity;
 using FluentResults;
 
@@ -35,7 +33,7 @@ public class JwtAuthService
             return Result.Fail(ex.Message);
         }
     }
-    
+
 
     public async Task<Result<ProfileRecord>> GetCurrentUser()
     {
@@ -59,18 +57,18 @@ public class JwtAuthService
         }
     }
 
-    private string CalculateHash(string password)
-    {
-        var bytes = Encoding.UTF8.GetBytes(password);
-        var hashedBytes = SHA256.HashData(bytes);
-
-        return Encoding.UTF8.GetString(hashedBytes);
-    }
-
-    private string GetHashForUser(ProfileRecord user)
-    {
-        var expiresAt = DateTime.UtcNow.AddDays(1);
-
-        return _jwtTokensService.GenerateNewTokenForUser(user, Audience, expiresAt);
-    }
+    // private string CalculateHash(string password)
+    // {
+    //     var bytes = Encoding.UTF8.GetBytes(password);
+    //     var hashedBytes = SHA256.HashData(bytes);
+    //
+    //     return Encoding.UTF8.GetString(hashedBytes);
+    // }
+    //
+    // private string GetHashForUser(ProfileRecord user)
+    // {
+    //     var expiresAt = DateTime.UtcNow.AddDays(1);
+    //
+    //     return _jwtTokensService.GenerateNewTokenForUser(user, Audience, expiresAt);
+    // }
 }

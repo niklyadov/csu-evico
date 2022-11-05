@@ -1,5 +1,4 @@
 using Evico.Api.Entity;
-using Evico.Api.InputModels;
 using Evico.Api.InputModels.Place;
 using Evico.Api.QueryBuilder;
 using Microsoft.AspNetCore.Mvc;

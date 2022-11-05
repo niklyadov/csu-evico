@@ -1,6 +1,5 @@
 using Evico.Api.Entity;
 using Evico.Api.Extensions;
-using Evico.Api.InputModels;
 using Evico.Api.InputModels.Event;
 using Evico.Api.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +14,7 @@ public class UpdateEventByIdUseCase
     {
         _eventService = eventService;
     }
-    
+
     public async Task<ActionResult<EventRecord>> Update(UpdateEventInputModel updateEventModel)
     {
         var updateEventResult = await _eventService.Update(updateEventModel);

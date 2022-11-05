@@ -11,11 +11,8 @@ public class AddEventInputModel
     public DateTime? End { get; set; } = null;
     // TODO: add photo
     //public long PhotoId { get; set; }
-    
-    [MinLength(1)]
-    [MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
-    [MinLength(1)]
-    [MaxLength(1024)]
-    public string Description { get; set; } = string.Empty;
+
+    [MinLength(1)] [MaxLength(255)] public string Name { get; set; } = string.Empty;
+
+    [MinLength(1)] [MaxLength(1024)] public string Description { get; set; } = string.Empty;
 }

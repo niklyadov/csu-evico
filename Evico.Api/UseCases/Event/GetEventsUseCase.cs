@@ -13,7 +13,7 @@ public class GetEventsUseCase : EventUseCase
     {
         _eventService = eventService;
     }
-    
+
     public async Task<ActionResult<List<EventRecord>>> GetAllAsync()
     {
         var getAllResult = await _eventService.GetAllAsync();

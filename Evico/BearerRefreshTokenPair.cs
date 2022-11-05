@@ -2,12 +2,12 @@ namespace Evico;
 
 public class BearerRefreshTokenPair
 {
-    public BearerRefreshTokenPair(String bearerToken, String refreshToken)
+    public BearerRefreshTokenPair(string bearerToken, string refreshToken)
     {
         BearerToken = bearerToken;
         RefreshToken = refreshToken;
     }
-    
-    public String BearerToken { get; set; }
-    public String RefreshToken { get; set; }
+
+    public string BearerToken { get; set; }
+    public string RefreshToken { get; set; }
 }

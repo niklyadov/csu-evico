@@ -15,9 +15,6 @@ public class ProfileService
 
     public async Task<Result<ProfileRecord>> GetByIdAsync(long id)
     {
-        return await Result.Try(async () =>
-        {
-            return await _profileQueryBuilder.WithId(id).SingleAsync();
-        });
+        return await Result.Try(async () => { return await _profileQueryBuilder.WithId(id).SingleAsync(); });
     }
 }

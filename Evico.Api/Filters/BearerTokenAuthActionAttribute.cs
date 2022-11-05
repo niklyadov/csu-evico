@@ -33,16 +33,18 @@ public class BearerTokenAuthActionAttribute : ActionFilterAttribute
 
             var userResult = await authService.GetCurrentUser();
             if (userResult.IsFailed)
-                throw new SecurityTokenInvalidIssuerException("Can't get current user. Maybe provided token is invalid.");
+                throw new SecurityTokenInvalidIssuerException(
+                    "Can't get current user. Maybe provided token is invalid.");
 
             var user = userResult.Value;
 
             if (user is null)
-                throw new SecurityTokenInvalidIssuerException("Can't get current user. Maybe provided token is invalid.");
+                throw new SecurityTokenInvalidIssuerException(
+                    "Can't get current user. Maybe provided token is invalid.");
 
             if (!await tokensService.IsValidTokenAsync(user, tokenBody))
                 throw new SecurityTokenValidationException("Token is invalid. Please, update the token.");
-            
+
             // success, passed
             await next();
         }
@@ -56,10 +58,10 @@ public class BearerTokenAuthActionAttribute : ActionFilterAttribute
     {
         var code = HttpStatusCode.InternalServerError;
 
-        var result = JsonConvert.SerializeObject(new { error = ex });
+        var result = JsonConvert.SerializeObject(new {error = ex});
 
         context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)code;
+        context.Response.StatusCode = (int) code;
 
         return context.Response.WriteAsync(result);
     }

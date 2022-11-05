@@ -1,5 +1,4 @@
 using Evico.Api.Entity;
-using Evico.Api.InputModels;
 using Evico.Api.InputModels.Event;
 using Evico.Api.UseCases.Event;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +10,10 @@ namespace Evico.Api.Controllers;
 public class EventController : BaseController
 {
     private readonly AddEventUseCase _addEventUseCase;
-    private readonly GetEventsUseCase _getEventsUseCase;
-    private readonly GetEventByIdUseCase _getEventByIdUseCase;
-    private readonly UpdateEventByIdUseCase _updateEventByIdUseCase;
     private readonly DeleteEventByIdUseCase _deleteEventByIdUseCase;
+    private readonly GetEventByIdUseCase _getEventByIdUseCase;
+    private readonly GetEventsUseCase _getEventsUseCase;
+    private readonly UpdateEventByIdUseCase _updateEventByIdUseCase;
 
     public EventController(IServiceProvider services)
     {
@@ -40,7 +39,7 @@ public class EventController : BaseController
 
         return await _getEventsUseCase.GetAllAsync();
     }
-    
+
     [HttpGet("{eventId}")]
     public async Task<ActionResult<EventRecord>> GetById([FromRoute] long eventId)
     {
@@ -48,7 +47,7 @@ public class EventController : BaseController
 
         return await _getEventByIdUseCase.GetById(eventId);
     }
-    
+
     [HttpPut]
     public async Task<ActionResult<EventRecord>> Update([FromBody] UpdateEventInputModel updateEventModel)
     {
@@ -56,7 +55,7 @@ public class EventController : BaseController
 
         return await _updateEventByIdUseCase.Update(updateEventModel);
     }
-    
+
     [HttpDelete("{eventId}")]
     public async Task<ActionResult<EventRecord>> DeleteById([FromRoute] long eventId)
     {

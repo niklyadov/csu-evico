@@ -31,7 +31,7 @@ public class EventService
 
             if (place.IsDeleted)
                 throw new InvalidOperationException($"Place with id {addEventInputModel.PlaceId} was deleted");
-            
+
             var eventRecord = new EventRecord
             {
                 Start = addEventInputModel.Start,
@@ -75,10 +75,11 @@ public class EventService
 
             if (eventWithId == null)
                 throw new InvalidOperationException($"Event with id {eventId} is not found.");
-            
-            if(eventWithId.IsDeleted) 
-                throw new InvalidOperationException($"Event with id {eventId} was already deleted at {eventWithId.DeletedDateTime.ToString()}");
-            
+
+            if (eventWithId.IsDeleted)
+                throw new InvalidOperationException(
+                    $"Event with id {eventId} was already deleted at {eventWithId.DeletedDateTime.ToString()}");
+
             return await _eventQueryBuilder
                 .DeleteAsync(eventWithId);
         });
@@ -95,13 +96,13 @@ public class EventService
 
             if (eventRecord == null)
                 throw new InvalidOperationException($"Event with id {updateEventModel.Id} is not found.");
-            
-            if(eventRecord.IsDeleted) 
+
+            if (eventRecord.IsDeleted)
                 throw new InvalidOperationException($"Event with id {updateEventModel.Id} is deleted");
-            
+
             if (updateEventModel.Start != null)
                 eventRecord.Start = updateEventModel.Start;
-            
+
             if (updateEventModel.End != null)
                 eventRecord.End = updateEventModel.End;
 
@@ -113,17 +114,17 @@ public class EventService
 
                 if (place == null)
                     throw new InvalidOperationException($"Place cannot be null. Place id: {updateEventModel.PlaceId}");
-                
+
                 if (place.IsDeleted)
                     throw new InvalidOperationException($"Place with id {place.Id} was deleted");
-                
+
                 eventRecord.Place = place;
             }
-            
-            if(!string.IsNullOrEmpty(updateEventModel.Name))
+
+            if (!string.IsNullOrEmpty(updateEventModel.Name))
                 eventRecord.Name = updateEventModel.Name;
-            
-            if(!string.IsNullOrEmpty(updateEventModel.Description))
+
+            if (!string.IsNullOrEmpty(updateEventModel.Description))
                 eventRecord.Description = updateEventModel.Description;
 
             return await _eventQueryBuilder.UpdateAsync(eventRecord);

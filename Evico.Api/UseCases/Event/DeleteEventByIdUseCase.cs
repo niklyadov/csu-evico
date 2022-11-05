@@ -13,7 +13,7 @@ public class DeleteEventByIdUseCase
     {
         _eventService = eventService;
     }
-    
+
     public async Task<ActionResult<EventRecord>> DeleteById(long eventId)
     {
         var deleteByIdResult = await _eventService.DeleteByIdAsync(eventId);

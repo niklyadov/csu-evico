@@ -1,27 +1,48 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Evico.Api.Entity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Evico.Api.Services.Auth;
 
 public class JwtTokensService
 {
-    private readonly JwtTokensServiceConfiguration _configuration = new();
+    private readonly JwtTokensServiceConfiguration _configuration;
+
+    public JwtTokensService(IOptions<JwtTokensServiceConfiguration> configuration)
+    {
+        _configuration = configuration.Value;
+    }
 
     private SymmetricSecurityKey GetSymmetricSecurityKey()
     {
         return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration.JwtSecret));
     }
 
-    public string GenerateNewTokenForUser(ProfileRecord user, string audience = "default", DateTime? expires = null)
+    public string GenerateBearerTokenForUser(ProfileRecord user,
+        string audience = "default" /*, DateTime? expires = null*/)
     {
         var generationDate = DateTime.UtcNow;
         var jwt = new JwtSecurityToken(
             user.Id.ToString(),
             audience,
             notBefore: generationDate,
-            expires: expires ?? generationDate.Add(_configuration.JwtDefaultLifetime),
+            expires: /*expires ?? */ generationDate.Add(_configuration.JwtRefreshLifetime),
+            signingCredentials: new SigningCredentials(GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+        return new JwtSecurityTokenHandler().WriteToken(jwt);
+    }
+
+    public string GenerateRefreshTokenForUser(ProfileRecord user,
+        string audience = "default" /*, DateTime? expires = null*/)
+    {
+        var generationDate = DateTime.UtcNow;
+        var jwt = new JwtSecurityToken(
+            user.Id.ToString(),
+            audience,
+            notBefore: generationDate,
+            expires: /*expires ?? */ generationDate.Add(_configuration.JwtDefaultLifetime),
             signingCredentials: new SigningCredentials(GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
         return new JwtSecurityTokenHandler().WriteToken(jwt);
@@ -48,5 +69,8 @@ public class JwtTokensService
         return validationResult.IsValid;
     }
 
-    public JwtSecurityToken ParseToken(string jwtBase64) => new(jwtBase64);
+    public JwtSecurityToken ParseToken(string jwtBase64)
+    {
+        return new JwtSecurityToken(jwtBase64);
+    }
 }

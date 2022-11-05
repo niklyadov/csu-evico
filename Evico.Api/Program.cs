@@ -1,11 +1,9 @@
-using System.Text.Json;
 using Evico.Api;
 using Evico.Api.QueryBuilder;
 using Evico.Api.Services;
 using Evico.Api.Services.Auth;
 using Evico.Api.UseCases.Event;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 const string allowAnyCorsOrigin = "Allow any";
 
@@ -17,6 +15,9 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("Default"),
         b => b.MigrationsAssembly("Evico.Api")));
+
+builder.Services.Configure<JwtTokensServiceConfiguration>(builder.Configuration.GetSection("JwtTokensService"));
+builder.Services.Configure<VkAuthServiceConfiguration>(builder.Configuration.GetSection("VkAuthService"));
 
 builder.Services.AddScoped<EventQueryBuilder>();
 builder.Services.AddScoped<PlaceQueryBuilder>();

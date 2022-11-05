@@ -22,12 +22,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Evico\Evico.csproj" />
+        <ProjectReference Include="..\Evico\Evico.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="InputModels\Profile" />
-      <Folder Include="UseCases\Profile" />
+        <Folder Include="InputModels\Profile" />
+        <Folder Include="UseCases\Profile" />
     </ItemGroup>
 
 </Project>
