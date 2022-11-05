@@ -7,10 +7,10 @@ export default function AuthVkCallback() {
     const urlParams = new URLSearchParams(window.location.search);
     //const host = 'https://api.csu-evico.ru:61666/' //todo: вынести в конфиг
     const host = 'https://localhost:61666/'
-    
+    const redirectUrl = 'https://web.csu-evico.ru:62666/auth/vk-callback'
     
     try {
-        fetch(`${host}auth/vkGateway`, {
+        fetch(`${host}auth/vkGateway?redirectUrl=${redirectUrl}`, {
             method: 'POST',
             mode: 'cors',
             headers: {
