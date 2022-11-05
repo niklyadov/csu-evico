@@ -13,8 +13,8 @@ public class AuthController : BaseController
     }
     
     [HttpPost("vkGateway")]
-    public async Task<ActionResult<BearerRefreshTokenPair>> VkGateway([FromBody] string accessToken)
+    public async Task<ActionResult<BearerRefreshTokenPair>> VkGateway([FromBody] string accessToken, [FromQuery] String redirectUrl)
     {
-        return await _vkAuthService.AuthAsync(accessToken);
+        return await _vkAuthService.AuthAsync(accessToken, redirectUrl);
     }
 }
