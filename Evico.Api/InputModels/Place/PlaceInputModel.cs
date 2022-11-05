@@ -1,4 +1,4 @@
-namespace Evico.Api.InputModels;
+namespace Evico.Api.InputModels.Place;
 
 public class PlaceInputModel
 {

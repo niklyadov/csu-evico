@@ -25,4 +25,9 @@
       <ProjectReference Include="..\Evico\Evico.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="InputModels\Profile" />
+      <Folder Include="UseCases\Profile" />
+    </ItemGroup>
+
 </Project>

@@ -1,8 +1,11 @@
+using System.Text.Json;
 using Evico.Api;
 using Evico.Api.QueryBuilder;
 using Evico.Api.Services;
 using Evico.Api.Services.Auth;
+using Evico.Api.UseCases.Event;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 const string allowAnyCorsOrigin = "Allow any";
 
@@ -21,8 +24,17 @@ builder.Services.AddScoped<ProfileQueryBuilder>();
 
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<PlaceService>();
+builder.Services.AddScoped<ProfileService>();
+
+builder.Services.AddScoped<AddEventUseCase>();
+builder.Services.AddScoped<AddEventUseCase>();
+builder.Services.AddScoped<GetEventsUseCase>();
+builder.Services.AddScoped<GetEventByIdUseCase>();
+builder.Services.AddScoped<UpdateEventByIdUseCase>();
+builder.Services.AddScoped<DeleteEventByIdUseCase>();
 
 builder.Services.AddScoped<JwtTokensService>();
+builder.Services.AddScoped<JwtAuthService>();
 builder.Services.AddScoped<VkAuthService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
