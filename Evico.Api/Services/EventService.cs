@@ -17,7 +17,7 @@ public class EventService
     private EventQueryBuilder _eventQueryBuilder => new(_context);
     private PlaceQueryBuilder _placeQueryBuilder => new(_context);
 
-    public async Task<Result<EventRecord>> AddAsync(AddEventInputModel addEventInputModel)
+    public async Task<Result<EventRecord>> AddAsync(AddEventInputModel addEventInputModel, ProfileRecord eventOwner)
     {
         // todo: add category to event
         return await Result.Try(async () =>
@@ -38,7 +38,8 @@ public class EventService
                 End = addEventInputModel.End,
                 PlaceId = addEventInputModel.PlaceId,
                 Name = addEventInputModel.Name,
-                Description = addEventInputModel.Description
+                Description = addEventInputModel.Description,
+                Owner = eventOwner
             };
 
             return await _eventQueryBuilder.AddAsync(eventRecord);
@@ -82,6 +83,19 @@ public class EventService
 
             return await _eventQueryBuilder
                 .DeleteAsync(eventWithId);
+        });
+    }
+    
+    public async Task<Result<EventRecord>> DeleteAsync(EventRecord eventRecord)
+    {
+        return await Result.Try(async () =>
+        {
+            if (eventRecord.IsDeleted)
+                throw new InvalidOperationException(
+                    $"Event with id {eventRecord.Id} was already deleted at {eventRecord.DeletedDateTime.ToString()}");
+
+            return await _eventQueryBuilder
+                .DeleteAsync(eventRecord);
         });
     }
 
@@ -129,5 +143,37 @@ public class EventService
 
             return await _eventQueryBuilder.UpdateAsync(eventRecord);
         });
+    }
+
+    public Result CanCreate(ProfileRecord userRecord)
+    {
+        return Result.Ok();
+    }
+    
+    public Result CanView(EventRecord eventRecord, ProfileRecord userRecord)
+    {
+        return Result.Ok();
+    }
+    
+    public Result CanDelete(EventRecord eventRecord, ProfileRecord userRecord)
+    {
+        if (eventRecord.IsDeleted)
+            return Result.Fail($"Event with id: {eventRecord.Id} was already deleted");
+
+        // todo добавить проверку на роль. модератор тоже должен уметь удалять события
+        
+        return Result.OkIf(eventRecord.OwnerId == userRecord.Id, 
+            "Only owner or moderator can delete this event");
+    }
+    
+    public Result CanUpdate(EventRecord eventRecord, ProfileRecord userRecord)
+    {
+        if (eventRecord.IsDeleted)
+            return Result.Fail($"Event with id: {eventRecord.Id} was already deleted");
+
+        // todo добавить проверку на роль. модератор тоже должен уметь удалять обновлять
+        
+        return Result.OkIf(eventRecord.OwnerId == userRecord.Id, 
+            "Only owner or moderator can update this event");
     }
 }

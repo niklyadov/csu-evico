@@ -29,7 +29,7 @@ public class EventController : BaseController
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        return await _addEventUseCase.AddEventAsync(addEventModel);
+        return await _addEventUseCase.AddEventAsync(addEventModel, User);
     }
 
     [HttpGet]
@@ -45,7 +45,7 @@ public class EventController : BaseController
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        return await _getEventByIdUseCase.GetById(eventId);
+        return await _getEventByIdUseCase.GetById(eventId, User);
     }
 
     [HttpPut]
@@ -53,7 +53,7 @@ public class EventController : BaseController
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        return await _updateEventByIdUseCase.Update(updateEventModel);
+        return await _updateEventByIdUseCase.Update(updateEventModel, User);
     }
 
     [HttpDelete("{eventId}")]
@@ -61,6 +61,6 @@ public class EventController : BaseController
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        return await _deleteEventByIdUseCase.DeleteById(eventId);
+        return await _deleteEventByIdUseCase.DeleteById(eventId, User);
     }
 }

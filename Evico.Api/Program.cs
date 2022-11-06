@@ -53,10 +53,10 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey
             (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
-        ValidateIssuer = false,
-        ValidateAudience = false,
+        ValidateIssuer = true,
+        ValidateAudience = true,
         ValidateLifetime = false,
-        ValidateIssuerSigningKey = false
+        ValidateIssuerSigningKey = true
     };
     
     options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Name;
