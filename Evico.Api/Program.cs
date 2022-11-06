@@ -64,6 +64,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<JwtTokensService>();
 builder.Services.AddScoped<JwtAuthService>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<VkAuthService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

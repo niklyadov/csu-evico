@@ -1,4 +1,3 @@
-using Evico.Api.Entity;
 using Evico.Api.Services.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +19,5 @@ public class AuthController : BaseController
         [FromQuery] string redirectUrl)
     {
         return await _vkAuthService.AuthAsync(accessToken, redirectUrl);
-    }
-
-    [HttpGet]
-    [Authorize]
-    public async Task<ActionResult<ProfileRecord>> GetCurrentProfile()
-    {
-        return Ok(User.Identity);
     }
 }
