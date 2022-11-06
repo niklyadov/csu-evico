@@ -4,6 +4,8 @@ using Evico.Api;
 using Evico.Api.QueryBuilder;
 using Evico.Api.Services;
 using Evico.Api.Services.Auth;
+using Evico.Api.Services.Auth.Vk;
+using Evico.Api.UseCases.Auth;
 using Evico.Api.UseCases.Event;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +33,9 @@ builder.Services.AddScoped<ProfileQueryBuilder>();
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<PlaceService>();
 builder.Services.AddScoped<ProfileService>();
+
+builder.Services.AddScoped<AuthViaVkUseCase>();
+builder.Services.AddScoped<CreateNewTokensUseCase>();
 
 builder.Services.AddScoped<AddEventUseCase>();
 builder.Services.AddScoped<AddEventUseCase>();
