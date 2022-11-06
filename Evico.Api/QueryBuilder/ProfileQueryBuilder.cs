@@ -14,4 +14,11 @@ public class ProfileQueryBuilder : QueryBuilder<ProfileRecord, ApplicationContex
 
         return this;
     }
+    
+    public ProfileQueryBuilder WithUsername(String username)
+    {
+        Query = Query.Where(x => x.Name == username);
+
+        return this;
+    }
 }

@@ -9,9 +9,10 @@ public record ProfileRecord : User
     public long? VkUserId { get; set; }
     public DateTime? BirthDate { get; set; }
 
-    //public virtual List<EventRecord> OwnEvents { get; set; }
+    public virtual List<EventRecord> OwnEvents { get; set; } = new();
     public virtual List<EventRecord> OrganizerEvents { get; set; } = new();
-
     public virtual List<EventRecord> ParticipantEvents { get; set; } = new();
-    //public virtual List<PlaceRecord> OwnPlaces { get; set; }
+    public virtual List<PlaceRecord> OwnPlaces { get; set; } = new();
+    public virtual List<EventReviewRecord> OwnEventReviews { get; set; } = new();
+    public virtual List<PlaceReviewRecord> OwnPlaceReviews { get; set; } = new();
 }

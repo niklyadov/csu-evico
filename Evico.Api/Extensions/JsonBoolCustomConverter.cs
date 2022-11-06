@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Evico.Api;
+namespace Evico.Api.Extensions;
 
 public class JsonBoolCustomConverter : JsonConverter<bool>
 {
@@ -18,7 +18,7 @@ public class JsonBoolCustomConverter : JsonConverter<bool>
             JsonTokenType.False => false,
             JsonTokenType.String => bool.TryParse(reader.GetString(), out var b) ? b : throw new JsonException(),
             JsonTokenType.Number => reader.TryGetInt64(out var l) ? Convert.ToBoolean(l) :
-                reader.TryGetDouble(out var d) ? Convert.ToBoolean(d) : false,
+                reader.TryGetDouble(out var d) && Convert.ToBoolean(d),
             _ => throw new JsonException()
         };
     }

@@ -5,9 +5,9 @@ namespace Evico.Api.Extensions;
 
 public static class FluentResultErrorGetReport
 {
-    public static string GetReport<T>(this Result<T> result)
+    public static string GetReport<T>(this Result<T> result, bool formatted = true)
     {
-        var report = new ErrorReport<T?>
+        var report = new ErrorReportTyped<T?>
         {
             Errors = result.Errors,
             Reasons = result.Reasons,
@@ -15,16 +15,43 @@ public static class FluentResultErrorGetReport
             ResultValue = result.ValueOrDefault
         };
 
-        return JsonConvert.SerializeObject(report, Formatting.Indented);
+        return JsonConvert.SerializeObject(report, formatted ? Formatting.Indented : Formatting.None);
+    }
+    
+    public static string GetReport(this Result result, bool formatted = true)
+    {
+        var report = new ErrorReport
+        {
+            Errors = result.Errors,
+            Reasons = result.Reasons
+        };
+
+        return JsonConvert.SerializeObject(report, formatted ? Formatting.Indented : Formatting.None);
+    }
+
+    public static ReportException GetReportException<T>(this Result<T> result)
+    {
+        return new ReportException(GetReport(result, false).Replace('"', '\''));
     }
 }
 
-internal record ErrorReport<T>
+internal record ErrorReport
 {
     public List<IError> Errors { get; set; } = new();
     public List<IReason> Reasons { get; set; } = new();
-    public Type? ResultType { get; set; }
-    public T? ResultValue { get; set; }
     public DateTime GeneratedAt { get; set; } = DateTime.Now;
     public DateTime GeneratedAtUtc { get; set; } = DateTime.UtcNow;
+}
+
+internal record ErrorReportTyped<T> : ErrorReport
+{
+    public Type? ResultType { get; set; }
+    public T? ResultValue { get; set; }
+}
+
+public class ReportException : Exception
+{
+    public ReportException(String message): base(message)
+    {
+    }
 }

@@ -43,8 +43,8 @@ public class VkAuthService
             userRegistered = true;
         }
 
-        var barerToken = _tokensService.GenerateBearerTokenForUser(vkUser);
-        var refreshToken = _tokensService.GenerateRefreshTokenForUser(vkUser);
+        var barerToken = _tokensService.CreateAccessTokenForUser(vkUser);
+        var refreshToken = _tokensService.CreateRefreshTokenForUser(vkUser);
         var tokens = new BearerRefreshTokenPair(barerToken, refreshToken);
 
         if (userRegistered)

@@ -1,4 +1,5 @@
 using Evico.Api.Services.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.Controllers;
@@ -13,6 +14,7 @@ public class AuthController : BaseController
     }
 
     [HttpPost("vkGateway")]
+    [AllowAnonymous]
     public async Task<ActionResult<BearerRefreshTokenPair>> VkGateway([FromBody] string accessToken,
         [FromQuery] string redirectUrl)
     {

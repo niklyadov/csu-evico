@@ -1,11 +1,13 @@
 using Evico.Api.InputModels.Place;
 using Evico.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public class PlaceController : BaseController
 {
     private readonly PlaceService _placeService;

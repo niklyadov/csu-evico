@@ -1,74 +1,69 @@
 using System.IdentityModel.Tokens.Jwt;
 using Evico.Api.Entity;
 using FluentResults;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Evico.Api.Services.Auth;
 
 public class JwtAuthService
 {
-    private const string Audience = "default";
+    private readonly ProfileService _profileService;
     private readonly JwtTokensService _jwtTokensService;
-    private readonly ProfileService _usersService;
-    private int? _userId;
 
-    public JwtAuthService(ProfileService usersService, JwtTokensService jwtTokensService)
+    public JwtAuthService(ProfileService profileService, JwtTokensService jwtTokensService)
     {
-        _usersService = usersService;
+        _profileService = profileService;
         _jwtTokensService = jwtTokensService;
     }
 
-    public Result InitInstanceWithToken(JwtSecurityToken token)
+    public Result<(String base64Token, JwtSecurityToken parsedToken)> GetSecurityTokenFromHttpRequest(HttpRequest httpRequest)
     {
         try
         {
-            if (!int.TryParse(token.Issuer, out var userId))
-                throw new Exception("The token is not attached on any user.");
+            var token = httpRequest.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(token) || !token.StartsWith("Bearer "))
+                throw new InvalidOperationException("Bearer Token is not passed.");
 
-            _userId = userId;
+            var tokenBody = token.Substring(7);
 
-            return Result.Ok();
+            var parsedToken = _jwtTokensService.ParseToken(tokenBody);
+            if (parsedToken == null)
+                throw new SecurityTokenValidationException("Invalid token provided. Can't parse token. Parsed token is null");
+
+            return Result.Ok((tokenBody, parsedToken));
         }
-        catch (Exception ex)
+        catch(Exception exception)
         {
-            return Result.Fail(ex.Message);
+            return Result.Fail(new Error("Some error with parsing JWT token")
+                .CausedBy(exception));
         }
     }
-
-
-    public async Task<Result<ProfileRecord>> GetCurrentUser()
+    
+    public async Task<Result<ProfileRecord>> GetCurrentUserFromToken(JwtSecurityToken parsedToken)
     {
         try
         {
-            if (!_userId.HasValue || _userId.Value == 0)
-                throw new Exception("User id is not assigned!");
-
-            var userByUsernameResult = await _usersService.GetByIdAsync(_userId.Value);
-
-            if (userByUsernameResult.IsFailed)
-                return Result.Fail(userByUsernameResult.Errors);
-
-            var user = userByUsernameResult.Value;
-
-            return Result.Ok(user);
+            if (!long.TryParse(parsedToken.Issuer, out long userId))
+                throw new SecurityTokenInvalidIssuerException("Issuer could not be parsed");
+            
+            var userWithIdResult = await _profileService.GetByIdAsync(userId);
+            
+            if (userWithIdResult.IsFailed)
+            {
+                return Result.Fail(new Error($"Retrieve one user with id {userId} is failed")
+                    .CausedBy(userWithIdResult.Errors));
+            }
+            
+            return Result.Ok(userWithIdResult.Value);
         }
-        catch (Exception ex)
+        catch (SecurityTokenInvalidIssuerException e)
         {
-            return Result.Fail(ex.Message);
+            return Result.Fail(new Error("Invalid issuer").CausedBy(e));
+        }
+        catch (Exception exception)
+        {
+            return Result.Fail(new Error("Some error with getting current user from JWT token")
+                .CausedBy(exception));
         }
     }
-
-    // private string CalculateHash(string password)
-    // {
-    //     var bytes = Encoding.UTF8.GetBytes(password);
-    //     var hashedBytes = SHA256.HashData(bytes);
-    //
-    //     return Encoding.UTF8.GetString(hashedBytes);
-    // }
-    //
-    // private string GetHashForUser(ProfileRecord user)
-    // {
-    //     var expiresAt = DateTime.UtcNow.AddDays(1);
-    //
-    //     return _jwtTokensService.GenerateNewTokenForUser(user, Audience, expiresAt);
-    // }
 }
