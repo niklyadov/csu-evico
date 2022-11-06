@@ -1,4 +1,5 @@
 using Evico.Api.Services.Auth;
+using Evico.Api.UseCases.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,11 +7,13 @@ namespace Evico.Api.Controllers;
 
 public class AuthController : BaseController
 {
-    private readonly VkAuthService _vkAuthService;
+    private readonly AuthViaVkUseCase _authViaVkUseCase;
+    private readonly CreateNewTokensUseCase _createNewTokensUseCase;
 
-    public AuthController(VkAuthService vkAuthService)
+    public AuthController(AuthViaVkUseCase authViaVkUseCase, CreateNewTokensUseCase createNewTokensUseCase)
     {
-        _vkAuthService = vkAuthService;
+        _authViaVkUseCase = authViaVkUseCase;
+        _createNewTokensUseCase = createNewTokensUseCase;
     }
 
     [HttpPost("vkGateway")]
@@ -18,6 +21,13 @@ public class AuthController : BaseController
     public async Task<ActionResult<BearerRefreshTokenPair>> VkGateway([FromBody] string accessToken,
         [FromQuery] string redirectUrl)
     {
-        return await _vkAuthService.AuthAsync(accessToken, redirectUrl);
+        return await _authViaVkUseCase.AuthViaVk(accessToken, redirectUrl);
+    }
+    
+    [HttpPost("createNewToken")]
+    [AllowAnonymous]
+    public async Task<ActionResult<BearerRefreshTokenPair>> CreateNewToken([FromQuery] String username)
+    {
+        return await _createNewTokensUseCase.CreateNewToken(username);
     }
 }

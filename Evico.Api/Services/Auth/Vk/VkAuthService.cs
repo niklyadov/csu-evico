@@ -1,99 +1,85 @@
 using System.Globalization;
 using System.Text.Json;
 using Evico.Api.Entity;
-using Evico.Api.QueryBuilder;
-using Microsoft.AspNetCore.Mvc;
+using FluentResults;
 using Microsoft.Extensions.Options;
 
-namespace Evico.Api.Services.Auth;
+namespace Evico.Api.Services.Auth.Vk;
 
 public class VkAuthService
 {
     private readonly VkAuthServiceConfiguration _configuration;
-    private readonly ProfileQueryBuilder _profileQb;
-    private readonly JwtTokensService _tokensService;
+    private readonly ProfileService _profileService;
 
-    public VkAuthService(JwtTokensService tokensService,
-        ProfileQueryBuilder profileQb,
+    public VkAuthService(ProfileService profileService, 
         IOptions<VkAuthServiceConfiguration> configuration)
     {
-        _tokensService = tokensService;
-        _profileQb = profileQb;
+        _profileService = profileService;
         _configuration = configuration.Value;
     }
 
-    public async Task<ActionResult<BearerRefreshTokenPair>> AuthAsync(string code, string redirectUrl)
+    public async Task<Result<ProfileRecord>> RegisterOrGetExistingProfileAsync(VkProfileInfo vkProfileInfo)
     {
-        var accessTokenResponse = await GetAccessTokenFromCode(code, redirectUrl);
-
-        if (!string.IsNullOrEmpty(accessTokenResponse.Error))
-            throw new InvalidDataException(
-                $"{accessTokenResponse.Error}, {accessTokenResponse.ErrorDescription ?? "no-description"}");
-
-        if (string.IsNullOrEmpty(accessTokenResponse.AccessToken))
-            throw new InvalidOperationException("Access token is empty");
-
-        var vkProfileInfo = await GetVkProfileInfoAsync(accessTokenResponse.AccessToken);
-        var vkUser = await _profileQb.WithVkId(vkProfileInfo.UserId).FirstOrDefaultAsync();
-        var userRegistered = false;
-
-        if (vkUser == null)
+        return await Result.Try(async () =>
         {
-            vkUser = await RegisterVkUser(vkProfileInfo);
-            userRegistered = true;
-        }
+            var vkUser = await _profileService.GetByVkIdAsync(vkProfileInfo.UserId);
 
-        var barerToken = _tokensService.CreateAccessTokenForUser(vkUser);
-        var refreshToken = _tokensService.CreateRefreshTokenForUser(vkUser);
-        var tokens = new BearerRefreshTokenPair(barerToken, refreshToken);
-
-        if (userRegistered)
-            return new ObjectResult(tokens) {StatusCode = StatusCodes.Status201Created};
-
-        return new OkObjectResult(tokens);
+            return vkUser.ValueOrDefault ?? (await RegisterVkUser(vkProfileInfo)).ValueOrDefault;
+        });
     }
-
-    private async Task<VkProfileInfo> GetVkProfileInfoAsync(string accessToken,
+    
+    public async Task<Result<VkProfileInfo>> GetVkProfileInfoAsync(string accessToken,
         string url = "https://api.vk.com/method/users.get")
     {
-        var content = new FormUrlEncodedContent(new[]
+        return await Result.Try(async () =>
         {
-            new KeyValuePair<string, string>("fields", "first_name,last_name,bdate,domain,id,has_photo,photo_50,sex"),
-            new KeyValuePair<string, string>("access_token", accessToken),
-            new KeyValuePair<string, string>("v", "5.131")
+            var content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("fields",
+                    "first_name,last_name,bdate,domain,id,has_photo,photo_50,sex"),
+                new KeyValuePair<string, string>("access_token", accessToken),
+                new KeyValuePair<string, string>("v", "5.131")
+            });
+
+            using var response = await new HttpClient().PostAsync(url, content).ConfigureAwait(false);
+
+            var responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var responseVkProfileInfo = JsonSerializer.Deserialize<VkProfileInfoResponse>(responseString);
+
+            if (responseVkProfileInfo == null)
+                throw new InvalidOperationException("Can't parse vk response");
+
+            return responseVkProfileInfo.Response.Single();
         });
-
-        using var response = await new HttpClient().PostAsync(url, content).ConfigureAwait(false);
-
-        var responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        var responseVkProfileInfo = JsonSerializer.Deserialize<VkProfileInfoResponse>(responseString);
-
-        if (responseVkProfileInfo == null)
-            throw new InvalidOperationException("Can't parse vk response");
-
-        return responseVkProfileInfo.Response.Single();
     }
 
-    private async Task<VkAccessTokenResponse> GetAccessTokenFromCode(string code, string redirectUri)
+    public async Task<Result<String>> GetAccessTokenFromCode(string code, string redirectUri)
     {
-        var clientId = _configuration.ApplicationClientId;
-        var clientSecret = _configuration.ApplicationSecret;
+        return await Result.Try(async () =>
+        {
+            var clientId = _configuration.ApplicationClientId;
+            var clientSecret = _configuration.ApplicationSecret;
 
-        var url =
-            $"https://oauth.vk.com/access_token?client_id={clientId}&client_secret={clientSecret}&code={code}&redirect_uri={redirectUri}";
+            var url =
+                $"https://oauth.vk.com/access_token?client_id={clientId}&client_secret={clientSecret}&code={code}&redirect_uri={redirectUri}";
 
-        using var response = await new HttpClient().GetAsync(url).ConfigureAwait(false);
+            using var response = await new HttpClient().GetAsync(url).ConfigureAwait(false);
 
-        var responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        var responseAccessToken = JsonSerializer.Deserialize<VkAccessTokenResponse>(responseString);
+            var responseString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var responseAccessToken = JsonSerializer.Deserialize<VkAccessTokenResponse>(responseString);
 
-        if (responseAccessToken == null)
-            throw new InvalidOperationException("Can't parse vk response");
+            if (responseAccessToken == null)
+                throw new InvalidOperationException("Can't parse vk response");
 
-        return responseAccessToken;
+            if (String.IsNullOrEmpty(responseAccessToken.AccessToken))
+                throw new InvalidOperationException($"Error with receive access token: {responseAccessToken.Error}. " +
+                                                    $"Description: {responseAccessToken.ErrorDescription} ");
+
+            return responseAccessToken.AccessToken!;
+        });
     }
 
-    private async Task<ProfileRecord> RegisterVkUser(VkProfileInfo vkProfileInfo)
+    private async Task<Result<ProfileRecord>> RegisterVkUser(VkProfileInfo vkProfileInfo)
     {
         ProfileRecord newUser = new()
         {
@@ -116,6 +102,6 @@ public class VkAuthService
             //vkProfileInfo.PhotoUri;
         }
 
-        return await _profileQb.AddAsync(newUser);
+        return await _profileService.AddAsync(newUser);
     }
 }

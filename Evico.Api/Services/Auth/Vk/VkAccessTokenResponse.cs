@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Evico.Api.Services.Auth;
+namespace Evico.Api.Services.Auth.Vk;
 
 public class VkAccessTokenResponse
 {
