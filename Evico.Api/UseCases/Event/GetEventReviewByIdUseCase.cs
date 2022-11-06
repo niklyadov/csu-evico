@@ -26,7 +26,19 @@ public class GetEventReviewByIdUseCase
         if (currentUserResult.IsFailed)
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
+
+        var eventReviewByIdResult = await _eventReviewService.GetById(reviewId);
+        if (eventReviewByIdResult.IsFailed)
+            return new BadRequestObjectResult(eventReviewByIdResult.GetReport());
+        var eventReview = eventReviewByIdResult.Value;
         
-        throw new NotImplementedException();
+        var canViewEventReviewResult = _eventReviewService.CanView(eventReview, currentUser);
+        if (canViewEventReviewResult.IsFailed)
+            return new ObjectResult(canViewEventReviewResult.GetReport())
+            {
+                StatusCode = StatusCodes.Status403Forbidden
+            };
+
+        return new OkObjectResult(eventReview);
     }
 }

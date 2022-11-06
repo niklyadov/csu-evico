@@ -26,7 +26,27 @@ public class UpdateEventReviewUseCase
         if (currentUserResult.IsFailed)
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
-        
-        throw new NotImplementedException();
+
+        var eventReviewByIdResult = await _eventReviewService.GetById(inputModel.Id);
+        if (eventReviewByIdResult.IsFailed)
+            return new BadRequestObjectResult(eventReviewByIdResult.GetReport());
+        var eventReview = eventReviewByIdResult.Value;
+
+        var canUpdateEventReviewResult = _eventReviewService.CanUpdate(eventReview, currentUser);
+        if (canUpdateEventReviewResult.IsFailed)
+            return new ObjectResult(canUpdateEventReviewResult.GetReport())
+            {
+                StatusCode = StatusCodes.Status403Forbidden
+            };
+
+        eventReview.Comment = inputModel.Comment;
+        eventReview.Rate = inputModel.Rate;
+        eventReview.Photos = inputModel.Photos;
+
+        var updateEventResult = await _eventReviewService.Update(eventReview);
+        if (updateEventResult.IsFailed)
+            return new BadRequestObjectResult(updateEventResult.GetReport());
+
+        return new OkObjectResult(updateEventResult.Value);
     }
 }

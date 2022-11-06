@@ -26,7 +26,23 @@ public class DeleteEventReviewByIdUseCase
         if (currentUserResult.IsFailed)
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
-        
-        throw new NotImplementedException();
+
+        var eventReviewByIdResult = await _eventReviewService.GetById(reviewId);
+        if (eventReviewByIdResult.IsFailed)
+            return new BadRequestObjectResult(eventReviewByIdResult.GetReport());
+        var eventReview = eventReviewByIdResult.Value;
+
+        var canDeleteEventReviewResult = _eventReviewService.CanDelete(eventReview, currentUser);
+        if (canDeleteEventReviewResult.IsFailed)
+            return new ObjectResult(canDeleteEventReviewResult.GetReport())
+            {
+                StatusCode = StatusCodes.Status403Forbidden
+            };
+
+        var deleteEventResult = await _eventReviewService.Delete(eventReview);
+        if (deleteEventResult.IsFailed)
+            return new BadRequestObjectResult(deleteEventResult.GetReport());
+
+        return new OkObjectResult(deleteEventResult.Value);
     }
 }

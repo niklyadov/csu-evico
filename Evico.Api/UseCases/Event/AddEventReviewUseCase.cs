@@ -34,13 +34,24 @@ public class AddEventReviewUseCase
                 eventWithIdResult.GetReport());
         var eventWithId = eventWithIdResult.Value;
         
-        var canCreateReviewResult = _eventReviewService.CanCreate(eventWithId, currentUser);
-        if (canCreateReviewResult.IsFailed)
-            return new ObjectResult(canCreateReviewResult.GetReport())
+        var canCreateEventReviewResult = _eventReviewService.CanCreate(eventWithId, currentUser);
+        if (canCreateEventReviewResult.IsFailed)
+            return new ObjectResult(canCreateEventReviewResult.GetReport())
             {
                 StatusCode = StatusCodes.Status403Forbidden
             };
-        
-        throw new NotImplementedException();
+
+        var createdReviewResult = await _eventReviewService.Add(new EventReviewRecord
+        {
+            Comment = inputModel.Comment,
+            Author = currentUser,
+            Rate = inputModel.Rate,
+            Photos = inputModel.Photos
+        });
+        if (createdReviewResult.IsFailed)
+            return new BadRequestObjectResult(
+                eventWithIdResult.GetReport());
+
+        return new OkObjectResult(createdReviewResult.Value);
     }
 }
