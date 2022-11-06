@@ -19,7 +19,7 @@ public sealed class ApplicationContext : DbContext
 
     public DbSet<ReviewRecord> Reviews { get; set; } = default!;
     public DbSet<ProfileRecord> Profiles { get; set; } = default!;
-    public DbSet<ExternalPhoto> Photos { get; set; } = default!;
+    public DbSet<ExternalPhotoRecord> Photos { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -63,6 +63,10 @@ public sealed class ApplicationContext : DbContext
             .HasMany(x => x.Categories)
             .WithMany(y => y.Places);
 
+        modelBuilder.Entity<ProfileRecord>()
+            .HasIndex(x => x.Name)
+            .IsUnique();
+        
         base.OnModelCreating(modelBuilder);
     }
 }

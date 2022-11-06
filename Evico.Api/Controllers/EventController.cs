@@ -1,6 +1,7 @@
 using Evico.Api.Entity;
 using Evico.Api.InputModels.Event;
 using Evico.Api.UseCases.Event;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.Controllers;
@@ -13,15 +14,25 @@ public class EventController : BaseController
     private readonly DeleteEventByIdUseCase _deleteEventByIdUseCase;
     private readonly GetEventByIdUseCase _getEventByIdUseCase;
     private readonly GetEventsUseCase _getEventsUseCase;
-    private readonly UpdateEventByIdUseCase _updateEventByIdUseCase;
+    private readonly UpdateEventUseCase _updateEventUseCase;
+    private readonly AddEventReviewUseCase _addEventReviewUseCase;
+    private readonly GetEventReviewByIdUseCase _getEventReviewByIdUseCase;
+    private readonly GetEventReviewsUseCase _getEventReviewsUseCase;
+    private readonly UpdateEventReviewUseCase _updateEventReviewUseCase;
+    private readonly DeleteEventReviewByIdUseCase _deleteEventReviewByIdUseCase;
 
     public EventController(IServiceProvider services)
     {
         _addEventUseCase = services.GetRequiredService<AddEventUseCase>();
         _getEventsUseCase = services.GetRequiredService<GetEventsUseCase>();
         _getEventByIdUseCase = services.GetRequiredService<GetEventByIdUseCase>();
-        _updateEventByIdUseCase = services.GetRequiredService<UpdateEventByIdUseCase>();
+        _updateEventUseCase = services.GetRequiredService<UpdateEventUseCase>();
         _deleteEventByIdUseCase = services.GetRequiredService<DeleteEventByIdUseCase>();
+        _addEventReviewUseCase = services.GetRequiredService<AddEventReviewUseCase>();
+        _getEventReviewByIdUseCase = services.GetRequiredService<GetEventReviewByIdUseCase>();
+        _getEventReviewsUseCase = services.GetRequiredService<GetEventReviewsUseCase>();
+        _updateEventReviewUseCase = services.GetRequiredService<UpdateEventReviewUseCase>();
+        _deleteEventReviewByIdUseCase = services.GetRequiredService<DeleteEventReviewByIdUseCase>();
     }
 
     [HttpPost]
@@ -29,7 +40,7 @@ public class EventController : BaseController
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        return await _addEventUseCase.AddEventAsync(addEventModel);
+        return await _addEventUseCase.AddAsync(addEventModel, User);
     }
 
     [HttpGet]
@@ -45,7 +56,7 @@ public class EventController : BaseController
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        return await _getEventByIdUseCase.GetById(eventId);
+        return await _getEventByIdUseCase.GetByIdAsync(eventId, User);
     }
 
     [HttpPut]
@@ -53,7 +64,7 @@ public class EventController : BaseController
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        return await _updateEventByIdUseCase.Update(updateEventModel);
+        return await _updateEventUseCase.UpdateAsync(updateEventModel, User);
     }
 
     [HttpDelete("{eventId}")]
@@ -61,6 +72,47 @@ public class EventController : BaseController
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        return await _deleteEventByIdUseCase.DeleteById(eventId);
+        return await _deleteEventByIdUseCase.DeleteByIdAsync(eventId, User);
+    }
+
+    [HttpPost("{eventId}/review")]
+    public async Task<ActionResult<EventReviewRecord>> AddReview([FromRoute] long eventId, [FromBody] AddEventReviewInputModel inputModel)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        return await _addEventReviewUseCase.AddAsync(eventId, inputModel, User);
+    }
+
+    [HttpGet("{eventId}/review/{reviewId}")]
+    public async Task<ActionResult<EventReviewRecord>> GetReviewById([FromRoute] long eventId, [FromRoute] long reviewId)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        return await _getEventReviewByIdUseCase.GetByIdAsync(eventId, reviewId, User);
+    }
+    
+    [HttpGet("{eventId}/review")]
+    public async Task<ActionResult<List<EventReviewRecord>>> GetReviews([FromRoute] long eventId)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        return await _getEventReviewsUseCase.GetAllAsync(eventId);
+    }
+    
+    [HttpPut("{eventId}/review")]
+    public async Task<ActionResult<EventReviewRecord>> UpdateReview([FromRoute] long eventId, [FromBody] UpdateEventReviewInputModel inputModel)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        return await _updateEventReviewUseCase.UpdateAsync(eventId, inputModel, User);
+    }
+    
+    
+    [HttpDelete("{eventId}/review/{reviewId}")]
+    public async Task<ActionResult<EventReviewRecord>> DeleteReview([FromRoute] long eventId, [FromRoute] long reviewId)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        return await _deleteEventReviewByIdUseCase.DeleteByIdAsync(eventId, reviewId, User);
     }
 }

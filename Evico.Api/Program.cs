@@ -29,10 +29,14 @@ builder.Services.Configure<VkAuthServiceConfiguration>(builder.Configuration.Get
 builder.Services.AddScoped<EventQueryBuilder>();
 builder.Services.AddScoped<PlaceQueryBuilder>();
 builder.Services.AddScoped<ProfileQueryBuilder>();
+builder.Services.AddScoped<EventReviewQueryBuilder>();
+builder.Services.AddScoped<ExternalPhotoQueryBuilder>();
 
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<PlaceService>();
 builder.Services.AddScoped<ProfileService>();
+builder.Services.AddScoped<ExternalPhotoService>();
+builder.Services.AddScoped<EventReviewService>();
 
 builder.Services.AddScoped<AuthViaVkUseCase>();
 builder.Services.AddScoped<CreateNewTokensUseCase>();
@@ -41,8 +45,14 @@ builder.Services.AddScoped<AddEventUseCase>();
 builder.Services.AddScoped<AddEventUseCase>();
 builder.Services.AddScoped<GetEventsUseCase>();
 builder.Services.AddScoped<GetEventByIdUseCase>();
-builder.Services.AddScoped<UpdateEventByIdUseCase>();
+builder.Services.AddScoped<UpdateEventUseCase>();
 builder.Services.AddScoped<DeleteEventByIdUseCase>();
+
+builder.Services.AddScoped<AddEventReviewUseCase>();
+builder.Services.AddScoped<GetEventReviewByIdUseCase>();
+builder.Services.AddScoped<GetEventReviewsUseCase>();
+builder.Services.AddScoped<UpdateEventReviewUseCase>();
+builder.Services.AddScoped<DeleteEventReviewByIdUseCase>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -58,10 +68,10 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey
             (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
-        ValidateIssuer = false,
-        ValidateAudience = false,
+        ValidateIssuer = true,
+        ValidateAudience = true,
         ValidateLifetime = false,
-        ValidateIssuerSigningKey = false
+        ValidateIssuerSigningKey = true
     };
     
     options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Name;
