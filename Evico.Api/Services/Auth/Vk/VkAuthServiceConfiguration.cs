@@ -1,4 +1,4 @@
-namespace Evico.Api.Services.Auth;
+namespace Evico.Api.Services.Auth.Vk;
 
 public class VkAuthServiceConfiguration
 {
