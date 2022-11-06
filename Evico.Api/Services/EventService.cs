@@ -17,31 +17,11 @@ public class EventService
     private EventQueryBuilder _eventQueryBuilder => new(_context);
     private PlaceQueryBuilder _placeQueryBuilder => new(_context);
 
-    public async Task<Result<EventRecord>> AddAsync(AddEventInputModel addEventInputModel, ProfileRecord eventOwner)
+    public async Task<Result<EventRecord>> AddAsync(EventRecord eventRecord)
     {
         // todo: add category to event
         return await Result.Try(async () =>
         {
-            var place = await _placeQueryBuilder
-                .WithId(addEventInputModel.PlaceId)
-                .FirstOrDefaultAsync();
-
-            if (place == null)
-                throw new InvalidOperationException($"Place cannot be null. Place id: {addEventInputModel.PlaceId}");
-
-            if (place.IsDeleted)
-                throw new InvalidOperationException($"Place with id {addEventInputModel.PlaceId} was deleted");
-
-            var eventRecord = new EventRecord
-            {
-                Start = addEventInputModel.Start,
-                End = addEventInputModel.End,
-                PlaceId = addEventInputModel.PlaceId,
-                Name = addEventInputModel.Name,
-                Description = addEventInputModel.Description,
-                Owner = eventOwner
-            };
-
             return await _eventQueryBuilder.AddAsync(eventRecord);
         });
     }
@@ -99,6 +79,7 @@ public class EventService
         });
     }
 
+    // todo: rewrite this
     public async Task<Result<EventRecord>> Update(UpdateEventInputModel updateEventModel)
     {
         // todo: add category to event
@@ -145,7 +126,7 @@ public class EventService
         });
     }
 
-    public Result CanCreate(ProfileRecord userRecord)
+    public Result CanCreate(PlaceRecord placeRecord, ProfileRecord userRecord)
     {
         return Result.Ok();
     }

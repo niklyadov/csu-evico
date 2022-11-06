@@ -12,11 +12,13 @@ public class AddEventUseCase : EventUseCase
 {
     private readonly EventService _eventService;
     private readonly AuthService _authService;
+    private readonly PlaceService _placeService;
 
-    public AddEventUseCase(EventService eventService, AuthService authService)
+    public AddEventUseCase(EventService eventService, AuthService authService, PlaceService placeService)
     {
         _eventService = eventService;
         _authService = authService;
+        _placeService = placeService;
     }
 
     public async Task<ActionResult<EventRecord>> AddAsync(AddEventInputModel addEventModel, ClaimsPrincipal userClaims)
@@ -26,15 +28,28 @@ public class AddEventUseCase : EventUseCase
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
 
-        var canCreateEventResult = _eventService.CanCreate(currentUser);
-        if (canCreateEventResult.IsFailed)
-            return new ObjectResult(canCreateEventResult.GetReport())
+        var placeWithIdResult = await _placeService.GetByIdAsync(addEventModel.PlaceId);
+        if (placeWithIdResult.IsFailed)
+            return new BadRequestObjectResult(placeWithIdResult.GetReport());
+
+        var canCreateResult = _eventService.CanCreate(placeWithIdResult.Value, currentUser);
+        if (canCreateResult.IsFailed)
+            return new ObjectResult(canCreateResult.GetReport())
             {
                 StatusCode = StatusCodes.Status403Forbidden
             };
 
-        var addEventResult = await _eventService.AddAsync(addEventModel, currentUser);
+        var eventRecord = new EventRecord
+        {
+            Start = addEventModel.Start,
+            End = addEventModel.End,
+            PlaceId = addEventModel.PlaceId,
+            Name = addEventModel.Name,
+            Description = addEventModel.Description,
+            Owner = currentUser
+        };
 
+        var addEventResult = await _eventService.AddAsync(eventRecord);
         if (addEventResult.IsFailed)
             return new BadRequestObjectResult(addEventResult.GetReport());
 
