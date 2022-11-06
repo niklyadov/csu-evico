@@ -63,6 +63,10 @@ public sealed class ApplicationContext : DbContext
             .HasMany(x => x.Categories)
             .WithMany(y => y.Places);
 
+        modelBuilder.Entity<ProfileRecord>()
+            .HasIndex(x => x.Name)
+            .IsUnique();
+        
         base.OnModelCreating(modelBuilder);
     }
 }

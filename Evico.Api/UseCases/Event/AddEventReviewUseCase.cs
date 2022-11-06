@@ -46,11 +46,12 @@ public class AddEventReviewUseCase
             Comment = inputModel.Comment,
             Author = currentUser,
             Rate = inputModel.Rate,
-            Photos = inputModel.Photos
+            Photos = inputModel.Photos,
+            Event = eventWithId
         });
         if (createdReviewResult.IsFailed)
             return new BadRequestObjectResult(
-                eventWithIdResult.GetReport());
+                createdReviewResult.GetReport());
 
         return new OkObjectResult(createdReviewResult.Value);
     }

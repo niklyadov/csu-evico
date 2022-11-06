@@ -12,7 +12,7 @@ public static class FluentResultErrorGetReport
             Errors = result.Errors,
             Reasons = result.Reasons,
             ResultType = typeof(T),
-            ResultValue = result.ValueOrDefault
+            //ResultValue = result.ValueOrDefault
         };
 
         return JsonConvert.SerializeObject(report, formatted ? Formatting.Indented : Formatting.None);
