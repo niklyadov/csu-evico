@@ -1,7 +1,6 @@
 using Evico.Api.Entity;
-using Evico.Api.Extensions;
-using Evico.Api.Filters;
 using Evico.Api.Services.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.Controllers;
@@ -16,6 +15,7 @@ public class AuthController : BaseController
     }
 
     [HttpPost("vkGateway")]
+    [AllowAnonymous]
     public async Task<ActionResult<BearerRefreshTokenPair>> VkGateway([FromBody] string accessToken,
         [FromQuery] string redirectUrl)
     {
@@ -23,14 +23,9 @@ public class AuthController : BaseController
     }
 
     [HttpGet]
-    [BearerTokenAuthAction]
+    [Authorize]
     public async Task<ActionResult<ProfileRecord>> GetCurrentProfile()
     {
-        var profileResult = await this.GetCurrentUserAsync();
-
-        if (profileResult.IsFailed)
-            return BadRequest(profileResult.GetReport());
-
-        return Ok(profileResult.Value);
+        return Ok(User.Identity);
     }
 }

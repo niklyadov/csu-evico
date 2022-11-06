@@ -6,7 +6,7 @@ public record PlaceRecord : EntityRecord
 
     public double LocationLongitude { get; set; } = default!;
 
-    //public ProfileRecord Owner { get; set; } = default!;
+    public ProfileRecord Owner { get; set; } = default!;
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public ExternalPhoto? Photo { get; set; } = null;

@@ -23,13 +23,21 @@ public sealed class ApplicationContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        //modelBuilder.Entity<EventRecord>()
-        //    .HasOne(x => x.Owner)
-        //    .WithMany(y => y.OwnEvents);
+        modelBuilder.Entity<EventRecord>()
+            .HasOne(x => x.Owner)
+            .WithMany(y => y.OwnEvents);
 
-        //modelBuilder.Entity<PlaceRecord>()
-        //    .HasOne(x => x.Owner)
-        //    .WithMany(y => y.OwnPlaces);
+        modelBuilder.Entity<PlaceRecord>()
+            .HasOne(x => x.Owner)
+            .WithMany(y => y.OwnPlaces);
+        
+        modelBuilder.Entity<EventReviewRecord>()
+            .HasOne(x => x.Author)
+            .WithMany(y => y.OwnEventReviews);
+        
+        modelBuilder.Entity<PlaceReviewRecord>()
+            .HasOne(x => x.Author)
+            .WithMany(y => y.OwnPlaceReviews);
 
         modelBuilder.Entity<EventRecord>()
             .HasMany(x => x.Organizers)

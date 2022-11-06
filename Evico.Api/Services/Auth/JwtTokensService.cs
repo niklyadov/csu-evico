@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using Evico.Api.Entity;
 using FluentResults;
@@ -9,73 +10,51 @@ namespace Evico.Api.Services.Auth;
 
 public class JwtTokensService
 {
-    private readonly JwtTokensServiceConfiguration _configuration;
+    private readonly JwtConfiguration _configuration;
 
-    public JwtTokensService(IOptions<JwtTokensServiceConfiguration> configuration)
+    public JwtTokensService(IOptions<JwtConfiguration> configuration)
     {
         _configuration = configuration.Value;
     }
 
-    private SymmetricSecurityKey GetSymmetricSecurityKey()
+    public String CreateAccessTokenForUser(ProfileRecord user)
+        => CreateTokenForUser(user, 
+            DateTime.UtcNow + _configuration.JwtDefaultLifetime);
+    
+    public String CreateRefreshTokenForUser(ProfileRecord user)
+        => CreateTokenForUser(user, 
+            DateTime.UtcNow + _configuration.JwtRefreshLifetime);
+    
+    private String CreateTokenForUser(User user, DateTime expires)
     {
-        return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration.JwtSecret));
-    }
-
-    public string GenerateBearerTokenForUser(ProfileRecord user,
-        string audience = "default" /*, DateTime? expires = null*/)
-    {
-        var generationDate = DateTime.UtcNow;
-        var jwt = new JwtSecurityToken(
-            user.Id.ToString(),
-            audience,
-            notBefore: generationDate,
-            expires: /*expires ?? */ generationDate.Add(_configuration.JwtRefreshLifetime),
-            signingCredentials: new SigningCredentials(GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-
-        return new JwtSecurityTokenHandler().WriteToken(jwt);
-    }
-
-    public string GenerateRefreshTokenForUser(ProfileRecord user,
-        string audience = "default" /*, DateTime? expires = null*/)
-    {
-        var generationDate = DateTime.UtcNow;
-        var jwt = new JwtSecurityToken(
-            user.Id.ToString(),
-            audience,
-            notBefore: generationDate,
-            expires: /*expires ?? */ generationDate.Add(_configuration.JwtDefaultLifetime),
-            signingCredentials: new SigningCredentials(GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-
-        return new JwtSecurityTokenHandler().WriteToken(jwt);
-    }
-
-    public async Task<Result<bool>> IsValidTokenAsync(ProfileRecord user, string jwtBase64, string audience = "default")
-    {
-        var validationResult = await new JwtSecurityTokenHandler().ValidateTokenAsync(jwtBase64,
-            new TokenValidationParameters
+        var issuer = _configuration.Issuer;
+        var audience = _configuration.Audience;
+        var key = Encoding.ASCII.GetBytes(_configuration.Key);
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[]
             {
-                ValidIssuer = user.Id.ToString(),
-                ValidateIssuer = true,
-
-                IssuerSigningKey = GetSymmetricSecurityKey(),
-                ValidateIssuerSigningKey = true,
-
-                ValidateLifetime = true,
-
-                ValidAudience = audience,
-                ValidateAudience = true
-            }
-        );
-
-        if (!validationResult.IsValid)
-            return Result.Fail(new Error("Error occurred during validation")
-                .CausedBy(validationResult.Exception));
-
-        return Result.Ok(validationResult.IsValid);
+                new Claim("Id", Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, $"{user.Id}"),
+                new Claim(JwtRegisteredClaimNames.Name, user.Name),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti,
+                    Guid.NewGuid().ToString())
+            }),
+            Expires = expires,
+            Issuer = issuer,
+            Audience = audience,
+            SigningCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(key),
+                SecurityAlgorithms.HmacSha512Signature)
+        };
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var jwtToken = tokenHandler.WriteToken(token);
+        
+        return jwtToken;
     }
-
-    public JwtSecurityToken ParseToken(string jwtBase64)
-    {
-        return new JwtSecurityToken(jwtBase64);
-    }
+    
+    public JwtSecurityToken ParseToken(string jwtBase64) 
+        => new JwtSecurityToken(jwtBase64);
 }

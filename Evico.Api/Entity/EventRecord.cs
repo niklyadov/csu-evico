@@ -2,7 +2,7 @@ namespace Evico.Api.Entity;
 
 public record EventRecord : EntityRecord
 {
-    //public ProfileRecord Owner { get; set; } = default!;
+    public ProfileRecord Owner { get; set; } = default!;
     public long PlaceId { get; set; }
     public PlaceRecord Place { get; set; } = default!;
     public string Name { get; set; } = string.Empty;

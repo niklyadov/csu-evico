@@ -1,5 +1,4 @@
 using Evico.Api.Entity;
-using Evico.Api.Filters;
 using Evico.Api.InputModels.Event;
 using Evico.Api.UseCases.Event;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,6 @@ namespace Evico.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-[BearerTokenAuthAction]
 public class EventController : BaseController
 {
     private readonly AddEventUseCase _addEventUseCase;

@@ -1,9 +1,13 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using Evico.Api;
 using Evico.Api.QueryBuilder;
 using Evico.Api.Services;
 using Evico.Api.Services.Auth;
 using Evico.Api.UseCases.Event;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 const string allowAnyCorsOrigin = "Allow any";
@@ -17,7 +21,7 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("Default"),
         b => b.MigrationsAssembly("Evico.Api")));
 
-builder.Services.Configure<JwtTokensServiceConfiguration>(builder.Configuration.GetSection("JwtTokensService"));
+builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("Jwt"));
 builder.Services.Configure<VkAuthServiceConfiguration>(builder.Configuration.GetSection("VkAuthService"));
 
 builder.Services.AddScoped<EventQueryBuilder>();
@@ -35,12 +39,36 @@ builder.Services.AddScoped<GetEventByIdUseCase>();
 builder.Services.AddScoped<UpdateEventByIdUseCase>();
 builder.Services.AddScoped<DeleteEventByIdUseCase>();
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey
+            (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = false,
+        ValidateIssuerSigningKey = false
+    };
+    
+    options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Name;
+});
+
 builder.Services.AddScoped<JwtTokensService>();
 builder.Services.AddScoped<JwtAuthService>();
 builder.Services.AddScoped<VkAuthService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { 
@@ -90,6 +118,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(allowAnyCorsOrigin);
+
+app.UseAuthentication();
 
 app.UseHttpsRedirection();
 
