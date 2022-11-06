@@ -18,7 +18,7 @@ public class DeleteEventByIdUseCase
         _authService = authService;
     }
 
-    public async Task<ActionResult<EventRecord>> DeleteById(long eventId, ClaimsPrincipal userClaims)
+    public async Task<ActionResult<EventRecord>> DeleteByIdAsync(long eventId, ClaimsPrincipal userClaims)
     {
         var currentUserResult = await _authService.GetCurrentUser(userClaims);
         if (currentUserResult.IsFailed)

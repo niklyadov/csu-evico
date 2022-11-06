@@ -8,18 +8,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.UseCases.Event;
 
-public class UpdateEventByIdUseCase
+public class UpdateEventUseCase
 {
     private readonly EventService _eventService;
     private readonly AuthService _authService;
 
-    public UpdateEventByIdUseCase(EventService eventService, AuthService authService)
+    public UpdateEventUseCase(EventService eventService, AuthService authService)
     {
         _eventService = eventService;
         _authService = authService;
     }
 
-    public async Task<ActionResult<EventRecord>> Update(UpdateEventInputModel updateEventModel, ClaimsPrincipal userClaims)
+    public async Task<ActionResult<EventRecord>> UpdateAsync(UpdateEventInputModel updateEventModel, ClaimsPrincipal userClaims)
     {
         var currentUserResult = await _authService.GetCurrentUser(userClaims);
         if (currentUserResult.IsFailed)

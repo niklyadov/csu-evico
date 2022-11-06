@@ -19,7 +19,7 @@ public class AddEventUseCase : EventUseCase
         _authService = authService;
     }
 
-    public async Task<ActionResult<EventRecord>> AddEventAsync(AddEventInputModel addEventModel, ClaimsPrincipal userClaims)
+    public async Task<ActionResult<EventRecord>> AddAsync(AddEventInputModel addEventModel, ClaimsPrincipal userClaims)
     {
         var currentUserResult = await _authService.GetCurrentUser(userClaims);
         if (currentUserResult.IsFailed)

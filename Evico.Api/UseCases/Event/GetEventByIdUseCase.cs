@@ -18,7 +18,7 @@ public class GetEventByIdUseCase
         _authService = authService;
     }
 
-    public async Task<ActionResult<EventRecord>> GetById(long eventId, ClaimsPrincipal userClaims)
+    public async Task<ActionResult<EventRecord>> GetByIdAsync(long eventId, ClaimsPrincipal userClaims)
     {
         var currentUserResult = await _authService.GetCurrentUser(userClaims);
         if (currentUserResult.IsFailed)
