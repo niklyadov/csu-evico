@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Evico.Api.Extensions;
 
 namespace Evico.Api.Services.Auth;
 

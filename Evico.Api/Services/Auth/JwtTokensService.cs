@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Evico.Api.Entity;
+using FluentResults;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -48,7 +49,7 @@ public class JwtTokensService
         return new JwtSecurityTokenHandler().WriteToken(jwt);
     }
 
-    public async Task<bool> IsValidTokenAsync(ProfileRecord user, string jwtBase64, string audience = "default")
+    public async Task<Result<bool>> IsValidTokenAsync(ProfileRecord user, string jwtBase64, string audience = "default")
     {
         var validationResult = await new JwtSecurityTokenHandler().ValidateTokenAsync(jwtBase64,
             new TokenValidationParameters
@@ -66,7 +67,11 @@ public class JwtTokensService
             }
         );
 
-        return validationResult.IsValid;
+        if (!validationResult.IsValid)
+            return Result.Fail(new Error("Error occurred during validation")
+                .CausedBy(validationResult.Exception));
+
+        return Result.Ok(validationResult.IsValid);
     }
 
     public JwtSecurityToken ParseToken(string jwtBase64)

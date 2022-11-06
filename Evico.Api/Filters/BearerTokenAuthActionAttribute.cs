@@ -1,4 +1,5 @@
 using System.Net;
+using Evico.Api.Extensions;
 using Evico.Api.Services.Auth;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.IdentityModel.Tokens;
@@ -17,24 +18,20 @@ public class BearerTokenAuthActionAttribute : ActionFilterAttribute
             var tokensService = svc.GetRequiredService<JwtTokensService>();
             var authService = svc.GetRequiredService<JwtAuthService>();
 
-            var token = context.HttpContext.Request.Headers["Authorization"].ToString();
-            if (string.IsNullOrEmpty(token) || !token.StartsWith("Bearer "))
-                throw new InvalidOperationException("Bearer Token is not passed.");
+            var tokenResult = authService.GetSecurityTokenFromHttpRequest(context.HttpContext.Request);
 
-            var tokenBody = token.Substring(7);
+            if (tokenResult.IsFailed)
+                throw new SecurityTokenValidationException("Unable to validate token", 
+                    tokenResult.GetReportException());
 
-            var parsedToken = tokensService.ParseToken(tokenBody);
-            if (parsedToken == null)
-                throw new InvalidOperationException("Invalid token provided. Can't parse token. Parsed token is null");
-
-            var initUserResult = authService.InitInstanceWithToken(parsedToken);
-            if (initUserResult.IsFailed)
-                throw new InvalidOperationException(string.Join(',', initUserResult.Errors));
-
-            var userResult = await authService.GetCurrentUser();
+            var parsedToken = tokenResult.Value.parsedToken;
+            var tokenBody = tokenResult.Value.base64Token;
+            
+            var userResult = await authService.GetCurrentUserFromToken(parsedToken);
             if (userResult.IsFailed)
                 throw new SecurityTokenInvalidIssuerException(
-                    "Can't get current user. Maybe provided token is invalid.");
+                    "Can't get current user. Maybe provided token is invalid.", 
+                    userResult.GetReportException());
 
             var user = userResult.Value;
 
@@ -42,8 +39,11 @@ public class BearerTokenAuthActionAttribute : ActionFilterAttribute
                 throw new SecurityTokenInvalidIssuerException(
                     "Can't get current user. Maybe provided token is invalid.");
 
-            if (!await tokensService.IsValidTokenAsync(user, tokenBody))
-                throw new SecurityTokenValidationException("Token is invalid. Please, update the token.");
+            var validationTokenResult = await tokensService.IsValidTokenAsync(user, tokenBody);
+            
+            if (validationTokenResult.IsFailed)
+                throw new SecurityTokenValidationException("Token is invalid. Please, update the token.", 
+                    validationTokenResult.GetReportException());
 
             // success, passed
             await next();

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using MySql.EntityFrameworkCore.Extensions;
 
-namespace Evico.Api;
+namespace Evico.Api.Extensions;
 
 public class MysqlEntityFrameworkDesignTimeServices : IDesignTimeServices
 {
