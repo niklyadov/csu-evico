@@ -59,6 +59,9 @@ public class PlaceService
 
     public Result CanView(PlaceRecord place, ProfileRecord? profile)
     {
+        if (place.IsDeleted)
+            return Result.Fail($"Event with id: {place.Id} is deleted");
+        
         return Result.Ok();
     }
     
@@ -69,12 +72,25 @@ public class PlaceService
     
     public Result CanDelete(PlaceRecord place, ProfileRecord profile)
     {
-        return Result.Ok();
+        if (place.IsDeleted)
+            return Result.Fail($"Event with id: {place.Id} was already deleted");
+
+        // todo добавить проверку на роль. модератор тоже должен уметь удалять места
+        // todo что будет с событиями если удалить место?
+        
+        return Result.OkIf(place.OwnerId == profile.Id, 
+            "Only owner or moderator can delete this Place");
     }
     
     public Result CanUpdate(PlaceRecord place, ProfileRecord profile)
     {
-        return Result.Ok();
+        if (place.IsDeleted)
+            return Result.Fail($"Event with id: {place.Id} is deleted");
+        
+        // todo добавить проверку на роль. модератор тоже должен уметь изменять места
+        
+        return Result.OkIf(place.OwnerId == profile.Id, 
+            "Only owner or moderator can delete this Place");
     }
     
     public Result CanCreate(PlaceRecord place, ProfileRecord profile)
