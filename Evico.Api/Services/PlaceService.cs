@@ -17,40 +17,20 @@ public class PlaceService
 
     private PlaceQueryBuilder _placeQueryBuilder => new(_context);
 
-    public async Task<IActionResult> AddAsync(AddPlaceInputModel addPlaceInputModel)
+    public async Task<Result<PlaceRecord>> AddAsync(PlaceRecord place)
     {
-        try
+        return await Result.Try(async () =>
         {
-            var placeRecord = new PlaceRecord
-            {
-                LocationLatitude = addPlaceInputModel.LocationLatitude,
-                LocationLongitude = addPlaceInputModel.LocationLongitude,
-                Name = addPlaceInputModel.Name,
-                Description = addPlaceInputModel.Description
-            };
-
-            var result = await _placeQueryBuilder.AddAsync(placeRecord);
-
-            return new OkObjectResult(result);
-        }
-        catch (Exception exception)
-        {
-            return new BadRequestObjectResult(exception.ToString());
-        }
+            return await _placeQueryBuilder.AddAsync(place);
+        });
     }
 
-    public async Task<IActionResult> GetAllAsync()
+    public async Task<Result<List<PlaceRecord>>> GetAllAsync()
     {
-        try
+        return await Result.Try(async () =>
         {
-            var result = await _placeQueryBuilder.ToListAsync();
-
-            return new OkObjectResult(result);
-        }
-        catch (Exception exception)
-        {
-            return new BadRequestObjectResult(exception.ToString());
-        }
+            return await _placeQueryBuilder.ToListAsync();
+        });
     }
 
     public async Task<Result<PlaceRecord>> GetByIdAsync(long id)
@@ -59,5 +39,46 @@ public class PlaceService
         {
             return await _placeQueryBuilder.WithId(id).SingleAsync();
         });
+    }
+    
+    public async Task<Result<PlaceRecord>> UpdateAsync(PlaceRecord place)
+    {
+        return await Result.Try(async () =>
+        {
+            return await _placeQueryBuilder.UpdateAsync(place);
+        });
+    }
+    
+    public async Task<Result<PlaceRecord>> DeleteAsync(PlaceRecord place)
+    {
+        return await Result.Try(async () =>
+        {
+            return await _placeQueryBuilder.DeleteAsync(place);
+        });
+    }
+
+    public Result CanView(PlaceRecord place, ProfileRecord? profile)
+    {
+        return Result.Ok();
+    }
+    
+    public Result CanViewAll(ProfileRecord? profile)
+    {
+        return Result.Ok();
+    }
+    
+    public Result CanDelete(PlaceRecord place, ProfileRecord profile)
+    {
+        return Result.Ok();
+    }
+    
+    public Result CanUpdate(PlaceRecord place, ProfileRecord profile)
+    {
+        return Result.Ok();
+    }
+    
+    public Result CanCreate(PlaceRecord place, ProfileRecord profile)
+    {
+        return Result.Ok();
     }
 }
