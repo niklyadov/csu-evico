@@ -58,7 +58,7 @@ public class EventReviewService
         });
     }
     
-    public Result CanView(EventReviewRecord eventReviewRecord, ProfileRecord profileRecord)
+    public Result CanView(EventReviewRecord eventReviewRecord, ProfileRecord? profileRecord)
     {
         if (eventReviewRecord.IsDeleted)
             return Result.Fail("This event is deleted");
@@ -66,7 +66,7 @@ public class EventReviewService
         return Result.Ok();
     }
 
-    public Result CanViewAll(EventRecord eventRecord)
+    public Result CanViewAll(EventRecord eventRecord, ProfileRecord? profileRecord)
     {
         if (eventRecord.IsDeleted)
             return Result.Fail("This event is deleted");

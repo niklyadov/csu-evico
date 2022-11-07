@@ -23,9 +23,7 @@ public class GetEventReviewByIdUseCase
     public async Task<ActionResult<EventReviewRecord>> GetByIdAsync(long eventId, long reviewId, ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
-        if (currentUserResult.IsFailed)
-            return new UnauthorizedObjectResult(currentUserResult.GetReport());
-        var currentUser = currentUserResult.Value;
+        var currentUser = currentUserResult.ValueOrDefault;
 
         var eventReviewByIdResult = await _eventReviewService.GetById(reviewId);
         if (eventReviewByIdResult.IsFailed)

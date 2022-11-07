@@ -39,8 +39,12 @@ public class UpdateEventReviewUseCase
                 StatusCode = StatusCodes.Status403Forbidden
             };
 
-        eventReview.Comment = inputModel.Comment;
-        eventReview.Rate = inputModel.Rate;
+        if (!String.IsNullOrEmpty(inputModel.Comment))
+            eventReview.Comment = inputModel.Comment;
+        
+        if (inputModel.Rate != null)
+            eventReview.Rate = inputModel.Rate.Value;
+        
         eventReview.Photos = inputModel.Photos;
 
         var updateEventResult = await _eventReviewService.Update(eventReview);
