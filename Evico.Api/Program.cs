@@ -118,7 +118,7 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins("*");
-            policy.WithHeaders("Origin", "X-Requested-With", "Content-Type", "Accept");
+            policy.WithHeaders("Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization");
         });
 });
 builder.Services.Configure<RouteOptions>(options =>
