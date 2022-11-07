@@ -2,6 +2,7 @@ using Evico.Api.Entity;
 using Evico.Api.InputModels.Place;
 using Evico.Api.Services;
 using Evico.Api.UseCases.Place;
+using Evico.Api.UseCases.Place.Review;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,11 @@ public class PlaceController : BaseController
     private readonly GetPlacesUseCase _getPlacesUseCase;
     private readonly UpdatePlaceUseCase _updatePlaceUseCase;
     private readonly DeletePlaceUseCase _deletePlaceUseCase;
+    private readonly AddPlaceReviewUseCase _addPlaceReviewUseCase;
+    private readonly GetPlaceReviewByIdUseCase _getPlaceReviewByIdUseCase;
+    private readonly GetPlaceReviewsUseCase _getPlaceReviewsUseCase;
+    private readonly UpdatePlaceReviewUseCase _updatePlaceReviewUseCase;
+    private readonly DeletePlaceReviewUseCase _deletePlaceReviewUseCase;
     
     public PlaceController(IServiceProvider services)
     {
@@ -26,6 +32,11 @@ public class PlaceController : BaseController
         _getPlacesUseCase = services.GetRequiredService<GetPlacesUseCase>();
         _updatePlaceUseCase = services.GetRequiredService<UpdatePlaceUseCase>();
         _deletePlaceUseCase = services.GetRequiredService<DeletePlaceUseCase>();
+        _addPlaceReviewUseCase = services.GetRequiredService<AddPlaceReviewUseCase>();
+        _getPlaceReviewByIdUseCase = services.GetRequiredService<GetPlaceReviewByIdUseCase>();
+        _getPlaceReviewsUseCase = services.GetRequiredService<GetPlaceReviewsUseCase>();
+        _updatePlaceReviewUseCase = services.GetRequiredService<UpdatePlaceReviewUseCase>();
+        _deletePlaceReviewUseCase = services.GetRequiredService<DeletePlaceReviewUseCase>();
     }
 
     [HttpPost]
@@ -70,5 +81,47 @@ public class PlaceController : BaseController
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         return await _deletePlaceUseCase.DeleteByIdAsync(placeId, User);
+    }
+
+    [HttpPost("{placeId}/review")]
+    public async Task<ActionResult<PlaceReviewRecord>> AddReview([FromRoute] long placeId, [FromBody] AddPlaceReviewInputModel inputModel)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        return await _addPlaceReviewUseCase.AddAsync(placeId, inputModel, User);
+    }
+
+    [HttpGet("{placeId}/review/{reviewId}")]
+    [AllowAnonymous]
+    public async Task<ActionResult<PlaceReviewRecord>> GetReviewById([FromRoute] long placeId, [FromRoute] long reviewId)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        return await _getPlaceReviewByIdUseCase.GetByIdAsync(placeId, reviewId, User);
+    }
+
+    [HttpGet("{placeId}/review")]
+    [AllowAnonymous]
+    public async Task<ActionResult<List<PlaceReviewRecord>>> GetReviews([FromRoute] long placeId)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        return await _getPlaceReviewsUseCase.GetAllAsync(placeId, User);
+    }
+
+    [HttpPut("{placeId}/review")]
+    public async Task<ActionResult<List<PlaceReviewRecord>>> UpdateReview([FromRoute] long placeId, [FromBody] UpdatePlaceInputModel inputModel)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        return await _updatePlaceReviewUseCase.UpdateAsync(placeId, inputModel, User);
+    }
+
+    [HttpDelete("{placeId}/review/{reviewId}")]
+    public async Task<ActionResult<List<PlaceReviewRecord>>> DeleteReviewById([FromRoute] long placeId, [FromRoute] long reviewId)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        return await _deletePlaceReviewUseCase.DeleteAsync(placeId, reviewId, User);
     }
 }

@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.UseCases.Event;
 
-public class DeleteEventReviewByIdUseCase
+public class DeleteEventReviewUseCase
 {
     private readonly EventService _eventService;
     private readonly EventReviewService _eventReviewService;
     private readonly AuthService _authService;
 
-    public DeleteEventReviewByIdUseCase(EventService eventService, EventReviewService eventReviewService, AuthService authService)
+    public DeleteEventReviewUseCase(EventService eventService, EventReviewService eventReviewService, AuthService authService)
     {
         _eventService = eventService;
         _eventReviewService = eventReviewService;
