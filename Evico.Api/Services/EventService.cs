@@ -79,49 +79,10 @@ public class EventService
         });
     }
 
-    // todo: rewrite this
-    public async Task<Result<EventRecord>> Update(UpdateEventInputModel updateEventModel)
+    public async Task<Result<EventRecord>> UpdateAsync(EventRecord eventRecord)
     {
-        // todo: add category to event
         return await Result.Try(async () =>
         {
-            var eventRecord = await _eventQueryBuilder
-                .WithId(updateEventModel.Id)
-                .FirstOrDefaultAsync();
-
-            if (eventRecord == null)
-                throw new InvalidOperationException($"Event with id {updateEventModel.Id} is not found.");
-
-            if (eventRecord.IsDeleted)
-                throw new InvalidOperationException($"Event with id {updateEventModel.Id} is deleted");
-
-            if (updateEventModel.Start != null)
-                eventRecord.Start = updateEventModel.Start;
-
-            if (updateEventModel.End != null)
-                eventRecord.End = updateEventModel.End;
-
-            if (updateEventModel.PlaceId != null)
-            {
-                var place = await _placeQueryBuilder
-                    .WithId(updateEventModel.PlaceId.Value)
-                    .FirstOrDefaultAsync();
-
-                if (place == null)
-                    throw new InvalidOperationException($"Place cannot be null. Place id: {updateEventModel.PlaceId}");
-
-                if (place.IsDeleted)
-                    throw new InvalidOperationException($"Place with id {place.Id} was deleted");
-
-                eventRecord.Place = place;
-            }
-
-            if (!string.IsNullOrEmpty(updateEventModel.Name))
-                eventRecord.Name = updateEventModel.Name;
-
-            if (!string.IsNullOrEmpty(updateEventModel.Description))
-                eventRecord.Description = updateEventModel.Description;
-
             return await _eventQueryBuilder.UpdateAsync(eventRecord);
         });
     }
