@@ -92,7 +92,7 @@ public class EventService
         return Result.Ok();
     }
     
-    public Result CanView(EventRecord eventRecord, ProfileRecord userRecord)
+    public Result CanView(EventRecord eventRecord, ProfileRecord? userRecord)
     {
         return Result.Ok();
     }
@@ -115,7 +115,15 @@ public class EventService
 
         // todo добавить проверку на роль. модератор тоже должен уметь удалять обновлять
         
+        if(userRecord == null)
+            return Result.Ok();
+        
         return Result.OkIf(eventRecord.OwnerId == userRecord.Id, 
             "Only owner or moderator can update this event");
+    }
+
+    public Result CanViewAll(ProfileRecord? currentUser)
+    {
+        return Result.Ok();
     }
 }

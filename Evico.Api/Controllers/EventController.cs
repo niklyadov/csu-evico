@@ -1,7 +1,7 @@
 using Evico.Api.Entity;
 using Evico.Api.InputModels.Event;
 using Evico.Api.UseCases.Event;
-using FluentResults;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.Controllers;
@@ -43,14 +43,16 @@ public class EventController : BaseController
         return await _addEventUseCase.AddAsync(addEventModel, User);
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<List<EventRecord>>> GetAll()
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        return await _getEventsUseCase.GetAllAsync();
+        return await _getEventsUseCase.GetAllAsync(User);
     }
 
+    [AllowAnonymous]
     [HttpGet("{eventId}")]
     public async Task<ActionResult<EventRecord>> GetById([FromRoute] long eventId)
     {
@@ -83,6 +85,7 @@ public class EventController : BaseController
         return await _addEventReviewUseCase.AddAsync(eventId, inputModel, User);
     }
 
+    [AllowAnonymous]
     [HttpGet("{eventId}/review/{reviewId}")]
     public async Task<ActionResult<EventReviewRecord>> GetReviewById([FromRoute] long eventId, [FromRoute] long reviewId)
     {
@@ -91,12 +94,13 @@ public class EventController : BaseController
         return await _getEventReviewByIdUseCase.GetByIdAsync(eventId, reviewId, User);
     }
     
+    [AllowAnonymous]
     [HttpGet("{eventId}/review")]
     public async Task<ActionResult<List<EventReviewRecord>>> GetReviews([FromRoute] long eventId)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        return await _getEventReviewsUseCase.GetAllAsync(eventId);
+        return await _getEventReviewsUseCase.GetAllAsync(eventId, User);
     }
     
     [HttpPut("{eventId}/review")]
