@@ -7,6 +7,8 @@ using Evico.Api.Services.Auth;
 using Evico.Api.Services.Auth.Vk;
 using Evico.Api.UseCases.Auth;
 using Evico.Api.UseCases.Event;
+using Evico.Api.UseCases.Place;
+using Evico.Api.UseCases.Place.Review;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -31,17 +33,18 @@ builder.Services.AddScoped<PlaceQueryBuilder>();
 builder.Services.AddScoped<ProfileQueryBuilder>();
 builder.Services.AddScoped<EventReviewQueryBuilder>();
 builder.Services.AddScoped<ExternalPhotoQueryBuilder>();
+builder.Services.AddScoped<PlaceReviewQueryBuilder>();
 
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<PlaceService>();
 builder.Services.AddScoped<ProfileService>();
 builder.Services.AddScoped<ExternalPhotoService>();
 builder.Services.AddScoped<EventReviewService>();
+builder.Services.AddScoped<PlaceReviewService>();
 
 builder.Services.AddScoped<AuthViaVkUseCase>();
 builder.Services.AddScoped<CreateNewTokensUseCase>();
 
-builder.Services.AddScoped<AddEventUseCase>();
 builder.Services.AddScoped<AddEventUseCase>();
 builder.Services.AddScoped<GetEventsUseCase>();
 builder.Services.AddScoped<GetEventByIdUseCase>();
@@ -52,7 +55,19 @@ builder.Services.AddScoped<AddEventReviewUseCase>();
 builder.Services.AddScoped<GetEventReviewByIdUseCase>();
 builder.Services.AddScoped<GetEventReviewsUseCase>();
 builder.Services.AddScoped<UpdateEventReviewUseCase>();
-builder.Services.AddScoped<DeleteEventReviewByIdUseCase>();
+builder.Services.AddScoped<DeleteEventReviewUseCase>();
+
+builder.Services.AddScoped<AddPlaceUseCase>();
+builder.Services.AddScoped<GetPlacesUseCase>();
+builder.Services.AddScoped<GetPlaceByIdUseCase>();
+builder.Services.AddScoped<UpdatePlaceUseCase>();
+builder.Services.AddScoped<DeletePlaceUseCase>();
+
+builder.Services.AddScoped<AddPlaceReviewUseCase>();
+builder.Services.AddScoped<GetPlaceReviewByIdUseCase>();
+builder.Services.AddScoped<GetPlaceReviewsUseCase>();
+builder.Services.AddScoped<UpdatePlaceReviewUseCase>();
+builder.Services.AddScoped<DeletePlaceReviewUseCase>();
 
 builder.Services.AddAuthentication(options =>
 {
