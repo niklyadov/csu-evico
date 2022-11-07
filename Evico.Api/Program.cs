@@ -7,6 +7,7 @@ using Evico.Api.Services.Auth;
 using Evico.Api.Services.Auth.Vk;
 using Evico.Api.UseCases.Auth;
 using Evico.Api.UseCases.Event;
+using Evico.Api.UseCases.Place;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -42,7 +43,6 @@ builder.Services.AddScoped<AuthViaVkUseCase>();
 builder.Services.AddScoped<CreateNewTokensUseCase>();
 
 builder.Services.AddScoped<AddEventUseCase>();
-builder.Services.AddScoped<AddEventUseCase>();
 builder.Services.AddScoped<GetEventsUseCase>();
 builder.Services.AddScoped<GetEventByIdUseCase>();
 builder.Services.AddScoped<UpdateEventUseCase>();
@@ -53,6 +53,12 @@ builder.Services.AddScoped<GetEventReviewByIdUseCase>();
 builder.Services.AddScoped<GetEventReviewsUseCase>();
 builder.Services.AddScoped<UpdateEventReviewUseCase>();
 builder.Services.AddScoped<DeleteEventReviewByIdUseCase>();
+
+builder.Services.AddScoped<AddPlaceUseCase>();
+builder.Services.AddScoped<GetPlacesUseCase>();
+builder.Services.AddScoped<GetPlaceByIdUseCase>();
+builder.Services.AddScoped<UpdatePlaceUseCase>();
+builder.Services.AddScoped<DeletePlaceUseCase>();
 
 builder.Services.AddAuthentication(options =>
 {

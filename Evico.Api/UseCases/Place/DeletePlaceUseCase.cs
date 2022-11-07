@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.UseCases.Place;
 
-public class GetPlacesUseCase : PlaceUseCase
+public class DeletePlaceUseCase
 {
-    public async Task<ActionResult<List<PlaceRecord>>> GetAllAsync(ClaimsPrincipal user)
+    public async Task<ActionResult<PlaceRecord>> DeleteByIdAsync(long placeId, ClaimsPrincipal user)
     {
         throw new NotImplementedException();
     }

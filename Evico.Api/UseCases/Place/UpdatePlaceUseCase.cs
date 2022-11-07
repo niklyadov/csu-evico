@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.UseCases.Place;
 
-public class AddPlaceUseCase : PlaceUseCase
+public class UpdatePlaceUseCase
 {
-    public async Task<ActionResult<PlaceRecord>> AddAsync(AddPlaceInputModel addPlaceInputModel, ClaimsPrincipal user)
+    public async Task<ActionResult<PlaceRecord>> UpdateAsync(UpdatePlaceInputModel inputModel, ClaimsPrincipal user)
     {
         throw new NotImplementedException();
     }

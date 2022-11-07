@@ -17,16 +17,16 @@ public class PlaceService
 
     private PlaceQueryBuilder _placeQueryBuilder => new(_context);
 
-    public async Task<IActionResult> AddAsync(PlaceInputModel placeInputModel)
+    public async Task<IActionResult> AddAsync(AddPlaceInputModel addPlaceInputModel)
     {
         try
         {
             var placeRecord = new PlaceRecord
             {
-                LocationLatitude = placeInputModel.LocationLatitude,
-                LocationLongitude = placeInputModel.LocationLongitude,
-                Name = placeInputModel.Name,
-                Description = placeInputModel.Description
+                LocationLatitude = addPlaceInputModel.LocationLatitude,
+                LocationLongitude = addPlaceInputModel.LocationLongitude,
+                Name = addPlaceInputModel.Name,
+                Description = addPlaceInputModel.Description
             };
 
             var result = await _placeQueryBuilder.AddAsync(placeRecord);

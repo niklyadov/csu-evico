@@ -1,6 +1,6 @@
 namespace Evico.Api.InputModels.Place;
 
-public class PlaceInputModel
+public class AddPlaceInputModel
 {
     public long? Id { get; set; }
     public double LocationLatitude { get; set; } = default!;
