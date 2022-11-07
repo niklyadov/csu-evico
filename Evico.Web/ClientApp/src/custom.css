@@ -52,6 +52,11 @@
     
 
 }
+#div-compilation {
+
+    
+
+}
 
 /* Классы */
 .a-brand {
@@ -59,10 +64,9 @@
     
 
 }
-.div-flex-line {
+.div-card {
 
-    display: flex;
-    justify-content: space-around;
+    
 
 }
 .div-window {
@@ -79,6 +83,12 @@
 .div-window > * {
 
     margin: var(--margin);
+
+}
+.div-flex-line {
+
+    display: flex;
+    justify-content: space-around;
 
 }
 .img-icon {
