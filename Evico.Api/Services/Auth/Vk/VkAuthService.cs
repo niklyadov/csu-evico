@@ -11,7 +11,7 @@ public class VkAuthService
     private readonly VkAuthServiceConfiguration _configuration;
     private readonly ProfileService _profileService;
 
-    public VkAuthService(ProfileService profileService, 
+    public VkAuthService(ProfileService profileService,
         IOptions<VkAuthServiceConfiguration> configuration)
     {
         _profileService = profileService;
@@ -27,7 +27,7 @@ public class VkAuthService
             return vkUser.ValueOrDefault ?? (await RegisterVkUser(vkProfileInfo)).ValueOrDefault;
         });
     }
-    
+
     public async Task<Result<VkProfileInfo>> GetVkProfileInfoAsync(string accessToken,
         string url = "https://api.vk.com/method/users.get")
     {
@@ -53,7 +53,7 @@ public class VkAuthService
         });
     }
 
-    public async Task<Result<String>> GetAccessTokenFromCode(string code, string redirectUri)
+    public async Task<Result<string>> GetAccessTokenFromCode(string code, string redirectUri)
     {
         return await Result.Try(async () =>
         {
@@ -71,7 +71,7 @@ public class VkAuthService
             if (responseAccessToken == null)
                 throw new InvalidOperationException("Can't parse vk response");
 
-            if (String.IsNullOrEmpty(responseAccessToken.AccessToken))
+            if (string.IsNullOrEmpty(responseAccessToken.AccessToken))
                 throw new InvalidOperationException($"Error with receive access token: {responseAccessToken.Error}. " +
                                                     $"Description: {responseAccessToken.ErrorDescription} ");
 

@@ -11,13 +11,13 @@ public static class FluentResultErrorGetReport
         {
             Errors = result.Errors,
             Reasons = result.Reasons,
-            ResultType = typeof(T),
+            ResultType = typeof(T)
             //ResultValue = result.ValueOrDefault
         };
 
         return JsonConvert.SerializeObject(report, formatted ? Formatting.Indented : Formatting.None);
     }
-    
+
     public static string GetReport(this Result result, bool formatted = true)
     {
         var report = new ErrorReport
@@ -51,7 +51,7 @@ internal record ErrorReportTyped<T> : ErrorReport
 
 public class ReportException : Exception
 {
-    public ReportException(String message): base(message)
+    public ReportException(string message) : base(message)
     {
     }
 }

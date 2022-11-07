@@ -10,8 +10,8 @@ namespace Evico.Api.UseCases.Event;
 
 public class UpdateEventUseCase
 {
-    private readonly EventService _eventService;
     private readonly AuthService _authService;
+    private readonly EventService _eventService;
     private readonly PlaceService _placeService;
 
     public UpdateEventUseCase(EventService eventService, AuthService authService, PlaceService placeService)
@@ -21,13 +21,14 @@ public class UpdateEventUseCase
         _placeService = placeService;
     }
 
-    public async Task<ActionResult<EventRecord>> UpdateAsync(UpdateEventInputModel updateEventModel, ClaimsPrincipal userClaims)
+    public async Task<ActionResult<EventRecord>> UpdateAsync(UpdateEventInputModel updateEventModel,
+        ClaimsPrincipal userClaims)
     {
         var currentUserResult = await _authService.GetCurrentUser(userClaims);
         if (currentUserResult.IsFailed)
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
-        
+
         var eventWithIdResult = await _eventService.GetByIdAsync(updateEventModel.Id);
         if (eventWithIdResult.IsFailed)
             return new BadRequestObjectResult(eventWithIdResult.GetReport());
@@ -52,10 +53,10 @@ public class UpdateEventUseCase
             if (placeResult.IsFailed)
                 return new BadRequestObjectResult(placeResult.GetReport());
             var place = placeResult.Value;
-            
+
             if (place.IsDeleted)
                 return new BadRequestObjectResult($"Place with id {place.Id} was deleted");
-            
+
             eventRecord.Place = place;
         }
 
@@ -64,7 +65,7 @@ public class UpdateEventUseCase
 
         if (!string.IsNullOrEmpty(updateEventModel.Description))
             eventRecord.Description = updateEventModel.Description;
-        
+
         var updateEventResult = await _eventService.UpdateAsync(eventRecord);
 
         if (updateEventResult.IsFailed)

@@ -1,4 +1,3 @@
-using Evico.Api.Services.Auth;
 using Evico.Api.UseCases.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,10 +22,10 @@ public class AuthController : BaseController
     {
         return await _authViaVkUseCase.AuthViaVk(accessToken, redirectUrl);
     }
-    
+
     [HttpPost("createNewToken")]
     [AllowAnonymous]
-    public async Task<ActionResult<BearerRefreshTokenPair>> CreateNewToken([FromQuery] String username)
+    public async Task<ActionResult<BearerRefreshTokenPair>> CreateNewToken([FromQuery] string username)
     {
         return await _createNewTokensUseCase.CreateNewToken(username);
     }

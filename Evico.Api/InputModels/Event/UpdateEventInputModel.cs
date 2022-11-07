@@ -12,9 +12,7 @@ public class UpdateEventInputModel
     // TODO: add photo
     //public long PhotoId { get; set; }
 
-    [StringLength(255, MinimumLength = 1)]
-    public string? Name { get; set; }
-    
-    [StringLength(1024)]
-    public string? Description { get; set; }
+    [StringLength(255, MinimumLength = 1)] public string? Name { get; set; }
+
+    [StringLength(1024)] public string? Description { get; set; }
 }

@@ -9,8 +9,8 @@ namespace Evico.Api.UseCases.Place;
 
 public class GetPlacesUseCase : PlaceUseCase
 {
-    private readonly PlaceService _placeService;
     private readonly AuthService _authService;
+    private readonly PlaceService _placeService;
 
     public GetPlacesUseCase(PlaceService placeService, AuthService authService)
     {
@@ -22,7 +22,7 @@ public class GetPlacesUseCase : PlaceUseCase
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         var currentUser = currentUserResult.ValueOrDefault;
-        
+
         var canViewResult = _placeService.CanViewAll(currentUser);
         if (canViewResult.IsFailed)
             return new ObjectResult(canViewResult.GetReport())
@@ -35,7 +35,7 @@ public class GetPlacesUseCase : PlaceUseCase
             return new BadRequestObjectResult(placeWithIdResult.GetReport());
         var places = placeWithIdResult.Value;
 
-        
+
         return new OkObjectResult(places);
     }
 }

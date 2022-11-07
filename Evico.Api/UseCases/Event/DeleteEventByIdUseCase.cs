@@ -9,8 +9,8 @@ namespace Evico.Api.UseCases.Event;
 
 public class DeleteEventByIdUseCase
 {
-    private readonly EventService _eventService;
     private readonly AuthService _authService;
+    private readonly EventService _eventService;
 
     public DeleteEventByIdUseCase(EventService eventService, AuthService authService)
     {
@@ -24,19 +24,19 @@ public class DeleteEventByIdUseCase
         if (currentUserResult.IsFailed)
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
-        
+
         var eventWithIdResult = await _eventService.GetByIdAsync(eventId);
         if (eventWithIdResult.IsFailed)
             return new BadRequestObjectResult(eventWithIdResult.GetReport());
         var eventWithId = eventWithIdResult.Value;
-        
+
         var canDeleteEventResult = _eventService.CanDelete(eventWithId, currentUser);
         if (canDeleteEventResult.IsFailed)
             return new ObjectResult(canDeleteEventResult.GetReport())
             {
                 StatusCode = StatusCodes.Status403Forbidden
             };
-        
+
         var deleteByIdResult = await _eventService.DeleteAsync(eventWithId);
         if (deleteByIdResult.IsFailed)
             return new BadRequestObjectResult(deleteByIdResult.GetReport());

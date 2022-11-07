@@ -1,9 +1,7 @@
 using Evico.Api.Entity;
 using Evico.Api.InputModels.Place;
-using Evico.Api.Services;
 using Evico.Api.UseCases.Place;
 using Evico.Api.UseCases.Place.Review;
-using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,17 +12,17 @@ namespace Evico.Api.Controllers;
 [Authorize]
 public class PlaceController : BaseController
 {
-    private readonly AddPlaceUseCase _addPlaceUseCase;
-    private readonly GetPlaceByIdUseCase _getPlaceByIdUseCase;
-    private readonly GetPlacesUseCase _getPlacesUseCase;
-    private readonly UpdatePlaceUseCase _updatePlaceUseCase;
-    private readonly DeletePlaceUseCase _deletePlaceUseCase;
     private readonly AddPlaceReviewUseCase _addPlaceReviewUseCase;
+    private readonly AddPlaceUseCase _addPlaceUseCase;
+    private readonly DeletePlaceReviewUseCase _deletePlaceReviewUseCase;
+    private readonly DeletePlaceUseCase _deletePlaceUseCase;
+    private readonly GetPlaceByIdUseCase _getPlaceByIdUseCase;
     private readonly GetPlaceReviewByIdUseCase _getPlaceReviewByIdUseCase;
     private readonly GetPlaceReviewsUseCase _getPlaceReviewsUseCase;
+    private readonly GetPlacesUseCase _getPlacesUseCase;
     private readonly UpdatePlaceReviewUseCase _updatePlaceReviewUseCase;
-    private readonly DeletePlaceReviewUseCase _deletePlaceReviewUseCase;
-    
+    private readonly UpdatePlaceUseCase _updatePlaceUseCase;
+
     public PlaceController(IServiceProvider services)
     {
         _addPlaceUseCase = services.GetRequiredService<AddPlaceUseCase>();
@@ -49,7 +47,6 @@ public class PlaceController : BaseController
 
     [HttpGet("{placeId}")]
     [AllowAnonymous]
-
     public async Task<ActionResult<PlaceRecord>> GetById(long placeId)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -73,9 +70,8 @@ public class PlaceController : BaseController
 
         return await _updatePlaceUseCase.UpdateAsync(inputModel, User);
     }
-    
-    [HttpDelete("{placeId}")]
 
+    [HttpDelete("{placeId}")]
     public async Task<ActionResult<PlaceRecord>> DeleteById(long placeId)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -84,7 +80,8 @@ public class PlaceController : BaseController
     }
 
     [HttpPost("{placeId}/review")]
-    public async Task<ActionResult<PlaceReviewRecord>> AddReview([FromRoute] long placeId, [FromBody] AddPlaceReviewInputModel inputModel)
+    public async Task<ActionResult<PlaceReviewRecord>> AddReview([FromRoute] long placeId,
+        [FromBody] AddPlaceReviewInputModel inputModel)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -93,7 +90,8 @@ public class PlaceController : BaseController
 
     [HttpGet("{placeId}/review/{reviewId}")]
     [AllowAnonymous]
-    public async Task<ActionResult<PlaceReviewRecord>> GetReviewById([FromRoute] long placeId, [FromRoute] long reviewId)
+    public async Task<ActionResult<PlaceReviewRecord>> GetReviewById([FromRoute] long placeId,
+        [FromRoute] long reviewId)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -110,7 +108,8 @@ public class PlaceController : BaseController
     }
 
     [HttpPut("{placeId}/review")]
-    public async Task<ActionResult<List<PlaceReviewRecord>>> UpdateReview([FromRoute] long placeId, [FromBody] UpdatePlaceInputModel inputModel)
+    public async Task<ActionResult<List<PlaceReviewRecord>>> UpdateReview([FromRoute] long placeId,
+        [FromBody] UpdatePlaceInputModel inputModel)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -118,7 +117,8 @@ public class PlaceController : BaseController
     }
 
     [HttpDelete("{placeId}/review/{reviewId}")]
-    public async Task<ActionResult<List<PlaceReviewRecord>>> DeleteReviewById([FromRoute] long placeId, [FromRoute] long reviewId)
+    public async Task<ActionResult<List<PlaceReviewRecord>>> DeleteReviewById([FromRoute] long placeId,
+        [FromRoute] long reviewId)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 

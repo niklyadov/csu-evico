@@ -30,11 +30,11 @@ public sealed class ApplicationContext : DbContext
         modelBuilder.Entity<PlaceRecord>()
             .HasOne(x => x.Owner)
             .WithMany(y => y.OwnPlaces);
-        
+
         modelBuilder.Entity<EventReviewRecord>()
             .HasOne(x => x.Author)
             .WithMany(y => y.OwnEventReviews);
-        
+
         modelBuilder.Entity<PlaceReviewRecord>()
             .HasOne(x => x.Author)
             .WithMany(y => y.OwnPlaceReviews);
@@ -66,7 +66,7 @@ public sealed class ApplicationContext : DbContext
         modelBuilder.Entity<ProfileRecord>()
             .HasIndex(x => x.Name)
             .IsUnique();
-        
+
         base.OnModelCreating(modelBuilder);
     }
 }

@@ -7,6 +7,7 @@ using Evico.Api.Services.Auth;
 using Evico.Api.Services.Auth.Vk;
 using Evico.Api.UseCases.Auth;
 using Evico.Api.UseCases.Event;
+using Evico.Api.UseCases.Event.Review;
 using Evico.Api.UseCases.Place;
 using Evico.Api.UseCases.Place.Review;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -74,7 +75,6 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-
 }).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
@@ -88,7 +88,7 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = false,
         ValidateIssuerSigningKey = true
     };
-    
+
     options.TokenValidationParameters.NameClaimType = JwtRegisteredClaimNames.Name;
 });
 
@@ -102,28 +102,31 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { 
-        Title = "CSU-EVICO API", 
-        Version = "v1" 
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "CSU-EVICO API",
+        Version = "v1"
     });
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
-        In = ParameterLocation.Header, 
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
         Description = "Please insert JWT with Bearer into field",
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey 
+        Type = SecuritySchemeType.ApiKey
     });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-        { 
-            new OpenApiSecurityScheme 
-            { 
-                Reference = new OpenApiReference 
-                { 
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer" 
-                } 
+                    Id = "Bearer"
+                }
             },
             Array.Empty<string>()
-        } 
+        }
     });
 });
 

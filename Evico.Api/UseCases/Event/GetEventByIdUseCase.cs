@@ -9,8 +9,8 @@ namespace Evico.Api.UseCases.Event;
 
 public class GetEventByIdUseCase
 {
-    private readonly EventService _eventService;
     private readonly AuthService _authService;
+    private readonly EventService _eventService;
 
     public GetEventByIdUseCase(EventService eventService, AuthService authService)
     {
@@ -27,7 +27,7 @@ public class GetEventByIdUseCase
         if (getByIdResult.IsFailed)
             return new BadRequestObjectResult(getByIdResult.GetReport());
         var eventWithId = getByIdResult.Value;
-        
+
         var canViewEventResult = _eventService.CanView(eventWithId, currentUser);
         if (canViewEventResult.IsFailed)
             return new ObjectResult(canViewEventResult.GetReport())

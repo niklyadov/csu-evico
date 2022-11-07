@@ -9,15 +9,15 @@ namespace Evico.Api.UseCases.Place;
 
 public class GetPlaceByIdUseCase
 {
-    private readonly PlaceService _placeService;
     private readonly AuthService _authService;
+    private readonly PlaceService _placeService;
 
     public GetPlaceByIdUseCase(PlaceService placeService, AuthService authService)
     {
         _placeService = placeService;
         _authService = authService;
     }
-    
+
     public async Task<ActionResult<PlaceRecord>> GetByIdAsync(long placeId, ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
@@ -27,7 +27,7 @@ public class GetPlaceByIdUseCase
         if (placeWithIdResult.IsFailed)
             return new BadRequestObjectResult(placeWithIdResult.GetReport());
         var place = placeWithIdResult.Value;
-        
+
         var canViewResult = _placeService.CanView(place, currentUser);
         if (canViewResult.IsFailed)
             return new ObjectResult(canViewResult.GetReport())

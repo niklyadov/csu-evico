@@ -10,16 +10,17 @@ namespace Evico.Api.UseCases.Place;
 
 public class AddPlaceUseCase : PlaceUseCase
 {
-    private readonly PlaceService _placeService;
     private readonly AuthService _authService;
+    private readonly PlaceService _placeService;
 
     public AddPlaceUseCase(PlaceService placeService, AuthService authService)
     {
         _placeService = placeService;
         _authService = authService;
     }
-    
-    public async Task<ActionResult<PlaceRecord>> AddAsync(AddPlaceInputModel inputModel, ClaimsPrincipal claimsPrincipal)
+
+    public async Task<ActionResult<PlaceRecord>> AddAsync(AddPlaceInputModel inputModel,
+        ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         if (currentUserResult.IsFailed)
@@ -34,7 +35,7 @@ public class AddPlaceUseCase : PlaceUseCase
             Description = inputModel.Description,
             Owner = currentUser
         };
-        
+
         var canCreateResult = _placeService.CanCreate(placeRecord, currentUser);
         if (canCreateResult.IsFailed)
             return new ObjectResult(canCreateResult.GetReport())
@@ -47,7 +48,7 @@ public class AddPlaceUseCase : PlaceUseCase
             return new BadRequestObjectResult(placeCreateResult.GetReport());
 
         var createdPlace = placeCreateResult.Value;
-        
+
         return new OkObjectResult(createdPlace);
     }
 }

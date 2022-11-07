@@ -10,16 +10,17 @@ namespace Evico.Api.UseCases.Place;
 
 public class UpdatePlaceUseCase
 {
-    private readonly PlaceService _placeService;
     private readonly AuthService _authService;
+    private readonly PlaceService _placeService;
 
     public UpdatePlaceUseCase(PlaceService placeService, AuthService authService)
     {
         _placeService = placeService;
         _authService = authService;
     }
-    
-    public async Task<ActionResult<PlaceRecord>> UpdateAsync(UpdatePlaceInputModel inputModel, ClaimsPrincipal claimsPrincipal)
+
+    public async Task<ActionResult<PlaceRecord>> UpdateAsync(UpdatePlaceInputModel inputModel,
+        ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         if (currentUserResult.IsFailed)
@@ -30,7 +31,7 @@ public class UpdatePlaceUseCase
         if (placeWithIdResult.IsFailed)
             return new BadRequestObjectResult(placeWithIdResult.GetReport());
         var place = placeWithIdResult.Value;
-        
+
         var canUpdateResult = _placeService.CanUpdate(place, currentUser);
         if (canUpdateResult.IsFailed)
             return new ObjectResult(canUpdateResult.GetReport())
@@ -38,18 +39,18 @@ public class UpdatePlaceUseCase
                 StatusCode = StatusCodes.Status403Forbidden
             };
 
-        if (!String.IsNullOrEmpty(inputModel.Name))
+        if (!string.IsNullOrEmpty(inputModel.Name))
             place.Name = inputModel.Name;
-        
-        if (!String.IsNullOrEmpty(inputModel.Description))
+
+        if (!string.IsNullOrEmpty(inputModel.Description))
             place.Description = inputModel.Description;
-        
+
         if (inputModel.LocationLatitude.HasValue)
             place.LocationLatitude = inputModel.LocationLatitude.Value;
-        
+
         if (inputModel.LocationLongitude.HasValue)
             place.LocationLongitude = inputModel.LocationLongitude.Value;
-        
+
         var updatePlaceResult = await _placeService.UpdateAsync(place);
         if (updatePlaceResult.IsFailed)
             return new BadRequestObjectResult(updatePlaceResult.GetReport());
