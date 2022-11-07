@@ -10,18 +10,19 @@ namespace Evico.Api.UseCases.Place.Review;
 
 public class UpdatePlaceReviewUseCase
 {
-    private readonly PlaceService _placeService;
-    private readonly PlaceReviewService _placeReviewService;
     private readonly AuthService _authService;
+    private readonly PlaceReviewService _placeReviewService;
+    private readonly PlaceService _placeService;
 
-    public UpdatePlaceReviewUseCase(PlaceService placeService, PlaceReviewService placeReviewService, AuthService authService)
+    public UpdatePlaceReviewUseCase(PlaceService placeService, PlaceReviewService placeReviewService,
+        AuthService authService)
     {
         _placeService = placeService;
         _placeReviewService = placeReviewService;
         _authService = authService;
     }
-    
-    public async Task<ActionResult<List<PlaceReviewRecord>>> UpdateAsync(long placeId, 
+
+    public async Task<ActionResult<List<PlaceReviewRecord>>> UpdateAsync(long placeId,
         UpdatePlaceInputModel inputModel, ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
@@ -33,7 +34,7 @@ public class UpdatePlaceReviewUseCase
         if (placeReviewWithIdResult.IsFailed)
             return new BadRequestObjectResult(placeReviewWithIdResult.GetReport());
         var placeReview = placeReviewWithIdResult.Value;
-        
+
         var canUpdateResult = _placeReviewService.CanUpdate(placeReview, currentUser);
         if (canUpdateResult.IsFailed)
             return new ObjectResult(canUpdateResult.GetReport())

@@ -9,21 +9,24 @@ namespace Evico.Api.UseCases.Place.Review;
 
 public class GetPlaceReviewByIdUseCase
 {
-    private readonly PlaceService _placeService;
-    private readonly PlaceReviewService _placeReviewService;
     private readonly AuthService _authService;
+    private readonly PlaceReviewService _placeReviewService;
+    private readonly PlaceService _placeService;
 
-    public GetPlaceReviewByIdUseCase(PlaceService placeService, PlaceReviewService placeReviewService, AuthService authService)
+    public GetPlaceReviewByIdUseCase(PlaceService placeService, PlaceReviewService placeReviewService,
+        AuthService authService)
     {
         _placeService = placeService;
         _placeReviewService = placeReviewService;
         _authService = authService;
     }
-    public async Task<ActionResult<PlaceReviewRecord>> GetByIdAsync(long placeId, long reviewId, ClaimsPrincipal claimsPrincipal)
+
+    public async Task<ActionResult<PlaceReviewRecord>> GetByIdAsync(long placeId, long reviewId,
+        ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         var currentUser = currentUserResult.ValueOrDefault;
-        
+
         var placeReviewWithIdResult = await _placeReviewService.GetByIdAsync(reviewId);
         if (placeReviewWithIdResult.IsFailed)
             return new BadRequestObjectResult(placeReviewWithIdResult.GetReport());
@@ -33,7 +36,7 @@ public class GetPlaceReviewByIdUseCase
         if (placeWithIdResult.IsFailed)
             return new BadRequestObjectResult(placeWithIdResult.GetReport());
         var place = placeWithIdResult.Value;
-        
+
         var canViewResult = _placeReviewService.CanView(place, placeReview, currentUser);
         if (canViewResult.IsFailed)
             return new ObjectResult(canViewResult.GetReport())

@@ -6,22 +6,24 @@ using Evico.Api.Services;
 using Evico.Api.Services.Auth;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Evico.Api.UseCases.Event;
+namespace Evico.Api.UseCases.Event.Review;
 
 public class AddEventReviewUseCase
 {
-    private readonly EventService _eventService;
-    private readonly EventReviewService _eventReviewService;
     private readonly AuthService _authService;
+    private readonly EventReviewService _eventReviewService;
+    private readonly EventService _eventService;
 
-    public AddEventReviewUseCase(EventService eventService, EventReviewService eventReviewService, AuthService authService)
+    public AddEventReviewUseCase(EventService eventService, EventReviewService eventReviewService,
+        AuthService authService)
     {
         _eventService = eventService;
         _eventReviewService = eventReviewService;
         _authService = authService;
     }
-    
-    public async Task<ActionResult<EventReviewRecord>> AddAsync(long eventId, AddEventReviewInputModel inputModel, ClaimsPrincipal claimsPrincipal)
+
+    public async Task<ActionResult<EventReviewRecord>> AddAsync(long eventId, AddEventReviewInputModel inputModel,
+        ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         if (currentUserResult.IsFailed)
@@ -33,7 +35,7 @@ public class AddEventReviewUseCase
             return new BadRequestObjectResult(
                 eventWithIdResult.GetReport());
         var eventWithId = eventWithIdResult.Value;
-        
+
         var canCreateEventReviewResult = _eventReviewService.CanCreate(eventWithId, currentUser);
         if (canCreateEventReviewResult.IsFailed)
             return new ObjectResult(canCreateEventReviewResult.GetReport())

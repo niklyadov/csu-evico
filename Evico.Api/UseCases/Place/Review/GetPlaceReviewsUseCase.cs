@@ -9,27 +9,28 @@ namespace Evico.Api.UseCases.Place.Review;
 
 public class GetPlaceReviewsUseCase
 {
-    private readonly PlaceService _placeService;
-    private readonly PlaceReviewService _placeReviewService;
     private readonly AuthService _authService;
+    private readonly PlaceReviewService _placeReviewService;
+    private readonly PlaceService _placeService;
 
-    public GetPlaceReviewsUseCase(PlaceService placeService, PlaceReviewService placeReviewService, AuthService authService)
+    public GetPlaceReviewsUseCase(PlaceService placeService, PlaceReviewService placeReviewService,
+        AuthService authService)
     {
         _placeService = placeService;
         _placeReviewService = placeReviewService;
         _authService = authService;
     }
-    
+
     public async Task<ActionResult<List<PlaceReviewRecord>>> GetAllAsync(long placeId, ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         var currentUser = currentUserResult.ValueOrDefault;
-        
+
         var placeWithIdResult = await _placeService.GetByIdAsync(placeId);
         if (placeWithIdResult.IsFailed)
             return new BadRequestObjectResult(placeWithIdResult.GetReport());
         var place = placeWithIdResult.Value;
-        
+
         var canViewResult = _placeReviewService.CanViewAll(place, currentUser);
         if (canViewResult.IsFailed)
             return new ObjectResult(canViewResult.GetReport())
@@ -40,10 +41,10 @@ public class GetPlaceReviewsUseCase
         var placeReviewsResult = await _placeReviewService.GetAllAsync();
         if (placeReviewsResult.IsFailed)
             return new BadRequestObjectResult(placeReviewsResult.GetReport());
-        
+
         var placeReview = placeReviewsResult.Value;
 
-        
+
         return new OkObjectResult(placeReview);
     }
 }

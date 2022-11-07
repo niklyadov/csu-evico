@@ -7,15 +7,15 @@ namespace Evico.Api.UseCases.Auth;
 
 public class CreateNewTokensUseCase
 {
-    private readonly ProfileService _profileService;
     private readonly JwtTokensService _jwtTokensService;
+    private readonly ProfileService _profileService;
 
     public CreateNewTokensUseCase(ProfileService profileService, JwtTokensService jwtTokensService)
     {
         _profileService = profileService;
         _jwtTokensService = jwtTokensService;
     }
-    
+
     public async Task<ActionResult<BearerRefreshTokenPair>> CreateNewToken(string username)
     {
         var addWithUsernameResult = await _profileService.AddWithUsernameAsync(username);
@@ -23,9 +23,9 @@ public class CreateNewTokensUseCase
             return new BadRequestObjectResult(addWithUsernameResult.GetReport());
 
         var tokensPair = new BearerRefreshTokenPair(
-            _jwtTokensService.CreateAccessTokenForUser(addWithUsernameResult.Value), 
-                _jwtTokensService.CreateRefreshTokenForUser(addWithUsernameResult.Value));
-        
+            _jwtTokensService.CreateAccessTokenForUser(addWithUsernameResult.Value),
+            _jwtTokensService.CreateRefreshTokenForUser(addWithUsernameResult.Value));
+
         return new OkObjectResult(tokensPair);
     }
 }

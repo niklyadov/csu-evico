@@ -2,7 +2,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Evico.Api.Entity;
-using FluentResults;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -17,15 +16,19 @@ public class JwtTokensService
         _configuration = configuration.Value;
     }
 
-    public String CreateAccessTokenForUser(ProfileRecord user)
-        => CreateTokenForUser(user, 
+    public string CreateAccessTokenForUser(ProfileRecord user)
+    {
+        return CreateTokenForUser(user,
             DateTime.UtcNow + _configuration.JwtDefaultLifetime);
-    
-    public String CreateRefreshTokenForUser(ProfileRecord user)
-        => CreateTokenForUser(user, 
+    }
+
+    public string CreateRefreshTokenForUser(ProfileRecord user)
+    {
+        return CreateTokenForUser(user,
             DateTime.UtcNow + _configuration.JwtRefreshLifetime);
-    
-    private String CreateTokenForUser(User user, DateTime expires)
+    }
+
+    private string CreateTokenForUser(User user, DateTime expires)
     {
         var issuer = _configuration.Issuer;
         var audience = _configuration.Audience;
@@ -51,10 +54,12 @@ public class JwtTokensService
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
         var jwtToken = tokenHandler.WriteToken(token);
-        
+
         return jwtToken;
     }
-    
-    public JwtSecurityToken ParseToken(string jwtBase64) 
-        => new JwtSecurityToken(jwtBase64);
+
+    public JwtSecurityToken ParseToken(string jwtBase64)
+    {
+        return new(jwtBase64);
+    }
 }

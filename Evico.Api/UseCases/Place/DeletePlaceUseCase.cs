@@ -9,15 +9,15 @@ namespace Evico.Api.UseCases.Place;
 
 public class DeletePlaceUseCase
 {
-    private readonly PlaceService _placeService;
     private readonly AuthService _authService;
+    private readonly PlaceService _placeService;
 
     public DeletePlaceUseCase(PlaceService placeService, AuthService authService)
     {
         _placeService = placeService;
         _authService = authService;
     }
-    
+
     public async Task<ActionResult<PlaceRecord>> DeleteByIdAsync(long placeId, ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
@@ -29,7 +29,7 @@ public class DeletePlaceUseCase
         if (placeWithIdResult.IsFailed)
             return new BadRequestObjectResult(placeWithIdResult.GetReport());
         var placeRecord = placeWithIdResult.Value;
-        
+
         var canDeleteResult = _placeService.CanDelete(placeRecord, currentUser);
         if (canDeleteResult.IsFailed)
             return new ObjectResult(canDeleteResult.GetReport())

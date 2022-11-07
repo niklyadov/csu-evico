@@ -10,29 +10,31 @@ namespace Evico.Api.UseCases.Place.Review;
 
 public class AddPlaceReviewUseCase
 {
-    private readonly PlaceService _placeService;
-    private readonly PlaceReviewService _placeReviewService;
     private readonly AuthService _authService;
+    private readonly PlaceReviewService _placeReviewService;
+    private readonly PlaceService _placeService;
 
-    public AddPlaceReviewUseCase(PlaceService placeService, PlaceReviewService placeReviewService, AuthService authService)
+    public AddPlaceReviewUseCase(PlaceService placeService, PlaceReviewService placeReviewService,
+        AuthService authService)
     {
         _placeService = placeService;
         _placeReviewService = placeReviewService;
         _authService = authService;
     }
-    
-    public async Task<ActionResult<PlaceReviewRecord>> AddAsync(long placeId, AddPlaceReviewInputModel inputModel, ClaimsPrincipal claimsPrincipal)
+
+    public async Task<ActionResult<PlaceReviewRecord>> AddAsync(long placeId, AddPlaceReviewInputModel inputModel,
+        ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         if (currentUserResult.IsFailed)
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
-        
+
         var placeWithIdResult = await _placeService.GetByIdAsync(placeId);
         if (placeWithIdResult.IsFailed)
             return new BadRequestObjectResult(placeWithIdResult.GetReport());
         var place = placeWithIdResult.Value;
-        
+
         var canCreateResult = _placeReviewService.CanCreate(place, currentUser);
         if (canCreateResult.IsFailed)
             return new ObjectResult(canCreateResult.GetReport())
@@ -52,7 +54,7 @@ public class AddPlaceReviewUseCase
         var createResult = await _placeReviewService.AddAsync(placeReview);
         if (createResult.IsFailed)
             return new BadRequestObjectResult(createResult.GetReport());
-        
+
         return new OkObjectResult(createResult.Value);
     }
 }

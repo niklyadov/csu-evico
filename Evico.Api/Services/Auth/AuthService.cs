@@ -23,11 +23,11 @@ public class AuthService
     {
         if (claimsPrincipal.Identity == null)
             throw new InvalidOperationException("Identity is null");
-        
+
         if (!claimsPrincipal.Identity.IsAuthenticated)
             throw new InvalidOperationException("User is not authorized");
 
-        if (String.IsNullOrEmpty(claimsPrincipal.Identity.Name))
+        if (string.IsNullOrEmpty(claimsPrincipal.Identity.Name))
             throw new InvalidOperationException("Username is empty");
 
         var username = claimsPrincipal.Identity.Name!;
@@ -35,7 +35,7 @@ public class AuthService
         var userWithUsernameResult = await _profileService.GetByUsernameAsync(username);
 
         if (userWithUsernameResult.IsFailed)
-            throw new InvalidOperationException($"Retrieve user with username: {username} was failed", 
+            throw new InvalidOperationException($"Retrieve user with username: {username} was failed",
                 userWithUsernameResult.GetReportException());
 
         return userWithUsernameResult.Value;

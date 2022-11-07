@@ -16,7 +16,8 @@ public record EventRecord : EntityRecord
     public ExternalPhotoRecord? Photo { get; set; } = null;
     public virtual List<ProfileRecord> Organizers { get; set; } = new();
     public virtual List<ProfileRecord> Participants { get; set; } = new();
-    [JsonIgnore]
-    public virtual List<EventReviewRecord> Reviews { get; set; } = new();
+
+    [JsonIgnore] public virtual List<EventReviewRecord> Reviews { get; set; } = new();
+
     public virtual List<EventCategoryRecord> Categories { get; set; } = new();
 }

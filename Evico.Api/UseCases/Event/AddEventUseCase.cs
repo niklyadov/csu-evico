@@ -10,8 +10,8 @@ namespace Evico.Api.UseCases.Event;
 
 public class AddEventUseCase : EventUseCase
 {
-    private readonly EventService _eventService;
     private readonly AuthService _authService;
+    private readonly EventService _eventService;
     private readonly PlaceService _placeService;
 
     public AddEventUseCase(EventService eventService, AuthService authService, PlaceService placeService)
