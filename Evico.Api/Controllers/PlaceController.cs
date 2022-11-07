@@ -37,6 +37,7 @@ public class PlaceController : BaseController
     }
 
     [HttpGet("{placeId}")]
+    [AllowAnonymous]
 
     public async Task<ActionResult<PlaceRecord>> GetById(long placeId)
     {
@@ -46,6 +47,7 @@ public class PlaceController : BaseController
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<List<PlaceRecord>>> GetAll()
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
