@@ -1,9 +1,9 @@
-import Button from "../../elements/Buttons/Button";
+import config from "../../../config";
 import Icon from "../../elements/Icons/Icon";
 
 export default function Auth() {
 
-    const clientId = 51458458, redirect_uri = 'https://web.csu-evico.ru:62666/auth/vk-callback';
+    const clientId = 51458458, redirect_uri_auth = config.redirect_uri_auth;
 
     return <div
 
@@ -20,15 +20,15 @@ export default function Auth() {
             onClick={_ => {
 
                 // todo: перенести куда-то, в отдельный сервис?
-                function logout() {
-                    //todo: строковые константы лучше бы вынести (authBearerToken и authRefreshToken)
-                    localStorage.setItem('authBearerToken', null);
-                    localStorage.setItem('authRefreshToken', null);
-                }
+                // function logout() {
+                //     //todo: строковые константы лучше бы вынести (authBearerToken и authRefreshToken)
+                //     localStorage.setItem('authBearerToken', null);
+                //     localStorage.setItem('authRefreshToken', null);
+                // }
                 
-                let handle = window.open(
+                window.open(
 
-                    `https://oauth.vk.com/authorize?client_id=${clientId}&redirect_uri=${redirect_uri}&scope=12&display=mobile`,
+                    `https://oauth.vk.com/authorize?client_id=${clientId}&redirect_uri=${redirect_uri_auth}&scope=12&display=mobile`,
                     'Auth',
                     `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=800,height=500`
 

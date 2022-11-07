@@ -1,15 +1,16 @@
-import Button from "../../elements/Buttons/Button";
-import Icon from "../../elements/Icons/Icon";
+import config from '../../../config';
 
 export default function AuthVkCallback() {
-    //todo: тут не помешала бы проверка на referer url. должны обрабатывать запросы только с referer url = https://oauth.vk.com/
-    
+
+    const urlReg = /https:\/\/oauth.vk.com\/\//;
     const urlParams = new URLSearchParams(window.location.search);
-    //const host = 'https://api.csu-evico.ru:61666/' //todo: вынести в конфиг
-    const host = 'https://localhost:61666/'
-    const redirectUrl = 'https://web.csu-evico.ru:62666/auth/vk-callback'
-    
+    const host = config.host;
+    const redirectUrl = config.redirect_uri_auth;
+
     try {
+        
+        if (!urlReg.test(document.referrer)) throw new Error('Неверный url');
+        
         fetch(`${host}auth/vkGateway?redirectUrl=${redirectUrl}`, {
             method: 'POST',
             mode: 'cors',
@@ -24,12 +25,12 @@ export default function AuthVkCallback() {
                 if (response.status === 200 || response.status === 202) {
                     let responseObj = JSON.parse(responseStr);
                     //todo: строковые константы лучше бы вынести (authBearerToken и authRefreshToken)
-                    localStorage.setItem('authBearerToken', responseObj['bearerToken']);
-                    localStorage.setItem('authRefreshToken', responseObj['refreshToken']);
+                    localStorage.setItem(config.authBearerToken, responseObj['bearerToken']);
+                    localStorage.setItem(config.authRefreshToken, responseObj['refreshToken']);
                     window.close();
                     return;
                 }
-                
+
                 throw new Error(responseStr)
             });
     } catch (ex) {

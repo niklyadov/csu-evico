@@ -16,6 +16,12 @@ export function NavMenu() {
                 <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={isOpen} navbar>
                     <ul className="navbar-nav flex-grow">
                         <NavItem>
+                            <NavLink tag={Link} to="/test">Тест</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink tag={Link} to="/compilation">Подбор</NavLink>
+                        </NavItem>
+                        <NavItem>
                             <NavLink tag={Link} to="/auth">Авторизация</NavLink>
                         </NavItem>
                         <NavItem>

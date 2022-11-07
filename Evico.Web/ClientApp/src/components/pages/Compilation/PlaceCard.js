@@ -1,13 +1,26 @@
-import { ToastBody, ToastHeader } from "reactstrap";
+/**
+ * @typedef T
+ * @prop {string} header
+ * @param {T} props
+*/
+export default function PlaceCard(props) {
 
-
-export function PlaceCard() {
-
-    return <Toast>
+    return <div
+    
+        className="div-card__place"
         
-        <ToastHeader></ToastHeader>
-        <ToastBody></ToastBody>
+    >
 
-    </Toast>
+        <header>
+            <h3>{props?.header}</h3>
+        </header>
+        <section>
+            <div>
+
+            </div>
+        </section>
+        <footer></footer>
+
+    </div>
 
 };
