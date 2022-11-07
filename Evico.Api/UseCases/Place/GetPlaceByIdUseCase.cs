@@ -7,35 +7,34 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.UseCases.Place;
 
-public class GetPlacesUseCase : PlaceUseCase
+public class GetPlaceByIdUseCase
 {
     private readonly PlaceService _placeService;
     private readonly AuthService _authService;
 
-    public GetPlacesUseCase(PlaceService placeService, AuthService authService)
+    public GetPlaceByIdUseCase(PlaceService placeService, AuthService authService)
     {
         _placeService = placeService;
         _authService = authService;
     }
-
-    public async Task<ActionResult<List<PlaceRecord>>> GetAllAsync(ClaimsPrincipal claimsPrincipal)
+    
+    public async Task<ActionResult<PlaceRecord>> GetByIdAsync(long placeId, ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         var currentUser = currentUserResult.ValueOrDefault;
+
+        var placeWithIdResult = await _placeService.GetByIdAsync(placeId);
+        if (placeWithIdResult.IsFailed)
+            return new BadRequestObjectResult(placeWithIdResult.GetReport());
+        var place = placeWithIdResult.Value;
         
-        var canViewResult = _placeService.CanViewAll(currentUser);
+        var canViewResult = _placeService.CanView(place, currentUser);
         if (canViewResult.IsFailed)
             return new ObjectResult(canViewResult.GetReport())
             {
                 StatusCode = StatusCodes.Status403Forbidden
             };
 
-        var placeWithIdResult = await _placeService.GetAllAsync();
-        if (placeWithIdResult.IsFailed)
-            return new BadRequestObjectResult(placeWithIdResult.GetReport());
-        var places = placeWithIdResult.Value;
-
-        
-        return new OkObjectResult(places);
+        return new OkObjectResult(place);
     }
 }

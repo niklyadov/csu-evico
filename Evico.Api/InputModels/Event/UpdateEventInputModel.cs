@@ -13,8 +13,8 @@ public class UpdateEventInputModel
     //public long PhotoId { get; set; }
 
     [StringLength(255, MinimumLength = 1)]
-    public string? Name { get; set; } = string.Empty;
+    public string? Name { get; set; }
     
     [StringLength(1024)]
-    public string? Description { get; set; } = string.Empty;
+    public string? Description { get; set; }
 }

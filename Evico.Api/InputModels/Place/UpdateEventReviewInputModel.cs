@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using Evico.Api.Entity;
 
-namespace Evico.Api.InputModels.Event;
+namespace Evico.Api.InputModels.Place;
 
-public class UpdateEventReviewInputModel
+public class UpdatePlaceReviewInputModel
 {
     public long Id { get; set; }
     

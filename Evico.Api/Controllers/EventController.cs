@@ -19,7 +19,7 @@ public class EventController : BaseController
     private readonly GetEventReviewByIdUseCase _getEventReviewByIdUseCase;
     private readonly GetEventReviewsUseCase _getEventReviewsUseCase;
     private readonly UpdateEventReviewUseCase _updateEventReviewUseCase;
-    private readonly DeleteEventReviewByIdUseCase _deleteEventReviewByIdUseCase;
+    private readonly DeleteEventReviewUseCase _deleteEventReviewUseCase;
 
     public EventController(IServiceProvider services)
     {
@@ -32,7 +32,7 @@ public class EventController : BaseController
         _getEventReviewByIdUseCase = services.GetRequiredService<GetEventReviewByIdUseCase>();
         _getEventReviewsUseCase = services.GetRequiredService<GetEventReviewsUseCase>();
         _updateEventReviewUseCase = services.GetRequiredService<UpdateEventReviewUseCase>();
-        _deleteEventReviewByIdUseCase = services.GetRequiredService<DeleteEventReviewByIdUseCase>();
+        _deleteEventReviewUseCase = services.GetRequiredService<DeleteEventReviewUseCase>();
     }
 
     [HttpPost]
@@ -117,6 +117,6 @@ public class EventController : BaseController
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        return await _deleteEventReviewByIdUseCase.DeleteByIdAsync(eventId, reviewId, User);
+        return await _deleteEventReviewUseCase.DeleteByIdAsync(eventId, reviewId, User);
     }
 }
