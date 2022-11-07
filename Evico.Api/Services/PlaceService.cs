@@ -1,6 +1,7 @@
 using Evico.Api.Entity;
-using Evico.Api.InputModels;
+using Evico.Api.InputModels.Place;
 using Evico.Api.QueryBuilder;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.Services;
@@ -50,5 +51,13 @@ public class PlaceService
         {
             return new BadRequestObjectResult(exception.ToString());
         }
+    }
+
+    public async Task<Result<PlaceRecord>> GetByIdAsync(long id)
+    {
+        return await Result.Try(async () =>
+        {
+            return await _placeQueryBuilder.WithId(id).SingleAsync();
+        });
     }
 }

@@ -1,22 +1,23 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Route } from 'react-router';
 import { Layout } from './components/Layout';
-import { Home } from './components/Home';
-import { FetchData } from './components/FetchData';
-import { Counter } from './components/Counter';
+import Auth from './components/pages/Auth/Auth';
+import Compilation from './components/pages/Compilation/Compilation';
+import Main from './components/pages/Main/Main';
+import Test from './components/pages/Test/Test';
 
 import './custom.css'
+import './scripts/document.js';
+import AuthVkCallback from "./components/pages/Auth/AuthVkCallback";
 
-export default class App extends Component {
-  static displayName = App.name;
+export default function App() {
 
-  render () {
-    return (
-      <Layout>
-        <Route exact path='/' component={Home} />
-        <Route path='/counter' component={Counter} />
-        <Route path='/fetch-data' component={FetchData} />
-      </Layout>
-    );
-  }
-}
+  return <Layout>
+    <Route exact path='/' component={Main} />
+    <Route exact path='/auth' component={Auth} />
+    <Route exact path='/auth/vk-callback' component={AuthVkCallback} />
+    <Route exact path='/test' component={Test} />
+    <Route exact path='/compilation' component={Compilation} />
+  </Layout>
+
+};
