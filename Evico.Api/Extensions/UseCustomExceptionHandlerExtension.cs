@@ -4,7 +4,7 @@ namespace Evico.Api.Extensions;
 
 public static class UseCustomExceptionHandlerExtension
 {
-    public static void UseCustomExceptionHandler(this WebApplication application)
+    public static void UseCustomExceptionHandler(this IApplicationBuilder application)
     {
         application.UseMiddleware<ExceptionHandlerMiddleware>();
     }
