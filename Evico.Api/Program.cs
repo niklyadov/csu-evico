@@ -11,6 +11,7 @@ using Evico.Api.UseCases.Event;
 using Evico.Api.UseCases.Event.Review;
 using Evico.Api.UseCases.Place;
 using Evico.Api.UseCases.Place.Review;
+using FluentResults;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -169,6 +170,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+Result.Setup(config => 
+    config.Logger = new FluentResultsLogger(app.Logger));
 
 app.UseCustomExceptionHandler();
 
