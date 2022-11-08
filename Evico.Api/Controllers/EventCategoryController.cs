@@ -24,34 +24,34 @@ public class EventCategoryController : BaseController
     }
 
     [HttpPost]
-    public ActionResult<EventCategoryRecord> Add(AddEventCategoryInputModel inputModel)
+    public async Task<ActionResult<EventCategoryRecord>> Add(AddEventCategoryInputModel inputModel)
     {
-        return _addEventCategoryUseCase.AddAsync(inputModel, User);
+        return await _addEventCategoryUseCase.AddAsync(inputModel, User);
     }
     
     [HttpGet("{categoryId}")]
     [AllowAnonymous]
-    public ActionResult<EventCategoryRecord> GetById(long categoryId)
+    public async Task<ActionResult<EventCategoryRecord>> GetById(long categoryId)
     {
-        return _getEventCategoryByIdUseCase.GetByIdAsync(categoryId, User);
+        return await _getEventCategoryByIdUseCase.GetByIdAsync(categoryId, User);
     }
     
     [HttpGet]
     [AllowAnonymous]
-    public ActionResult<List<EventCategoryRecord>> GetAll()
+    public async Task<ActionResult<List<EventCategoryRecord>>> GetAll()
     {
-        return _getEventCategoriesUseCase.GetAllAsync(User);
+        return await _getEventCategoriesUseCase.GetAllAsync(User);
     }
     
     [HttpPut]
-    public ActionResult<List<EventCategoryRecord>> Update(UpdateEventCategoryInputModel inputModel)
+    public async Task<ActionResult<List<EventCategoryRecord>>> Update(UpdateEventCategoryInputModel inputModel)
     {
-        return _updateEventCategoryUseCase.UpdateAsync(inputModel, User);
+        return await _updateEventCategoryUseCase.UpdateAsync(inputModel, User);
     }
     
     [HttpDelete("{categoryId}")]
-    public ActionResult<List<EventCategoryRecord>> Delete(long categoryId)
+    public async Task<ActionResult<List<EventCategoryRecord>>> Delete(long categoryId)
     {
-        return _deleteEventCategoryUseCase.DeleteAsync(categoryId, User);
+        return await _deleteEventCategoryUseCase.DeleteAsync(categoryId, User);
     }
 }

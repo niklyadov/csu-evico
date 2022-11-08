@@ -23,34 +23,34 @@ public class PlaceCategoryController : BaseController
         _deletePlaceCategoryUseCase = services.GetRequiredService<DeletePlaceCategoryUseCase>();
     }
     [HttpPost]
-    public ActionResult<PlaceCategoryRecord> Add(AddPlaceCategoryInputModel inputModel)
+    public async Task<ActionResult<PlaceCategoryRecord>> Add(AddPlaceCategoryInputModel inputModel)
     {
-        return _addPlaceCategoryUseCase.AddAsync(inputModel, User);
+        return await _addPlaceCategoryUseCase.AddAsync(inputModel, User);
     }
     
     [HttpGet("{categoryId}")]
     [AllowAnonymous]
-    public ActionResult<PlaceCategoryRecord> GetById(long categoryId)
+    public async Task<ActionResult<PlaceCategoryRecord>> GetById(long categoryId)
     {
-        return _getPlaceCategoryByIdUseCase.GetByIdAsync(categoryId, User);
+        return await _getPlaceCategoryByIdUseCase.GetByIdAsync(categoryId, User);
     }
     
     [HttpGet]
     [AllowAnonymous]
-    public ActionResult<List<PlaceCategoryRecord>> GetAll()
+    public async Task<ActionResult<List<PlaceCategoryRecord>>> GetAll()
     {
-        return _getPlaceCategoriesUseCase.GetAllAsync(User);
+        return await _getPlaceCategoriesUseCase.GetAllAsync(User);
     }
     
     [HttpPut]
-    public ActionResult<List<PlaceCategoryRecord>> Update(UpdatePlaceCategoryInputModel inputModel)
+    public async Task<ActionResult<List<PlaceCategoryRecord>>> Update(UpdatePlaceCategoryInputModel inputModel)
     {
-        return _updatePlaceCategoryUseCase.UpdateAsync(inputModel, User);
+        return await _updatePlaceCategoryUseCase.UpdateAsync(inputModel, User);
     }
     
     [HttpDelete("{categoryId}")]
-    public ActionResult<List<PlaceCategoryRecord>> Delete(long categoryId)
+    public async Task<ActionResult<List<PlaceCategoryRecord>>> Delete(long categoryId)
     {
-        return _deletePlaceCategoryUseCase.DeleteAsync(categoryId, User);
+        return await _deletePlaceCategoryUseCase.DeleteAsync(categoryId, User);
     }
 }
