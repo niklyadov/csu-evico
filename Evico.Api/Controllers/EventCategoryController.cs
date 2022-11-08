@@ -24,7 +24,7 @@ public class EventCategoryController : BaseController
     }
 
     [HttpPost]
-    public async Task<ActionResult<EventCategoryRecord>> Add(AddEventCategoryInputModel inputModel)
+    public async Task<ActionResult<EventCategoryRecord>> Add([FromBody] AddEventCategoryInputModel inputModel)
     {
         return await _addEventCategoryUseCase.AddAsync(inputModel, User);
     }
@@ -44,7 +44,7 @@ public class EventCategoryController : BaseController
     }
     
     [HttpPut]
-    public async Task<ActionResult<List<EventCategoryRecord>>> Update(UpdateEventCategoryInputModel inputModel)
+    public async Task<ActionResult<List<EventCategoryRecord>>> Update([FromBody] UpdateEventCategoryInputModel inputModel)
     {
         return await _updateEventCategoryUseCase.UpdateAsync(inputModel, User);
     }

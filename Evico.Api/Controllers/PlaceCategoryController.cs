@@ -23,7 +23,7 @@ public class PlaceCategoryController : BaseController
         _deletePlaceCategoryUseCase = services.GetRequiredService<DeletePlaceCategoryUseCase>();
     }
     [HttpPost]
-    public async Task<ActionResult<PlaceCategoryRecord>> Add(AddPlaceCategoryInputModel inputModel)
+    public async Task<ActionResult<PlaceCategoryRecord>> Add([FromBody] AddPlaceCategoryInputModel inputModel)
     {
         return await _addPlaceCategoryUseCase.AddAsync(inputModel, User);
     }
@@ -43,7 +43,7 @@ public class PlaceCategoryController : BaseController
     }
     
     [HttpPut]
-    public async Task<ActionResult<List<PlaceCategoryRecord>>> Update(UpdatePlaceCategoryInputModel inputModel)
+    public async Task<ActionResult<List<PlaceCategoryRecord>>> Update([FromBody] UpdatePlaceCategoryInputModel inputModel)
     {
         return await _updatePlaceCategoryUseCase.UpdateAsync(inputModel, User);
     }
