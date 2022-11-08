@@ -1,6 +1,6 @@
 using System.Globalization;
 using System.Text.Json;
-using Evico.Api.Entity;
+using Evico.Api.Entities;
 using FluentResults;
 using Microsoft.Extensions.Options;
 

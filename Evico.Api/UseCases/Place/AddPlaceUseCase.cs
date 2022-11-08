@@ -1,9 +1,10 @@
 using System.Security.Claims;
-using Evico.Api.Entity;
+using Evico.Api.Entities;
 using Evico.Api.Extensions;
 using Evico.Api.InputModels.Place;
 using Evico.Api.Services;
 using Evico.Api.Services.Auth;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.UseCases.Place;
@@ -35,6 +36,21 @@ public class AddPlaceUseCase
             Description = inputModel.Description,
             Owner = currentUser
         };
+
+        if (inputModel.ParentId.HasValue)
+        {
+            var parentPlaceResult = await _placeService.GetByIdAsync(inputModel.ParentId.Value);
+            if (parentPlaceResult.IsFailed)
+            {
+                var parentPlaceError = new Error("Can`t add parent place")
+                    .CausedBy(parentPlaceResult.Errors);
+                
+                return new BadRequestObjectResult(Result.Fail(parentPlaceError).GetReport());
+            }
+            var parentPlace = parentPlaceResult.Value;
+
+            placeRecord.Parent = parentPlace;
+        }
 
         var canCreateResult = _placeService.CanCreate(placeRecord, currentUser);
         if (canCreateResult.IsFailed)

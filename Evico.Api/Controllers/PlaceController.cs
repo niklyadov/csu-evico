@@ -1,4 +1,4 @@
-using Evico.Api.Entity;
+using Evico.Api.Entities;
 using Evico.Api.InputModels.Place;
 using Evico.Api.UseCases.Place;
 using Evico.Api.UseCases.Place.Review;

@@ -2,14 +2,16 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Evico.Api;
 using Evico.Api.Extensions;
-using Evico.Api.QueryBuilder;
+using Evico.Api.QueryBuilders;
 using Evico.Api.Services;
 using Evico.Api.Services.Auth;
 using Evico.Api.Services.Auth.Vk;
 using Evico.Api.UseCases.Auth;
 using Evico.Api.UseCases.Event;
+using Evico.Api.UseCases.Event.Category;
 using Evico.Api.UseCases.Event.Review;
 using Evico.Api.UseCases.Place;
+using Evico.Api.UseCases.Place.Category;
 using Evico.Api.UseCases.Place.Review;
 using FluentResults;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -38,6 +40,8 @@ builder.Services.AddScoped<ProfileQueryBuilder>();
 builder.Services.AddScoped<EventReviewQueryBuilder>();
 builder.Services.AddScoped<ExternalPhotoQueryBuilder>();
 builder.Services.AddScoped<PlaceReviewQueryBuilder>();
+builder.Services.AddScoped<EventCategoryQueryBuilder>();
+builder.Services.AddScoped<PlaceCategoryQueryBuilder>();
 
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<PlaceService>();
@@ -45,6 +49,8 @@ builder.Services.AddScoped<ProfileService>();
 builder.Services.AddScoped<ExternalPhotoService>();
 builder.Services.AddScoped<EventReviewService>();
 builder.Services.AddScoped<PlaceReviewService>();
+builder.Services.AddScoped<EventCategoryService>();
+builder.Services.AddScoped<PlaceCategoryService>();
 
 builder.Services.AddScoped<AuthViaVkUseCase>();
 builder.Services.AddScoped<CreateNewTokensUseCase>();
@@ -72,6 +78,18 @@ builder.Services.AddScoped<GetPlaceReviewByIdUseCase>();
 builder.Services.AddScoped<GetPlaceReviewsUseCase>();
 builder.Services.AddScoped<UpdatePlaceReviewUseCase>();
 builder.Services.AddScoped<DeletePlaceReviewUseCase>();
+
+builder.Services.AddScoped<AddEventCategoryUseCase>();
+builder.Services.AddScoped<GetEventCategoryByIdUseCase>();
+builder.Services.AddScoped<GetEventCategoriesUseCase>();
+builder.Services.AddScoped<UpdateEventCategoryUseCase>();
+builder.Services.AddScoped<DeleteEventCategoryUseCase>();
+
+builder.Services.AddScoped<AddPlaceCategoryUseCase>();
+builder.Services.AddScoped<GetPlaceCategoryByIdUseCase>();
+builder.Services.AddScoped<GetPlaceCategoryByIdUseCase>();
+builder.Services.AddScoped<GetPlaceCategoryByIdUseCase>();
+builder.Services.AddScoped<GetPlaceCategoryByIdUseCase>();
 
 builder.Services.AddAuthentication(options =>
 {

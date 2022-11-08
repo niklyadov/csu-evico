@@ -1,5 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
-using Evico.Api.Entity;
+using Evico.Api.Entities;
 using FluentResults;
 using Microsoft.IdentityModel.Tokens;
 

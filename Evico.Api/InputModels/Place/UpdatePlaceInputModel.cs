@@ -13,4 +13,6 @@ public class UpdatePlaceInputModel
     
     [StringLength(1024)]
     public string? Description { get; set; }
+    
+    public long? ParentId { get; set; }
 }

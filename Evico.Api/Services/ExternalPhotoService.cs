@@ -1,4 +1,4 @@
-using Evico.Api.QueryBuilder;
+using Evico.Api.QueryBuilders;
 
 namespace Evico.Api.Services;
 

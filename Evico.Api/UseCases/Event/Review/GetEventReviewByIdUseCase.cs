@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Evico.Api.Entity;
+using Evico.Api.Entities;
 using Evico.Api.Extensions;
 using Evico.Api.Services;
 using Evico.Api.Services.Auth;

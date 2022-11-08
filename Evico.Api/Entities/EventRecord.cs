@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Evico.Api.Entity;
+namespace Evico.Api.Entities;
 
 public record EventRecord : EntityRecord
 {
