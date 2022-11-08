@@ -27,6 +27,7 @@ public class EventService
         return await Result.Try(async () =>
         {
             return await _eventQueryBuilder
+                .Include(x => x.Categories)
                 .WhereNotDeleted()
                 .ToListAsync();
         });
@@ -37,6 +38,7 @@ public class EventService
         return await Result.Try(async () =>
         {
             return await _eventQueryBuilder
+                .Include(x => x.Categories)
                 .Include(x => x.Place)
                 .WhereNotDeleted()
                 .WithId(eventId)
@@ -107,10 +109,7 @@ public class EventService
             return Result.Fail($"Event with id: {eventRecord.Id} was already deleted");
 
         // todo добавить проверку на роль. модератор тоже должен уметь удалять обновлять
-
-        if (userRecord == null)
-            return Result.Ok();
-
+        
         return Result.OkIf(eventRecord.OwnerId == userRecord.Id,
             "Only owner or moderator can update this event");
     }
