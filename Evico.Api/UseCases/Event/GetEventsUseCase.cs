@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.UseCases.Event;
 
-public class GetEventsUseCase : EventUseCase
+public class GetEventsUseCase
 {
     private readonly AuthService _authService;
     private readonly EventService _eventService;
