@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.UseCases.Place;
 
-public class AddPlaceUseCase : PlaceUseCase
+public class AddPlaceUseCase
 {
     private readonly AuthService _authService;
     private readonly PlaceService _placeService;
