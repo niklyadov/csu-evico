@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Evico.Api;
@@ -12,10 +11,7 @@ using Evico.Api.UseCases.Event;
 using Evico.Api.UseCases.Event.Review;
 using Evico.Api.UseCases.Place;
 using Evico.Api.UseCases.Place.Review;
-using FluentResults;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -147,40 +143,7 @@ builder.Services.AddCors(options =>
 builder.Services.Configure<RouteOptions>(options =>
     options.LowercaseUrls = true);
 
-builder.Services.Configure<ApiBehaviorOptions>(o =>
-{
-    o.InvalidModelStateResponseFactory = actionContext =>
-    {
-        Result? result = null;
-
-        foreach (var modelStateKeyValue in actionContext.ModelState)
-        {
-            var modelState = modelStateKeyValue.Value;
-            
-            if(modelState.ValidationState == ModelValidationState.Valid)
-                continue;
-
-            var mainValidateError = new Error("One or more errors occurred when validate model");
-            mainValidateError.Metadata.Add("ValidationState", modelState.ValidationState.ToString());
-            
-            result = Result.Fail(mainValidateError
-                .CausedBy(modelState.Errors
-                        .Select(mError =>
-                        {
-                            var error = new Error(mError.ErrorMessage);
-
-                            if (mError.Exception != null)
-                                error.CausedBy(mError.Exception);
-
-                            return error;
-                        })
-                    )
-            );
-        }
-        
-        return new BadRequestObjectResult(result?.GetReport());
-    };
-});
+builder.Services.UseCustomModelValidationErrorHandler();
 
 var app = builder.Build();
 
@@ -190,6 +153,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCustomExceptionHandler();
 
 app.UseCors(allowAnyCorsOrigin);
 
