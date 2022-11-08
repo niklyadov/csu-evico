@@ -37,6 +37,14 @@ public class EventCategoryService
             return await _queryBuilder.ToListAsync();
         });
     }
+    
+    public async Task<Result<List<EventCategoryRecord>>> GetByIdsAsync(List<long> categoryIds)
+    {
+        return await Result.Try(async () =>
+        {
+            return await _queryBuilder.WithIds(categoryIds).ToListAsync();
+        });
+    }
 
     public async Task<Result<EventCategoryRecord>> UpdateAsync(EventCategoryRecord categoryRecord)
     {
