@@ -40,7 +40,7 @@ public class AddPlaceCategoryUseCase
             Description = inputModel.Description
         };
 
-        if (inputModel.ParentCategoryId.HasValue)
+        if (inputModel.ParentCategoryId.HasValue && inputModel.ParentCategoryId.Value >0)
         {
             var parentCategoryRecordResult = await _categoryService.GetByIdAsync(inputModel.ParentCategoryId.Value);
             if (parentCategoryRecordResult.IsFailed)

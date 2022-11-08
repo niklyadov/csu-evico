@@ -17,17 +17,31 @@ public class PlaceService
 
     public async Task<Result<PlaceRecord>> AddAsync(PlaceRecord place)
     {
-        return await Result.Try(async () => { return await _placeQueryBuilder.AddAsync(place); });
+        return await Result.Try(async () =>
+        {
+            return await _placeQueryBuilder.AddAsync(place);
+        });
     }
 
     public async Task<Result<List<PlaceRecord>>> GetAllAsync()
     {
-        return await Result.Try(async () => { return await _placeQueryBuilder.ToListAsync(); });
+        return await Result.Try(async () =>
+        {
+            return await _placeQueryBuilder
+                .Include(x => x.Categories)
+                .ToListAsync();
+        });
     }
 
     public async Task<Result<PlaceRecord>> GetByIdAsync(long id)
     {
-        return await Result.Try(async () => { return await _placeQueryBuilder.WithId(id).SingleAsync(); });
+        return await Result.Try(async () =>
+        {
+            return await _placeQueryBuilder
+                .WithId(id)
+                .Include(x => x.Categories)
+                .SingleAsync();
+        });
     }
 
     public async Task<Result<PlaceRecord>> UpdateAsync(PlaceRecord place)
