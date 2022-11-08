@@ -1,14 +1,14 @@
 import React from 'react';
 import { Route } from 'react-router';
-import { Layout } from './components/Layout';
-import Auth from './components/pages/Auth/Auth';
-import Compilation from './components/pages/Compilation/Compilation';
-import Main from './components/pages/Main/Main';
 import Test from './components/pages/Test/Test';
+import Auth from './components/pages/Auth/Auth';
+import Main from './components/pages/Main/Main';
+import Layout from './components/attachments/Layout';
+import Compilation from './components/pages/Compilation/Compilation';
+import AuthVkCallback from "./components/pages/Auth/AuthVkCallback";
 
 import './custom.css'
 import './scripts/document.js';
-import AuthVkCallback from "./components/pages/Auth/AuthVkCallback";
 
 export default function App() {
 

@@ -1,11 +1,37 @@
-import PlaceCard from "./PlaceCard";
+import Main from "../../elements/Main";
+import DevideList from "../../elements/Devide/DevideList/DevideList";
+import DevideListItem from "../../elements/Devide/DevideList/DevideListItem";
+import DevideListSettings from "../../elements/Devide/DevideList/DevideListSettings";
+import Button from "../../elements/Buttons/Button";
 
 export default function Compilation(props) {
 
-    return <div id='div-compilation'>
+    /** @type {[import("../../elements/Devide/DevideList/DevideListItem").TDevideListItem]} */
+    const items = [
 
-        <PlaceCard header="Мероприятие"></PlaceCard>
+        { header: 'Мероприятие' },
+        { header: 'Олимпиада' },
+        { header: 'Поход' },
+        { header: 'Чемпионат' },
+        { header: 'Список' },
 
-    </div>
+    ];
+
+    return <Main id='main-compilation'>
+        <DevideList
+            id='div-devide__compilation'
+            header='Подборка'
+            footer={<Setting/>}
+            section={<div className="div-list">{items.map((item, index) => DevideListItem({ ...item, key: index }))}</div>}
+        />
+    </Main>
+
+};
+
+function Setting(props) {
+
+    return <div className="div-panel">
+        <Button text='Настройка'/>
+    </div>;
 
 };
