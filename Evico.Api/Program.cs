@@ -40,6 +40,8 @@ builder.Services.AddScoped<ProfileQueryBuilder>();
 builder.Services.AddScoped<EventReviewQueryBuilder>();
 builder.Services.AddScoped<ExternalPhotoQueryBuilder>();
 builder.Services.AddScoped<PlaceReviewQueryBuilder>();
+builder.Services.AddScoped<EventCategoryQueryBuilder>();
+builder.Services.AddScoped<PlaceCategoryQueryBuilder>();
 
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<PlaceService>();
@@ -47,6 +49,8 @@ builder.Services.AddScoped<ProfileService>();
 builder.Services.AddScoped<ExternalPhotoService>();
 builder.Services.AddScoped<EventReviewService>();
 builder.Services.AddScoped<PlaceReviewService>();
+builder.Services.AddScoped<EventCategoryService>();
+builder.Services.AddScoped<PlaceCategoryService>();
 
 builder.Services.AddScoped<AuthViaVkUseCase>();
 builder.Services.AddScoped<CreateNewTokensUseCase>();
