@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Evico.Api.Entity;
+namespace Evico.Api.Entities;
 
 [NotMapped]
 public record User : EntityRecord

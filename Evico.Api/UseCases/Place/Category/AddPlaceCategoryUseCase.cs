@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Evico.Api.Entity;
+using Evico.Api.Entities;
 using Evico.Api.InputModels.Place;
 using Microsoft.AspNetCore.Mvc;
 

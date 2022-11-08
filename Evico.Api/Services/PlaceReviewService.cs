@@ -1,5 +1,5 @@
-using Evico.Api.Entity;
-using Evico.Api.QueryBuilder;
+using Evico.Api.Entities;
+using Evico.Api.QueryBuilders;
 using FluentResults;
 
 namespace Evico.Api.Services;

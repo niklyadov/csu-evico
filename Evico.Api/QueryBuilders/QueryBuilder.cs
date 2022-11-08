@@ -1,8 +1,8 @@
 using System.Linq.Expressions;
-using Evico.Api.Entity;
+using Evico.Api.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Evico.Api.QueryBuilder;
+namespace Evico.Api.QueryBuilders;
 
 public abstract class QueryBuilder<TEntity, TContext>
     : IDisposable where TEntity : class, IEntity, new()

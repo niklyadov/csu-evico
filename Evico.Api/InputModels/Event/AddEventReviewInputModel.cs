@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Evico.Api.Entity;
+using Evico.Api.Entities;
 
 namespace Evico.Api.InputModels.Event;
 

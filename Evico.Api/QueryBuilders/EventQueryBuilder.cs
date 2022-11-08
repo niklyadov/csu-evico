@@ -1,6 +1,6 @@
-using Evico.Api.Entity;
+using Evico.Api.Entities;
 
-namespace Evico.Api.QueryBuilder;
+namespace Evico.Api.QueryBuilders;
 
 public class EventQueryBuilder : QueryBuilder<EventRecord, ApplicationContext>
 {

@@ -1,4 +1,4 @@
-using Evico.Api.Entity;
+using Evico.Api.Entities;
 using Evico.Api.InputModels.Event;
 using Evico.Api.UseCases.Event.Category;
 using Microsoft.AspNetCore.Authorization;

@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Evico.Api;
 using Evico.Api.Extensions;
-using Evico.Api.QueryBuilder;
+using Evico.Api.QueryBuilders;
 using Evico.Api.Services;
 using Evico.Api.Services.Auth;
 using Evico.Api.Services.Auth.Vk;

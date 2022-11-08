@@ -1,4 +1,4 @@
-using Evico.Api.Entity;
+using Evico.Api.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Evico.Api;

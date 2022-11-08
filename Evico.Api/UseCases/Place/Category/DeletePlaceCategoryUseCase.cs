@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Evico.Api.Entity;
+using Evico.Api.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.UseCases.Place.Category;

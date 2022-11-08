@@ -1,4 +1,4 @@
-using Evico.Api.Entity;
+using Evico.Api.Entities;
 using Evico.Api.InputModels.Place;
 using Evico.Api.UseCases.Place.Category;
 using Microsoft.AspNetCore.Authorization;

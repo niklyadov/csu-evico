@@ -1,4 +1,4 @@
-namespace Evico.Api.Entity;
+namespace Evico.Api.Entities;
 
 public interface IEntity
 {
