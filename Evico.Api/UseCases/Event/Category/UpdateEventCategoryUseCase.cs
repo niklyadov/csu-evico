@@ -1,0 +1,14 @@
+using System.Security.Claims;
+using Evico.Api.Entity;
+using Evico.Api.InputModels.Event;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Evico.Api.UseCases.Event.Category;
+
+public class UpdateEventCategoryUseCase
+{
+    public ActionResult<List<EventCategoryRecord>> UpdateAsyns(UpdateEventCategoryInputModel inputModel, ClaimsPrincipal user)
+    {
+        throw new NotImplementedException();
+    }
+}
