@@ -1,8 +1,6 @@
 using Evico.Api.Entity;
-using Evico.Api.Extensions;
 using Evico.Api.InputModels.Event;
 using Evico.Api.UseCases.Event.Category;
-using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,7 +46,7 @@ public class EventCategoryController : BaseController
     [HttpPut]
     public ActionResult<List<EventCategoryRecord>> Update(UpdateEventCategoryInputModel inputModel)
     {
-        return _updateEventCategoryUseCase.UpdateAsyns(inputModel, User);
+        return _updateEventCategoryUseCase.UpdateAsync(inputModel, User);
     }
     
     [HttpDelete("{categoryId}")]

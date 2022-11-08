@@ -8,8 +8,10 @@ using Evico.Api.Services.Auth;
 using Evico.Api.Services.Auth.Vk;
 using Evico.Api.UseCases.Auth;
 using Evico.Api.UseCases.Event;
+using Evico.Api.UseCases.Event.Category;
 using Evico.Api.UseCases.Event.Review;
 using Evico.Api.UseCases.Place;
+using Evico.Api.UseCases.Place.Category;
 using Evico.Api.UseCases.Place.Review;
 using FluentResults;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -72,6 +74,18 @@ builder.Services.AddScoped<GetPlaceReviewByIdUseCase>();
 builder.Services.AddScoped<GetPlaceReviewsUseCase>();
 builder.Services.AddScoped<UpdatePlaceReviewUseCase>();
 builder.Services.AddScoped<DeletePlaceReviewUseCase>();
+
+builder.Services.AddScoped<AddEventCategoryUseCase>();
+builder.Services.AddScoped<GetEventCategoryByIdUseCase>();
+builder.Services.AddScoped<GetEventCategoriesUseCase>();
+builder.Services.AddScoped<UpdateEventCategoryUseCase>();
+builder.Services.AddScoped<DeleteEventCategoryUseCase>();
+
+builder.Services.AddScoped<AddPlaceCategoryUseCase>();
+builder.Services.AddScoped<GetPlaceCategoryByIdUseCase>();
+builder.Services.AddScoped<GetPlaceCategoryByIdUseCase>();
+builder.Services.AddScoped<GetPlaceCategoryByIdUseCase>();
+builder.Services.AddScoped<GetPlaceCategoryByIdUseCase>();
 
 builder.Services.AddAuthentication(options =>
 {
