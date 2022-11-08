@@ -24,7 +24,7 @@ public class GetEventsUseCase
         var currentUser = currentUserResult.ValueOrDefault;
 
         var canViewAllResult = _eventService.CanViewAll(currentUser);
-        if (!canViewAllResult.IsFailed)
+        if (canViewAllResult.IsFailed)
             return new ObjectResult(canViewAllResult.GetReport())
             {
                 StatusCode = StatusCodes.Status403Forbidden
