@@ -2,32 +2,15 @@ import config from "../../config"
 
 const token = "token";
 
+const placeRecord = {"locationLatitude": 0, "locationLongitude": 0, "name": "string", "description": "string"};
+const changedPlaceRecord = {"id": 1, "locationLatitude": 1, "locationLongitude": 1, "name": "string123", "description": "string123"};
 
-class EventRecord{
-    constructor(id, placeId, start, end, name, description){
-        this.id = id;
-        this.placeId = placeId;
-        this.start = start;
-        this.end = end;
-        this.name = name;
-        this.description = description;
-    }
-}
+const placeReview = {"comment":"Comment21312313123123123123", "rate":1};
+const changedPlaceReview = {"id": 1,"comment":"12321323123Comment", "rate":2};
 
-const eventRecord = new EventRecord(0,1,"2022-11-07T10:59:09.875Z","2022-11-07T10:59:09.875Z","Text","Description");
-const changedEventRecord = new EventRecord(0,1,"2022-11-07T10:59:09.875Z","2022-11-07T10:59:09.875Z","New Text","New Description");
-
-class EventReview{
-    constructor(comment, rate){
-        this.comment = comment;
-        this.rate = rate;
-    }
-}
-const eventReview = new EventReview("Comment21312313123123123123",1);
-const changedEventReview = {"id": 1,"comment":"12321323123Comment", "rate":2};
-// Post create
-export const createEvent = function () {
-    fetch(`${config.api}event`, {
+// post
+export const createPlace = function () {
+    fetch(`${config.api}place`, {
         method: "POST",
         mode: 'cors',
         headers: {
@@ -35,16 +18,15 @@ export const createEvent = function () {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json"
           },
-        body: JSON.stringify(eventRecord)
+        body: JSON.stringify(placeRecord)
     })
     .then(response => response.json())
     .then(x => console.log(x));
 
 }
-
-// Get list
-export const getEventsList = function () {
-    fetch(`${config.api}event`, {
+// get list
+export const getPlacesList = function () {
+    fetch(`${config.api}place`, {
         method: "GET",
         mode: 'cors',
         headers: {
@@ -55,10 +37,9 @@ export const getEventsList = function () {
     .then(response => response.json())
     .then(x => console.log(x));
 }
-
-// Get by id
-export const getEventById = function (eventId) {
-    fetch(`${config.api}event/${eventId}`, {
+// get by id
+export const getPlaceById = function (placeId) {
+    fetch(`${config.api}place/${placeId}`, {
         method: "GET",
         mode: 'cors',
         headers: {
@@ -69,10 +50,9 @@ export const getEventById = function (eventId) {
     .then(response => response.json())
     .then(x => console.log(x));
 }
-
-// Put
-export const changeEvent = function () {
-    fetch(`${config.api}event`, {
+// put
+export const changePlace = function () {
+    fetch(`${config.api}place`, {
         method: "PUT",
         mode: 'cors',
         headers: {
@@ -80,15 +60,14 @@ export const changeEvent = function () {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json"
           },
-        body: JSON.stringify(changedEventRecord)
+        body: JSON.stringify(changedPlaceRecord)
     })
     .then(response => response.json())
     .then(x => console.log(x));
 }
-
 // delete
-export const deleteEventById = function (eventId) {
-    fetch(`${config.api}event/${eventId}`, {
+export const deletePlaceById = function (placeId) {
+    fetch(`${config.api}place/${placeId}`, {
         method: "DELETE",
         mode: "cors",
         headers: {
@@ -101,10 +80,9 @@ export const deleteEventById = function (eventId) {
 }
 
 
-
-// Post create review
-export const createEventReview = function (eventId) {
-    fetch(`${config.api}event/${eventId}/review`, {
+// post review
+export const createPlaceReview = function (placeId) {
+    fetch(`${config.api}place/${placeId}/review`, {
         method: "POST",
         mode: 'cors',
         headers: {
@@ -112,16 +90,14 @@ export const createEventReview = function (eventId) {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json"
           },
-        body: JSON.stringify(eventReview)
+        body: JSON.stringify(placeReview)
     })
     .then(response => response.json())
     .then(x => console.log(x));
 }
-
-
-// Get reviews list by event id
-export const getReviewsByEventId = function (eventId) {
-    fetch(`${config.api}event/${eventId}/review`, { 
+// get reviews list by place id
+export const getReviewsByPlaceId = function (placeId) {
+    fetch(`${config.api}place/${placeId}/review`, { 
         method: "GET",
         mode: 'cors',
         headers: {
@@ -132,10 +108,9 @@ export const getReviewsByEventId = function (eventId) {
     .then(response => response.json())
     .then(x => console.log(x));
 }
-
-// Get one review by id
-export const getReviewByIdByEventId = function (eventId, reviewId) {
-    fetch(`${config.api}event/${eventId}/review/${reviewId}`, { 
+// get review by id
+export const getReviewByIdByPlaceId = function (placeId, reviewId) {
+    fetch(`${config.api}place/${placeId}/review/${reviewId}`, { 
         method: "GET",
         mode: 'cors',
         headers: {
@@ -146,10 +121,9 @@ export const getReviewByIdByEventId = function (eventId, reviewId) {
     .then(response => response.json())
     .then(x => console.log(x));
 }
-
-// put
-export const changeEventReview = function (eventId) {
-    fetch(`${config.api}event/${eventId}/review`, {
+// put review
+export const changePlaceReview = function (placeId) {
+    fetch(`${config.api}place/${placeId}/review`, {
         method: "PUT",
         mode: 'cors',
         headers: {
@@ -157,14 +131,14 @@ export const changeEventReview = function (eventId) {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json"
           },
-        body: JSON.stringify(changedEventReview)
+        body: JSON.stringify(changedPlaceReview)
     })
     .then(response => response.json())
     .then(x => console.log(x));
 }
-// delete
-export const deleteReviewById = function (eventId, reviewId) {
-    fetch(`${config.api}event/${eventId}/review/${reviewId}`, { 
+// delete review
+export const deleteReviewById = function (placeId, reviewId) {
+    fetch(`${config.api}place/${placeId}/review/${reviewId}`, { 
         method: "DELETE",
         mode: 'cors',
         headers: {

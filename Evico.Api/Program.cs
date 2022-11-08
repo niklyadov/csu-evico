@@ -156,6 +156,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(allowAnyCorsOrigin,
         policy =>
         {
+            policy.WithMethods("GET", "POST", "PUT", "DELETE");
             policy.WithOrigins("*");
             policy.WithHeaders("Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization");
         });
