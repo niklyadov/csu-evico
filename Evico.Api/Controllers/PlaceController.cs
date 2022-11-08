@@ -40,8 +40,6 @@ public class PlaceController : BaseController
     [HttpPost]
     public async Task<ActionResult<PlaceRecord>> Add([FromBody] AddPlaceInputModel inputModel)
     {
-        //if (!ModelState.IsValid) return BadRequest(ModelState);
-
         return await _addPlaceUseCase.AddAsync(inputModel, User);
     }
 
@@ -49,8 +47,6 @@ public class PlaceController : BaseController
     [AllowAnonymous]
     public async Task<ActionResult<PlaceRecord>> GetById(long placeId)
     {
-        //if (!ModelState.IsValid) return BadRequest(ModelState);
-
         return await _getPlaceByIdUseCase.GetByIdAsync(placeId, User);
     }
 
@@ -58,24 +54,18 @@ public class PlaceController : BaseController
     [AllowAnonymous]
     public async Task<ActionResult<List<PlaceRecord>>> GetAll()
     {
-        //if (!ModelState.IsValid) return BadRequest(ModelState);
-
         return await _getPlacesUseCase.GetAllAsync(User);
     }
 
     [HttpPut]
     public async Task<ActionResult<PlaceRecord>> UpdateAsync([FromBody] UpdatePlaceInputModel inputModel)
     {
-        //if (!ModelState.IsValid) return BadRequest(ModelState);
-
         return await _updatePlaceUseCase.UpdateAsync(inputModel, User);
     }
 
     [HttpDelete("{placeId}")]
     public async Task<ActionResult<PlaceRecord>> DeleteById(long placeId)
     {
-        //if (!ModelState.IsValid) return BadRequest(ModelState);
-
         return await _deletePlaceUseCase.DeleteByIdAsync(placeId, User);
     }
 
@@ -83,8 +73,6 @@ public class PlaceController : BaseController
     public async Task<ActionResult<PlaceReviewRecord>> AddReview([FromRoute] long placeId,
         [FromBody] AddPlaceReviewInputModel inputModel)
     {
-        //if (!ModelState.IsValid) return BadRequest(ModelState);
-
         return await _addPlaceReviewUseCase.AddAsync(placeId, inputModel, User);
     }
 
@@ -93,8 +81,6 @@ public class PlaceController : BaseController
     public async Task<ActionResult<PlaceReviewRecord>> GetReviewById([FromRoute] long placeId,
         [FromRoute] long reviewId)
     {
-        //if (!ModelState.IsValid) return BadRequest(ModelState);
-
         return await _getPlaceReviewByIdUseCase.GetByIdAsync(placeId, reviewId, User);
     }
 
@@ -102,8 +88,6 @@ public class PlaceController : BaseController
     [AllowAnonymous]
     public async Task<ActionResult<List<PlaceReviewRecord>>> GetReviews([FromRoute] long placeId)
     {
-        //if (!ModelState.IsValid) return BadRequest(ModelState);
-
         return await _getPlaceReviewsUseCase.GetAllAsync(placeId, User);
     }
 
@@ -111,8 +95,6 @@ public class PlaceController : BaseController
     public async Task<ActionResult<List<PlaceReviewRecord>>> UpdateReview([FromRoute] long placeId,
         [FromBody] UpdatePlaceInputModel inputModel)
     {
-        //if (!ModelState.IsValid) return BadRequest(ModelState);
-
         return await _updatePlaceReviewUseCase.UpdateAsync(placeId, inputModel, User);
     }
 
@@ -120,8 +102,6 @@ public class PlaceController : BaseController
     public async Task<ActionResult<List<PlaceReviewRecord>>> DeleteReviewById([FromRoute] long placeId,
         [FromRoute] long reviewId)
     {
-        //if (!ModelState.IsValid) return BadRequest(ModelState);
-
         return await _deletePlaceReviewUseCase.DeleteAsync(placeId, reviewId, User);
     }
 }

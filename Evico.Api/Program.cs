@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 const string allowAnyCorsOrigin = "Allow any";
 
@@ -144,6 +145,21 @@ builder.Services.Configure<RouteOptions>(options =>
     options.LowercaseUrls = true);
 
 builder.Services.UseCustomModelValidationErrorHandler();
+
+#region Use Serilog
+
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateLogger();
+
+Log.Logger = logger;
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
+
+#endregion
 
 var app = builder.Build();
 
