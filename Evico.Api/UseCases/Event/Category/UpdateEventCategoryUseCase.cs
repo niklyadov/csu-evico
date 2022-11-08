@@ -7,7 +7,7 @@ namespace Evico.Api.UseCases.Event.Category;
 
 public class UpdateEventCategoryUseCase
 {
-    public ActionResult<List<EventCategoryRecord>> UpdateAsyns(UpdateEventCategoryInputModel inputModel, ClaimsPrincipal user)
+    public ActionResult<List<EventCategoryRecord>> UpdateAsync(UpdateEventCategoryInputModel inputModel, ClaimsPrincipal user)
     {
         throw new NotImplementedException();
     }
