@@ -4,6 +4,7 @@ using Evico.Api.Extensions;
 using Evico.Api.InputModels.Event;
 using Evico.Api.Services;
 using Evico.Api.Services.Auth;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.UseCases.Event;
@@ -13,22 +14,24 @@ public class AddEventUseCase
     private readonly AuthService _authService;
     private readonly EventService _eventService;
     private readonly PlaceService _placeService;
+    private readonly EventCategoryService _categoryService;
 
-    public AddEventUseCase(EventService eventService, AuthService authService, PlaceService placeService)
+    public AddEventUseCase(EventService eventService, AuthService authService, PlaceService placeService, EventCategoryService categoryService)
     {
         _eventService = eventService;
         _authService = authService;
         _placeService = placeService;
+        _categoryService = categoryService;
     }
 
-    public async Task<ActionResult<EventRecord>> AddAsync(AddEventInputModel addEventModel, ClaimsPrincipal userClaims)
+    public async Task<ActionResult<EventRecord>> AddAsync(AddEventInputModel inputModel, ClaimsPrincipal userClaims)
     {
         var currentUserResult = await _authService.GetCurrentUser(userClaims);
         if (currentUserResult.IsFailed)
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
 
-        var placeWithIdResult = await _placeService.GetByIdAsync(addEventModel.PlaceId);
+        var placeWithIdResult = await _placeService.GetByIdAsync(inputModel.PlaceId);
         if (placeWithIdResult.IsFailed)
             return new BadRequestObjectResult(placeWithIdResult.GetReport());
 
@@ -41,13 +44,27 @@ public class AddEventUseCase
 
         var eventRecord = new EventRecord
         {
-            Start = addEventModel.Start,
-            End = addEventModel.End,
-            PlaceId = addEventModel.PlaceId,
-            Name = addEventModel.Name,
-            Description = addEventModel.Description,
+            Start = inputModel.Start,
+            End = inputModel.End,
+            PlaceId = inputModel.PlaceId,
+            Name = inputModel.Name,
+            Description = inputModel.Description,
             Owner = currentUser
         };
+
+        if (inputModel.CategoryIds != null && inputModel.CategoryIds.Any())
+        {
+            var categoriesResult = await _categoryService.GetByIdsAsync(inputModel.CategoryIds);
+            if (categoriesResult.IsFailed)
+            {
+                var categoriesResultError =
+                    new Error($"Failed to get categories with ids {String.Join(',', inputModel.CategoryIds)}").CausedBy(
+                        categoriesResult.Errors);
+                return new BadRequestObjectResult(Result.Fail(categoriesResultError));
+            }
+
+            eventRecord.Categories = categoriesResult.Value;
+        }
 
         var addEventResult = await _eventService.AddAsync(eventRecord);
         if (addEventResult.IsFailed)

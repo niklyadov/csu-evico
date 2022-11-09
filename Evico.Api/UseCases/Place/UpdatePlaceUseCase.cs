@@ -52,7 +52,7 @@ public class UpdatePlaceUseCase
         if (inputModel.LocationLongitude.HasValue)
             place.LocationLongitude = inputModel.LocationLongitude.Value;
 
-        if (inputModel.ParentId.HasValue)
+        if (inputModel.ParentId.HasValue && inputModel.ParentId.Value > 0)
         {
             var parentPlaceResult = await _placeService.GetByIdAsync(inputModel.ParentId.Value);
             if (parentPlaceResult.IsFailed)

@@ -4,6 +4,7 @@ using Evico.Api.Extensions;
 using Evico.Api.InputModels.Event;
 using Evico.Api.Services;
 using Evico.Api.Services.Auth;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.UseCases.Event;
@@ -13,15 +14,18 @@ public class UpdateEventUseCase
     private readonly AuthService _authService;
     private readonly EventService _eventService;
     private readonly PlaceService _placeService;
+    private readonly EventCategoryService _categoryService;
 
-    public UpdateEventUseCase(EventService eventService, AuthService authService, PlaceService placeService)
+    public UpdateEventUseCase(EventService eventService, AuthService authService, PlaceService placeService,
+        EventCategoryService categoryService)
     {
         _eventService = eventService;
         _authService = authService;
         _placeService = placeService;
+        _categoryService = categoryService;
     }
 
-    public async Task<ActionResult<EventRecord>> UpdateAsync(UpdateEventInputModel updateEventModel,
+    public async Task<ActionResult<EventRecord>> UpdateAsync(UpdateEventInputModel inputModel,
         ClaimsPrincipal userClaims)
     {
         var currentUserResult = await _authService.GetCurrentUser(userClaims);
@@ -29,7 +33,7 @@ public class UpdateEventUseCase
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
 
-        var eventWithIdResult = await _eventService.GetByIdAsync(updateEventModel.Id);
+        var eventWithIdResult = await _eventService.GetByIdAsync(inputModel.Id);
         if (eventWithIdResult.IsFailed)
             return new BadRequestObjectResult(eventWithIdResult.GetReport());
         var eventRecord = eventWithIdResult.Value;
@@ -41,15 +45,15 @@ public class UpdateEventUseCase
                 StatusCode = StatusCodes.Status403Forbidden
             };
 
-        if (updateEventModel.Start != null)
-            eventRecord.Start = updateEventModel.Start;
+        if (inputModel.Start != null)
+            eventRecord.Start = inputModel.Start;
 
-        if (updateEventModel.End != null)
-            eventRecord.End = updateEventModel.End;
+        if (inputModel.End != null)
+            eventRecord.End = inputModel.End;
 
-        if (updateEventModel.PlaceId != null)
+        if (inputModel.PlaceId != null)
         {
-            var placeResult = await _placeService.GetByIdAsync(updateEventModel.PlaceId.Value);
+            var placeResult = await _placeService.GetByIdAsync(inputModel.PlaceId.Value);
             if (placeResult.IsFailed)
                 return new BadRequestObjectResult(placeResult.GetReport());
             var place = placeResult.Value;
@@ -60,11 +64,32 @@ public class UpdateEventUseCase
             eventRecord.Place = place;
         }
 
-        if (!string.IsNullOrEmpty(updateEventModel.Name))
-            eventRecord.Name = updateEventModel.Name;
+        if (!String.IsNullOrEmpty(inputModel.Name))
+            eventRecord.Name = inputModel.Name;
 
-        if (!string.IsNullOrEmpty(updateEventModel.Description))
-            eventRecord.Description = updateEventModel.Description;
+        if (!String.IsNullOrEmpty(inputModel.Description))
+            eventRecord.Description = inputModel.Description;
+
+        if (inputModel.CategoryIds != null)
+        {
+            if (!inputModel.CategoryIds.Any())
+            {
+                eventRecord.Categories = new List<EventCategoryRecord>();
+            }
+            else
+            {
+                var categoriesResult = await _categoryService.GetByIdsAsync(inputModel.CategoryIds);
+                if (categoriesResult.IsFailed)
+                {
+                    var categoriesResultError =
+                        new Error($"Failed to get categories with ids {String.Join(',', inputModel.CategoryIds)}").CausedBy(
+                            categoriesResult.Errors);
+                    return new BadRequestObjectResult(Result.Fail(categoriesResultError));
+                }
+
+                eventRecord.Categories = categoriesResult.Value;
+            } 
+        }
 
         var updateEventResult = await _eventService.UpdateAsync(eventRecord);
 
