@@ -16,7 +16,7 @@ export default function Progress(props) {
 
     } = props;
 
-    return <div className="svg-progress">
+    return <div className={"svg-progress " + props.className}>
 
         <svg
 
@@ -30,7 +30,7 @@ export default function Progress(props) {
 
                     rx="10px"
                     ry="10px"
-                    fill={colorEmpty}
+                    fill={(colorEmpty) ? colorEmpty : '#cfcfcf'}
 
                 />
 
@@ -41,7 +41,7 @@ export default function Progress(props) {
 
                     rx="5px"
                     ry="5px"
-                    fill={color}
+                    fill={(color) ? color : '#fa8072'}
                     width={(props.procent ?? 0) + "%"}
 
                 />
