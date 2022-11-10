@@ -53,8 +53,6 @@ public class UpdateEventReviewUseCase
         if (inputModel.Rate != null)
             eventReview.Rate = inputModel.Rate.Value;
 
-        eventReview.Photos = inputModel.Photos;
-
         var updateEventResult = await _eventReviewService.Update(eventReview);
         if (updateEventResult.IsFailed)
             return new BadRequestObjectResult(updateEventResult.GetReport());
