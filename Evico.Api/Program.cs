@@ -181,6 +181,24 @@ builder.Logging.AddSerilog(logger);
 
 #endregion
 
+#region Minio
+
+builder.Services.Configure<MinioBucketsConfiguration>(builder.Configuration.GetSection("Minio"));
+builder.Services.AddMinio(config =>
+{
+    config.Endpoint = builder.Configuration["Minio:Endpoint"];
+    
+    config.ConfigureClient(clientConfig =>
+    {
+        clientConfig.WithCredentials(
+            builder.Configuration["Minio:AccessKey"],
+            builder.Configuration["Minio:SecretKey"]);
+    });
+});
+
+#endregion
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
