@@ -9,5 +9,5 @@ public record ReviewRecord : EntityRecord
     public long AuthorId { get; set; }
     public string Comment { get; set; } = string.Empty;
     public Rate Rate { get; set; }
-    public virtual List<ExternalPhotoRecord> Photos { get; set; } = new();
+    public virtual List<PhotoRecord> Photos { get; set; } = new();
 }
