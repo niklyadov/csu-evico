@@ -46,7 +46,6 @@ public class AddPlaceReviewUseCase
         {
             Comment = inputModel.Comment,
             Rate = inputModel.Rate,
-            Photos = inputModel.Photos,
             Author = currentUser,
             Place = place
         };
