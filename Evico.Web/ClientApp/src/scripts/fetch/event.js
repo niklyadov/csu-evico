@@ -45,24 +45,26 @@ export const createEvent = function () {
 
 // Get list
 export const getEventsList = function () {
-    let eventsList = [];
-    fetch(`${config.api}event`, {
-        method: "GET",
-        mode: 'cors',
-        headers: {
-            "accept": "text/plain",
-            "Authorization": `Bearer ${token}`
-          }
+    return new Promise(function(resolve, reject) {
+        let eventsList = [];
+        return fetch(`${config.api}event`, {
+            method: "GET",
+            mode: 'cors',
+            headers: {
+                "accept": "text/plain",
+                "Authorization": `Bearer ${token}`
+              }
+        })
+        .then(response => response.json())
+        .then(data => {
+            for (const event of data){
+                let eventObj = new Event(event);
+                eventsList.push(eventObj);
+                //console.log(eventObj);
+            }
+            resolve(eventsList);
+        });
     })
-    .then(response => response.json())
-    .then(data => {
-        for (const event of data){
-            let eventObj = new Event(event);
-            eventsList.push(eventObj);
-            console.log(eventObj);
-        }
-        return eventsList;
-    });
 }
 
 // Get by id
