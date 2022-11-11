@@ -13,7 +13,13 @@ export default function Compilation(props) {
 
     const [items, setItems] = useState([]);
 
-    
+    (async () => {
+
+        const l = await getEventsList();
+
+        setItems(l);
+
+    })();
 
     // const items = [] ?? [
 
