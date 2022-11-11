@@ -1,7 +1,11 @@
 using Evico.Api.Entities;
+using Evico.Api.InputModels;
+using Evico.Api.InputModels.Photo;
 using Evico.Api.InputModels.Place;
 using Evico.Api.UseCases.Place;
+using Evico.Api.UseCases.Place.Photo;
 using Evico.Api.UseCases.Place.Review;
+using Evico.Api.UseCases.Place.Review.Photo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +26,10 @@ public class PlaceController : BaseController
     private readonly GetPlacesUseCase _getPlacesUseCase;
     private readonly UpdatePlaceReviewUseCase _updatePlaceReviewUseCase;
     private readonly UpdatePlaceUseCase _updatePlaceUseCase;
-
+    private readonly AddPlacePhotoUseCase _addPlacePhotoUseCase;
+    private readonly DeletePlacePhotoUseCase _deletePlacePhotoUseCase;
+    private readonly AddPlaceReviewPhotoUseCase _addPlaceReviewPhotoUseCase;
+    private readonly DeletePlaceReviewPhotoUseCase _deletePlaceReviewPhotoUseCase;
     public PlaceController(IServiceProvider services)
     {
         _addPlaceUseCase = services.GetRequiredService<AddPlaceUseCase>();
@@ -35,6 +42,10 @@ public class PlaceController : BaseController
         _getPlaceReviewsUseCase = services.GetRequiredService<GetPlaceReviewsUseCase>();
         _updatePlaceReviewUseCase = services.GetRequiredService<UpdatePlaceReviewUseCase>();
         _deletePlaceReviewUseCase = services.GetRequiredService<DeletePlaceReviewUseCase>();
+        _addPlacePhotoUseCase = services.GetRequiredService<AddPlacePhotoUseCase>();
+        _deletePlacePhotoUseCase = services.GetRequiredService<DeletePlacePhotoUseCase>();
+        _addPlaceReviewPhotoUseCase = services.GetRequiredService<AddPlaceReviewPhotoUseCase>();
+        _deletePlaceReviewPhotoUseCase = services.GetRequiredService<DeletePlaceReviewPhotoUseCase>();
     }
 
     [HttpPost]
@@ -64,9 +75,21 @@ public class PlaceController : BaseController
     }
 
     [HttpDelete("{placeId}")]
-    public async Task<ActionResult<PlaceRecord>> DeleteById(long placeId)
+    public async Task<ActionResult<PlaceRecord>> DeleteById([FromRoute] long placeId)
     {
         return await _deletePlaceUseCase.DeleteByIdAsync(placeId, User);
+    }
+    
+    [HttpPost("{placeId}/photo")]
+    public async Task<ActionResult<PhotoRecord>> AddPhoto([FromForm] PhotoUploadInputModel inputModel, [FromRoute] long placeId)
+    {
+        return await _addPlacePhotoUseCase.AddAsync(inputModel, placeId, User);
+    }
+
+    [HttpDelete("{placeId}/photo/{photoId}")]
+    public async Task<ActionResult<PhotoRecord>> DeletePhoto([FromRoute] long placeId, [FromRoute] long photoId)
+    {
+        return await _deletePlacePhotoUseCase.DeleteAsync(placeId, photoId, User);
     }
 
     [HttpPost("{placeId}/review")]
@@ -103,5 +126,19 @@ public class PlaceController : BaseController
         [FromRoute] long reviewId)
     {
         return await _deletePlaceReviewUseCase.DeleteAsync(placeId, reviewId, User);
+    }
+    
+    [HttpPost("{placeId}/review/{reviewId}/photo")]
+    public async Task<ActionResult<PhotoRecord>> AddReviewPhoto([FromForm] PhotoUploadInputModel inputModel, 
+        [FromRoute] long placeId, [FromRoute] long reviewId)
+    {
+        return await _addPlaceReviewPhotoUseCase.AddAsync(inputModel, placeId, reviewId, User);
+    }
+
+    [HttpDelete("{placeId}/review/{reviewId}/photo/{photoId}")]
+    public async Task<ActionResult<PhotoRecord>> DeleteReviewPhoto([FromRoute] long placeId, 
+        [FromRoute] long reviewId, [FromRoute] long photoId)
+    {
+        return await _deletePlaceReviewPhotoUseCase.DeleteAsync(placeId, photoId, User);
     }
 }

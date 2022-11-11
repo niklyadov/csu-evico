@@ -35,6 +35,13 @@ public class AddPlaceReviewUseCase
             return new BadRequestObjectResult(placeWithIdResult.GetReport());
         var place = placeWithIdResult.Value;
 
+        var canViewPlaceResult = _placeService.CanView(place, currentUser);
+        if (canViewPlaceResult.IsFailed)
+            return new ObjectResult(canViewPlaceResult.GetReport())
+            {
+                StatusCode = StatusCodes.Status403Forbidden
+            };
+        
         var canCreateResult = _placeReviewService.CanCreate(place, currentUser);
         if (canCreateResult.IsFailed)
             return new ObjectResult(canCreateResult.GetReport())
@@ -46,7 +53,6 @@ public class AddPlaceReviewUseCase
         {
             Comment = inputModel.Comment,
             Rate = inputModel.Rate,
-            Photos = inputModel.Photos,
             Author = currentUser,
             Place = place
         };

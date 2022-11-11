@@ -11,6 +11,4 @@ public class UpdateEventReviewInputModel
     public string? Comment { get; set; }
 
     public Rate? Rate { get; set; }
-
-    [MaxLength(16)] public virtual List<ExternalPhotoRecord> Photos { get; set; } = new();
 }

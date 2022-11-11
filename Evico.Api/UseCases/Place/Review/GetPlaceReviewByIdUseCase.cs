@@ -37,6 +37,13 @@ public class GetPlaceReviewByIdUseCase
             return new BadRequestObjectResult(placeWithIdResult.GetReport());
         var place = placeWithIdResult.Value;
 
+        var canViewPlaceResult = _placeService.CanView(place, currentUser);
+        if (canViewPlaceResult.IsFailed)
+            return new ObjectResult(canViewPlaceResult.GetReport())
+            {
+                StatusCode = StatusCodes.Status403Forbidden
+            };
+
         var canViewResult = _placeReviewService.CanView(place, placeReview, currentUser);
         if (canViewResult.IsFailed)
             return new ObjectResult(canViewResult.GetReport())
