@@ -10,11 +10,15 @@ public class VkAuthService
 {
     private readonly VkAuthServiceConfiguration _configuration;
     private readonly ProfileService _profileService;
+    private readonly FileService _fileService;
+    private readonly ProfilePhotoService _photoService;
 
-    public VkAuthService(ProfileService profileService,
+    public VkAuthService(ProfileService profileService, FileService fileService, ProfilePhotoService photoService,
         IOptions<VkAuthServiceConfiguration> configuration)
     {
         _profileService = profileService;
+        _fileService = fileService;
+        _photoService = photoService;
         _configuration = configuration.Value;
     }
 
@@ -42,8 +46,27 @@ public class VkAuthService
 
         if (vkProfileInfo.HasPhoto)
         {
-            // TODO: добавить фото
-            //vkProfileInfo.PhotoUri;
+            var minioBucket = MinioBucketNames.UserAvatars;
+            var minioInternalId = Guid.NewGuid();
+
+            var fileUploadResult = await _fileService.UploadFileFromUri(vkProfileInfo.PhotoUri,
+                minioBucket, minioInternalId.ToString());
+            if (fileUploadResult.IsFailed)
+                return Result.Fail(new Error("Photo uploading error")
+                    .CausedBy(fileUploadResult.Errors));
+            
+            var userPhotoResult = await _photoService.AddAsync(new ProfilePhotoRecord
+            {
+                MinioBucket = minioBucket,
+                MinioInternalId = minioInternalId
+            });
+            var userPhoto = userPhotoResult.Value;
+
+            if (userPhotoResult.IsFailed)
+                return Result.Fail(new Error("Photo adding error")
+                    .CausedBy(userPhotoResult.Errors));
+            
+            newUser.Photo = userPhoto;
         }
 
         return await _profileService.AddAsync(newUser);
