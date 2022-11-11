@@ -4,23 +4,30 @@ import DevideListItem from "../../elements/Devide/DevideList/DevideListItem";
 import Progress from "../../elements/Progress/Progress";
 import { ButtonSvg } from "../../elements/Buttons/Button";
 import { SvgSetting } from "../../elements/Svg/Svg";
+import { getEventsList } from "../../../scripts/fetch/event";
+import { useState } from "react";
 
 export default function Compilation(props) {
 
     /** @type {[import("../../elements/Devide/DevideList/DevideListItem").TDevideListItem]} */
-    const items = [
 
-        {
-            title: 'Мероприятие',
-        },
-        {
-            title: 'Поход'
-        },
-        {
-            title: 'Чемпионат'
-        },
+    const [items, setItems] = useState([]);
 
-    ];
+    
+
+    // const items = [] ?? [
+
+        // {
+        //     title: 'Мероприятие',
+        // },
+        // {
+        //     title: 'Поход'
+        // },
+        // {
+        //     title: 'Чемпионат'
+        // },
+
+    // ];
 
     return <Main id='main-compilation'>
         <DevideList
