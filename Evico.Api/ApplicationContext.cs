@@ -86,7 +86,7 @@ public sealed class ApplicationContext : DbContext
             .HasValue<PhotoRecord>(0)
             .HasValue<PlacePhotoRecord>(10)
             .HasValue<EventPhotoRecord>(20)
-            .HasValue<PhofilePhotoRecord>(30)
+            .HasValue<ProfilePhotoRecord>(30)
             .HasValue<PlaceReviewPhotoRecord>(40)
             .HasValue<EventReviewPhotoRecord>(50);
 

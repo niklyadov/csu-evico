@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace Evico.Api.Entities;
 
-public record PhofilePhotoRecord : PhotoRecord
+public record ProfilePhotoRecord : PhotoRecord
 {
     public long ProfileId { get; set; }
     [JsonIgnore]
