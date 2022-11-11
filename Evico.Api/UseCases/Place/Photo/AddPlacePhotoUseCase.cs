@@ -56,7 +56,6 @@ public class AddPlacePhotoUseCase
             MinioBucket = minioBucket,
             Author = currentUser,
             Comment = inputModel.Comment,
-            Uri = new Uri("/Photo/"),
             Place = place
         };
         

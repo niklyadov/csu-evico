@@ -10,7 +10,8 @@ public record PhotoRecord : EntityRecord
     [JsonIgnore]
     public ProfileRecord? Author { get; set; }
     public String? Comment { get; set; }
-    public Uri Uri { get; set; } = default!;
+    [NotMapped]
+    public Uri Uri => new Uri($"/photo/{Id}");
     [JsonIgnore]
     public MinioBucketNames MinioBucket { get; set; }
     [JsonIgnore]

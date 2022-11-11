@@ -55,7 +55,6 @@ public class AddEventPhotoUseCase
             MinioBucket = minioBucket,
             Author = currentUser,
             Comment = inputModel.Comment,
-            Uri = new Uri("/Photo/"),
             Event = eventRecord
         };
         

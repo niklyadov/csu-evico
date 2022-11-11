@@ -69,7 +69,6 @@ public class AddEventReviewPhotoUseCase
             MinioBucket = minioBucket,
             Author = currentUser,
             Comment = inputModel.Comment,
-            Uri = new Uri("/Photo/"),
             Review = review
         };
         
