@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.Controllers;
 
-public class PhotoController : ControllerBase
+public class PhotoController : BaseController
 {
     private readonly GetPhotoByIdUseCase _getPhotoByIdUseCase;
 
