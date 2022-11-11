@@ -1,8 +1,9 @@
 import Main from "../../elements/Main";
 import DevideList from "../../elements/Devide/DevideList/DevideList";
 import DevideListItem from "../../elements/Devide/DevideList/DevideListItem";
-import Button from "../../elements/Buttons/Button";
 import Progress from "../../elements/Progress/Progress";
+import { ButtonSvg } from "../../elements/Buttons/Button";
+import { SvgSetting } from "../../elements/Svg/Svg";
 
 export default function Compilation(props) {
 
@@ -11,43 +12,21 @@ export default function Compilation(props) {
 
         {
             rait: 97,
+            watchers: 1241,
             participant: 98,
             title: 'Мероприятие',
         },
         {
-            rait: 56,
-            participant: 14,
-            title: 'Олимпиада'
-        },
-        {
-            rait: 43,
-            participant: 65,
+            rait: 73,
+            watchers: 12,
+            participant: 35,
             title: 'Поход'
         },
         {
-            rait: 37,
-            participant: 9,
+            rait: 100,
+            watchers: 74302,
+            participant: 100,
             title: 'Чемпионат'
-        },
-        {
-            rait: 69,
-            participant: 79,
-            title: 'Список'
-        },
-        {
-            rait: 16,
-            participant: 88,
-            title: 'Праздник'
-        },
-        {
-            rait: 76,
-            participant: 45,
-            title: 'Выборы'
-        },
-        {
-            rait: 63,
-            participant: 87,
-            title: 'Дегустация'
         },
 
     ];
@@ -63,20 +42,27 @@ export default function Compilation(props) {
 
 };
 
+function Stat(props) {
+
+    return <div className="div-devide__list_stat">
+        <p className="p-devide__list_watchers">Наблюдателей: {props.watchers ?? 0}</p>
+    </div>;
+
+};
 function Preview(props) {
 
     return <div className="div-devide__list_preview">
         <h4 className="div-devide__list_title">{props.title}</h4>
         <Progress className='div-devide__list_rait' procent={props.rait}/>
         <Progress className='div-devide__list_participant' procent={props.participant} color='#ffcb5c'/>
-        <div></div>
+        <Stat {...props}/>
     </div>;
 
 };
 function Setting(props) {
 
     return <div className="div-panel">
-        <Button text='Настройка' />
+        <ButtonSvg><SvgSetting/></ButtonSvg>
     </div>;
 
 };

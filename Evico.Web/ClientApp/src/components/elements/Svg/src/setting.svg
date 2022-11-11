@@ -1,12 +1,11 @@
 <svg width='100' height='100' xmlns='http://www.w3.org/2000/svg'>
-    <defs>
-        <path id='f1' d="M50 50 l10 1 l-5 5 l-10 0 l-5 -5" fill="red"/>
-    </defs>
     <g>
-        <circle r='25' cx='50' cy='50' />
+        <path
+        d="m33.5 20 l-20,30 20,30 35,0 20,-30 -20,-30"
+        fill='#fff'
+        />
     </g>
     <g>
-        <use xlink:href="#f1" transform="rotate(90, 39, 39)"/>
-        <use xlink:href="#f1" y="22"/>
+        <circle cx='50' cy='50' r='15' class='svg-setting__circle'/>
     </g>
 </svg>

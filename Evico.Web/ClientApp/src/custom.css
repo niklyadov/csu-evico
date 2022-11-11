@@ -94,6 +94,18 @@
         ". . .";
 
 }
+#main-setting {
+
+    grid-template-areas: 
+        ". . . . ."
+        ". s s . ."
+        ". s s . ."
+        ". s s . ."
+        ". . . . .";
+    grid-template-rows: 1em 1fr 1fr 1fr 1em;
+    grid-template-columns: 1em 1fr 1fr 1fr 1fr;
+    
+}
 #main-compilation {
 
     grid-template-areas: 
@@ -175,6 +187,11 @@
     grid-area: e;
 
 }
+#div-devide__setting {
+
+    grid-area: s;
+
+}
 #div-devide__compilation {
 
     margin: var(--margin);
@@ -242,6 +259,16 @@
 
 }
 
+svg:hover > .g-rotate {
+
+    animation: animate-rotate 0.5s;
+
+}
+.svg-setting__circle {
+
+    fill: var(--color-6);
+
+}
 .svg-progress {
 
     display: flex;
@@ -260,6 +287,21 @@
 
 }
 
+.g-rotate {
+
+    /* position: absolute; */
+    /* top: 50%; */
+    /* left: 50%; */
+    /* transform: translate(-50%, -50%); */
+    transform-origin: 50% 50%;
+
+}
+.g-rotate:hover {
+
+    animation: animate-rotate 0.5s;
+
+}
+
 .button {
 
     color: var(--font-color-light);
@@ -274,6 +316,19 @@
 .button:hover {
 
     background-color: var(--color-6);
+
+}
+.button-svg:hover > .svg > .g-rotate {
+
+    animation: animate-rotate 0.5s;
+
+}
+
+.p-devide__list_watchers {
+
+    height: var(--height-min);
+    font-size: small;
+    box-sizing: content-box;
 
 }
 
@@ -329,6 +384,12 @@
     grid-area: r;
 
 }
+.div-devide__list_stat {
+
+    display: flex;
+    grid-area: s;
+
+}
 .div-devide__list_title {
     
     grid-area: t;
@@ -343,7 +404,7 @@
         ". r"
         ". ."
         ". p"
-        ". .";
+        ". s";
     grid-template-rows: 1fr 5fr 0.25em 0.5em 0.25em 1em;
     grid-template-columns: 0.5em 1fr;
     
@@ -393,7 +454,7 @@ body {
 
     margin: 0;
     padding: 0;
-    overflow: auto;
+    overflow: hidden;
     white-space: nowrap;
     font-family: var(--font-family);
     text-overflow: clip;
@@ -401,6 +462,20 @@ body {
 }
 
 /* Анимации */
+@keyframes animate-rotate {
+
+    from {
+
+        transform: rotate(0);
+
+    }
+    to {
+
+        transform: rotate(360deg);
+
+    }
+
+}
 @keyframes animate-appirance {
 
     from {
