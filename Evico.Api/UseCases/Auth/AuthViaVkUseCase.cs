@@ -29,7 +29,7 @@ public class AuthViaVkUseCase
         var vkProfileInfo = vkProfileInfoResult.Value;
         
         var userRegistered = false;
-        var vkUser = ( await _vkAuthService.GetExistingProfileAsync(vkProfileInfo)).ValueOrDefault;
+        var vkUser = (await _vkAuthService.GetExistingProfileAsync(vkProfileInfo)).ValueOrDefault;
 
         if (vkUser is null)
         {
