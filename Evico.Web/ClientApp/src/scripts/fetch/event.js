@@ -61,6 +61,7 @@ export const getEventsList = function () {
             eventsList.push(eventObj);
             console.log(eventObj);
         }
+        return eventsList;
     });
 }
 
@@ -78,6 +79,7 @@ export const getEventById = function (eventId) {
     .then(data => {
         let eventObj = new Event(data);
         console.log(eventObj);
+        return eventObj;
     });
 }
 
