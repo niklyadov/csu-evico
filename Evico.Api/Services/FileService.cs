@@ -17,12 +17,6 @@ public class FileService
         _bucketsConfiguration = bucketsConfiguration.Value;
     }
     
-    public async Task<Result<IFormFile>> ValidateInput(IFormFile inputFile)
-    {
-        
-        return Result.Ok(inputFile);
-    }
-
     public async Task<Result> UploadFile(IFormFile inputFile, MinioBucketNames bucket, String internalId)
     {
         var bucketValidationResult = ValidateBucketsConfiguration();
