@@ -28,7 +28,7 @@ public class EventReviewService
         return await Result.Try(async () => { return await _eventReviewQueryBuilder.AddAsync(eventReviewRecord); });
     }
 
-    public async Task<Result<EventReviewRecord>> GetById(long id)
+    public async Task<Result<EventReviewRecord>> GetByIdAsync(long id)
     {
         return await Result.Try(async () =>
         {
@@ -80,7 +80,10 @@ public class EventReviewService
     {
         if (eventRecord.IsDeleted)
             return Result.Fail("This event is deleted");
-
+        
+        if (eventReviewRecord.IsDeleted)
+            return Result.Fail("This review is deleted");
+        
         // todo добавить проверку на роль. модератор тоже должен уметь обновлять отзывы
 
         return Result.OkIf(eventReviewRecord.AuthorId == profileRecord.Id,

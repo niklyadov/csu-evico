@@ -9,15 +9,21 @@ using Evico.Api.Services.Auth.Vk;
 using Evico.Api.UseCases.Auth;
 using Evico.Api.UseCases.Event;
 using Evico.Api.UseCases.Event.Category;
+using Evico.Api.UseCases.Event.Photo;
 using Evico.Api.UseCases.Event.Review;
+using Evico.Api.UseCases.Event.Review.Photo;
+using Evico.Api.UseCases.Photo;
 using Evico.Api.UseCases.Place;
 using Evico.Api.UseCases.Place.Category;
+using Evico.Api.UseCases.Place.Photo;
 using Evico.Api.UseCases.Place.Review;
+using Evico.Api.UseCases.Place.Review.Photo;
 using FluentResults;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Minio.AspNetCore;
 using Serilog;
 
 const string allowAnyCorsOrigin = "Allow any";
@@ -31,8 +37,6 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("Default"),
         b => b.MigrationsAssembly("Evico.Api")));
 
-builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("Jwt"));
-builder.Services.Configure<VkAuthServiceConfiguration>(builder.Configuration.GetSection("VkAuthService"));
 
 builder.Services.AddScoped<EventQueryBuilder>();
 builder.Services.AddScoped<PlaceQueryBuilder>();
@@ -42,6 +46,11 @@ builder.Services.AddScoped<ExternalPhotoQueryBuilder>();
 builder.Services.AddScoped<PlaceReviewQueryBuilder>();
 builder.Services.AddScoped<EventCategoryQueryBuilder>();
 builder.Services.AddScoped<PlaceCategoryQueryBuilder>();
+builder.Services.AddScoped<PhotoQueryBuilder>();
+builder.Services.AddScoped<EventPhotoQueryBuilder>();
+builder.Services.AddScoped<PlacePhotoQueryBuilder>();
+builder.Services.AddScoped<EventReviewPhotoQueryBuilder>();
+builder.Services.AddScoped<PlaceReviewPhotoQueryBuilder>();
 
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<PlaceService>();
@@ -51,6 +60,12 @@ builder.Services.AddScoped<EventReviewService>();
 builder.Services.AddScoped<PlaceReviewService>();
 builder.Services.AddScoped<EventCategoryService>();
 builder.Services.AddScoped<PlaceCategoryService>();
+builder.Services.AddScoped<PhotoService>();
+builder.Services.AddScoped<EventPhotoService>();
+builder.Services.AddScoped<PlacePhotoService>();
+builder.Services.AddScoped<EventReviewPhotoService>();
+builder.Services.AddScoped<PlaceReviewPhotoService>();
+builder.Services.AddScoped<FileService>();
 
 builder.Services.AddScoped<AuthViaVkUseCase>();
 builder.Services.AddScoped<CreateNewTokensUseCase>();
@@ -79,6 +94,20 @@ builder.Services.AddScoped<GetPlaceReviewsUseCase>();
 builder.Services.AddScoped<UpdatePlaceReviewUseCase>();
 builder.Services.AddScoped<DeletePlaceReviewUseCase>();
 
+builder.Services.AddScoped<GetPhotoByIdUseCase>();
+
+builder.Services.AddScoped<AddPlacePhotoUseCase>();
+builder.Services.AddScoped<DeletePlacePhotoUseCase>();
+
+builder.Services.AddScoped<AddPlaceReviewPhotoUseCase>();
+builder.Services.AddScoped<DeletePlaceReviewPhotoUseCase>();
+
+builder.Services.AddScoped<AddEventPhotoUseCase>();
+builder.Services.AddScoped<DeleteEventPhotoUseCase>();
+
+builder.Services.AddScoped<AddEventReviewPhotoUseCase>();
+builder.Services.AddScoped<DeleteEventReviewPhotoUseCase>();
+
 builder.Services.AddScoped<AddEventCategoryUseCase>();
 builder.Services.AddScoped<GetEventCategoryByIdUseCase>();
 builder.Services.AddScoped<GetEventCategoriesUseCase>();
@@ -91,6 +120,10 @@ builder.Services.AddScoped<GetPlaceCategoryByIdUseCase>();
 builder.Services.AddScoped<GetPlaceCategoryByIdUseCase>();
 builder.Services.AddScoped<GetPlaceCategoryByIdUseCase>();
 
+#region Auth
+
+builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("Jwt"));
+builder.Services.Configure<VkAuthServiceConfiguration>(builder.Configuration.GetSection("VkAuthService"));
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -117,6 +150,8 @@ builder.Services.AddScoped<JwtTokensService>();
 builder.Services.AddScoped<JwtAuthService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<VkAuthService>();
+
+#endregion
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

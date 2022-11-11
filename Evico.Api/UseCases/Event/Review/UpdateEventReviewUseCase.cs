@@ -30,7 +30,7 @@ public class UpdateEventReviewUseCase
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
 
-        var eventReviewByIdResult = await _eventReviewService.GetById(inputModel.Id);
+        var eventReviewByIdResult = await _eventReviewService.GetByIdAsync(inputModel.Id);
         if (eventReviewByIdResult.IsFailed)
             return new BadRequestObjectResult(eventReviewByIdResult.GetReport());
         var eventReview = eventReviewByIdResult.Value;

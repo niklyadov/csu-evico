@@ -27,7 +27,7 @@ public class GetEventReviewByIdUseCase
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         var currentUser = currentUserResult.ValueOrDefault;
 
-        var eventReviewByIdResult = await _eventReviewService.GetById(reviewId);
+        var eventReviewByIdResult = await _eventReviewService.GetByIdAsync(reviewId);
         if (eventReviewByIdResult.IsFailed)
             return new BadRequestObjectResult(eventReviewByIdResult.GetReport());
         var eventReview = eventReviewByIdResult.Value;
