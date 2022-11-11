@@ -18,14 +18,35 @@ public class VkAuthService
         _configuration = configuration.Value;
     }
 
-    public async Task<Result<ProfileRecord>> RegisterOrGetExistingProfileAsync(VkProfileInfo vkProfileInfo)
+    public async Task<Result<ProfileRecord>> GetExistingProfileAsync(VkProfileInfo vkProfileInfo)
     {
-        return await Result.Try(async () =>
+        return await _profileService.GetByVkIdAsync(vkProfileInfo.UserId);
+    }
+    
+    public async Task<Result<ProfileRecord>> RegisterVkUser(VkProfileInfo vkProfileInfo)
+    {
+        ProfileRecord newUser = new()
         {
-            var vkUser = await _profileService.GetByVkIdAsync(vkProfileInfo.UserId);
+            VkUserId = vkProfileInfo.UserId,
+            Name = vkProfileInfo.UserId.ToString(),
+            Firstname = vkProfileInfo.Firstname,
+            Lastname = vkProfileInfo.Lastname
+        };
 
-            return vkUser.ValueOrDefault ?? (await RegisterVkUser(vkProfileInfo)).ValueOrDefault;
-        });
+        if (!string.IsNullOrEmpty(vkProfileInfo.Domain))
+            newUser.Name = vkProfileInfo.Domain;
+
+        if (DateTime.TryParse(vkProfileInfo.BirthDate, CultureInfo.InvariantCulture, DateTimeStyles.None,
+                out var birthDate))
+            newUser.BirthDate = birthDate;
+
+        if (vkProfileInfo.HasPhoto)
+        {
+            // TODO: добавить фото
+            //vkProfileInfo.PhotoUri;
+        }
+
+        return await _profileService.AddAsync(newUser);
     }
 
     public async Task<Result<VkProfileInfo>> GetVkProfileInfoAsync(string accessToken,
@@ -77,31 +98,5 @@ public class VkAuthService
 
             return responseAccessToken.AccessToken!;
         });
-    }
-
-    private async Task<Result<ProfileRecord>> RegisterVkUser(VkProfileInfo vkProfileInfo)
-    {
-        ProfileRecord newUser = new()
-        {
-            VkUserId = vkProfileInfo.UserId,
-            Name = vkProfileInfo.UserId.ToString(),
-            Firstname = vkProfileInfo.Firstname,
-            Lastname = vkProfileInfo.Lastname
-        };
-
-        if (!string.IsNullOrEmpty(vkProfileInfo.Domain))
-            newUser.Name = vkProfileInfo.Domain;
-
-        if (DateTime.TryParse(vkProfileInfo.BirthDate, CultureInfo.InvariantCulture, DateTimeStyles.None,
-                out var birthDate))
-            newUser.BirthDate = birthDate;
-
-        if (vkProfileInfo.HasPhoto)
-        {
-            // TODO: добавить фото
-            //vkProfileInfo.PhotoUri;
-        }
-
-        return await _profileService.AddAsync(newUser);
     }
 }

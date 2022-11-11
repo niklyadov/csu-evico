@@ -10,6 +10,7 @@ public record ProfileRecord : User
     public ExternalPhotoRecord? Photo { get; set; } = null;
     public long? VkUserId { get; set; }
     public DateTime? BirthDate { get; set; }
+    public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
 
     [JsonIgnore] public virtual List<EventRecord> OwnEvents { get; set; } = new();
 
