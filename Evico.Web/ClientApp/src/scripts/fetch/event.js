@@ -1,6 +1,7 @@
+import { Event } from "../../components/classes/Event";
 import config from "../../config"
 
-const token = "token";
+const token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjUyZWVlYWNkLWNiOTMtNGE4Yy05ZjFiLTRmNTBlNTVjZmU3MyIsInN1YiI6IjEiLCJuYW1lIjoiTmlraXRhX2hvdGRvZyIsImVtYWlsIjoiIiwianRpIjoiOWMzNjZjNTctZTlhNC00ODg0LTkwMDUtYWY5MDAwNDE4Mzc5IiwibmJmIjoxNjY4MTU2MzM3LCJleHAiOjE2Njg3NjExMzcsImlhdCI6MTY2ODE1NjMzNywiaXNzIjoiQ1NVLUVWSUNPIiwiYXVkIjoiQ1NVLUVWSUNPIn0.VEAw-QDPRCIQcdqVnRIXmyXrlfm_RE4EYxw-X2dVeomNL7EBDAV5Kn7SzfpZOkDat9Ho1uHfdNkSGm06ZXq_4w";
 
 
 class EventRecord{
@@ -44,6 +45,7 @@ export const createEvent = function () {
 
 // Get list
 export const getEventsList = function () {
+    let eventsList = [];
     fetch(`${config.api}event`, {
         method: "GET",
         mode: 'cors',
@@ -53,7 +55,13 @@ export const getEventsList = function () {
           }
     })
     .then(response => response.json())
-    .then(x => console.log(x));
+    .then(data => {
+        for (const event of data){
+            let eventObj = new Event(event);
+            eventsList.push(eventObj);
+            console.log(eventObj);
+        }
+    });
 }
 
 // Get by id
@@ -67,7 +75,10 @@ export const getEventById = function (eventId) {
           }
     })
     .then(response => response.json())
-    .then(x => console.log(x));
+    .then(data => {
+        let eventObj = new Event(data);
+        console.log(eventObj);
+    });
 }
 
 // Put
