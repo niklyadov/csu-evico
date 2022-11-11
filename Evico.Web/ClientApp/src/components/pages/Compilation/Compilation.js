@@ -11,21 +11,12 @@ export default function Compilation(props) {
     const items = [
 
         {
-            rait: 97,
-            watchers: 1241,
-            participant: 98,
             title: 'Мероприятие',
         },
         {
-            rait: 73,
-            watchers: 12,
-            participant: 35,
             title: 'Поход'
         },
         {
-            rait: 100,
-            watchers: 74302,
-            participant: 100,
             title: 'Чемпионат'
         },
 
@@ -45,7 +36,7 @@ export default function Compilation(props) {
 function Stat(props) {
 
     return <div className="div-devide__list_stat">
-        <p className="p-devide__list_watchers">Наблюдателей: {props.watchers ?? 0}</p>
+        <p className="p-devide__list_watchers">Подписчики: {props.watchers ?? 0}</p>
     </div>;
 
 };
