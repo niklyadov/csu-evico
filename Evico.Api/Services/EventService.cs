@@ -18,7 +18,6 @@ public class EventService
 
     public async Task<Result<EventRecord>> AddAsync(EventRecord eventRecord)
     {
-        // todo: add category to event
         return await Result.Try(async () => { return await _eventQueryBuilder.AddAsync(eventRecord); });
     }
 
