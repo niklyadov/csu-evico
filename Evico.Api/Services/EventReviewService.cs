@@ -76,7 +76,7 @@ public class EventReviewService
         return Result.Ok();
     }
 
-    public Result CanUpdate(EventRecord eventRecord, EventReviewRecord eventReviewRecord, ProfileRecord profileRecord)
+    public Result CanUpdate(EventRecord eventRecord, EventReviewRecord eventReviewRecord, ProfileRecord profile)
     {
         if (eventRecord.IsDeleted)
             return Result.Fail("This event is deleted");
@@ -87,13 +87,14 @@ public class EventReviewService
         if (eventRecord.Id != eventReviewRecord.EventId)
             return Result.Fail($"Place id {eventRecord.Id} must be {eventReviewRecord.EventId}");
         
-        // todo добавить проверку на роль. модератор тоже должен уметь обновлять отзывы
-
-        return Result.OkIf(eventReviewRecord.AuthorId == profileRecord.Id,
+        if (profile.Role == UserRoles.Moderator)
+            return Result.Ok();
+        
+        return Result.OkIf(eventReviewRecord.AuthorId == profile.Id,
             "Only author or moderator can update this review");
     }
 
-    public Result CanDelete(EventRecord eventRecord, EventReviewRecord eventReviewRecord, ProfileRecord profileRecord)
+    public Result CanDelete(EventRecord eventRecord, EventReviewRecord eventReviewRecord, ProfileRecord profile)
     {
         if (eventRecord.IsDeleted)
             return Result.Fail("This event is deleted");
@@ -101,9 +102,10 @@ public class EventReviewService
         if (eventRecord.Id != eventReviewRecord.EventId)
             return Result.Fail($"Place id {eventRecord.Id} must be {eventReviewRecord.EventId}");
         
-        // todo добавить проверку на роль. модератор тоже должен уметь удалять отзывы
-
-        return Result.OkIf(eventReviewRecord.AuthorId == profileRecord.Id,
+        if (profile.Role == UserRoles.Moderator)
+            return Result.Ok();
+        
+        return Result.OkIf(eventReviewRecord.AuthorId == profile.Id,
             "Only author or moderator can delete this review");
     }
 }

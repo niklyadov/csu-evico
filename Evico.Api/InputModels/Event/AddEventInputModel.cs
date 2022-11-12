@@ -7,8 +7,6 @@ public class AddEventInputModel
     public long PlaceId { get; set; }
     public DateTime? Start { get; set; } = null;
     public DateTime? End { get; set; } = null;
-    // TODO: add photo
-    //public long PhotoId { get; set; }
 
     [StringLength(255, MinimumLength = 1)] 
     public String Name { get; set; } = String.Empty;
