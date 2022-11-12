@@ -17,10 +17,7 @@ public class PlaceService
 
     public async Task<Result<PlaceRecord>> AddAsync(PlaceRecord place)
     {
-        return await Result.Try(async () =>
-        {
-            return await PlaceQueryBuilder.AddAsync(place);
-        });
+        return await Result.Try(async () => { return await PlaceQueryBuilder.AddAsync(place); });
     }
 
     public async Task<Result<List<PlaceRecord>>> GetAllAsync()

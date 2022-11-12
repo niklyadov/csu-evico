@@ -26,7 +26,7 @@ public class AuthViaVkUseCase
         if (vkProfileInfoResult.IsFailed)
             return new BadRequestObjectResult(vkProfileInfoResult.GetReport());
         var vkProfileInfo = vkProfileInfoResult.Value;
-        
+
         var userRegistered = false;
         var vkUser = (await _vkAuthService.GetExistingProfileAsync(vkProfileInfo)).ValueOrDefault;
 

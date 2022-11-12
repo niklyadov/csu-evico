@@ -15,8 +15,12 @@ namespace Evico.Api.Controllers;
 [Authorize]
 public class PlaceController : BaseController
 {
+    private readonly AddPlacePhotoUseCase _addPlacePhotoUseCase;
+    private readonly AddPlaceReviewPhotoUseCase _addPlaceReviewPhotoUseCase;
     private readonly AddPlaceReviewUseCase _addPlaceReviewUseCase;
     private readonly AddPlaceUseCase _addPlaceUseCase;
+    private readonly DeletePlacePhotoUseCase _deletePlacePhotoUseCase;
+    private readonly DeletePlaceReviewPhotoUseCase _deletePlaceReviewPhotoUseCase;
     private readonly DeletePlaceReviewUseCase _deletePlaceReviewUseCase;
     private readonly DeletePlaceUseCase _deletePlaceUseCase;
     private readonly GetPlaceByIdUseCase _getPlaceByIdUseCase;
@@ -25,10 +29,7 @@ public class PlaceController : BaseController
     private readonly GetPlacesUseCase _getPlacesUseCase;
     private readonly UpdatePlaceReviewUseCase _updatePlaceReviewUseCase;
     private readonly UpdatePlaceUseCase _updatePlaceUseCase;
-    private readonly AddPlacePhotoUseCase _addPlacePhotoUseCase;
-    private readonly DeletePlacePhotoUseCase _deletePlacePhotoUseCase;
-    private readonly AddPlaceReviewPhotoUseCase _addPlaceReviewPhotoUseCase;
-    private readonly DeletePlaceReviewPhotoUseCase _deletePlaceReviewPhotoUseCase;
+
     public PlaceController(IServiceProvider services)
     {
         _addPlaceUseCase = services.GetRequiredService<AddPlaceUseCase>();
@@ -78,9 +79,10 @@ public class PlaceController : BaseController
     {
         return await _deletePlaceUseCase.DeleteByIdAsync(placeId, User);
     }
-    
+
     [HttpPost("{placeId}/photo")]
-    public async Task<ActionResult<PhotoRecord>> AddPhoto([FromForm] PhotoUploadInputModel inputModel, [FromRoute] long placeId)
+    public async Task<ActionResult<PhotoRecord>> AddPhoto([FromForm] PhotoUploadInputModel inputModel,
+        [FromRoute] long placeId)
     {
         return await _addPlacePhotoUseCase.AddAsync(inputModel, placeId, User);
     }
@@ -126,16 +128,16 @@ public class PlaceController : BaseController
     {
         return await _deletePlaceReviewUseCase.DeleteAsync(placeId, reviewId, User);
     }
-    
+
     [HttpPost("{placeId}/review/{reviewId}/photo")]
-    public async Task<ActionResult<PhotoRecord>> AddReviewPhoto([FromForm] PhotoUploadInputModel inputModel, 
+    public async Task<ActionResult<PhotoRecord>> AddReviewPhoto([FromForm] PhotoUploadInputModel inputModel,
         [FromRoute] long placeId, [FromRoute] long reviewId)
     {
         return await _addPlaceReviewPhotoUseCase.AddAsync(inputModel, placeId, reviewId, User);
     }
 
     [HttpDelete("{placeId}/review/{reviewId}/photo/{photoId}")]
-    public async Task<ActionResult<PhotoRecord>> DeleteReviewPhoto([FromRoute] long placeId, 
+    public async Task<ActionResult<PhotoRecord>> DeleteReviewPhoto([FromRoute] long placeId,
         [FromRoute] long reviewId, [FromRoute] long photoId)
     {
         return await _deletePlaceReviewPhotoUseCase.DeleteAsync(placeId, photoId, User);

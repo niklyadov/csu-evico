@@ -9,10 +9,10 @@ namespace Evico.Api.UseCases.Place.Review.Photo;
 
 public class DeletePlaceReviewPhotoUseCase
 {
-    private readonly PlaceReviewPhotoService _photoService;
-    private readonly PlaceService _placeService;
-    private readonly PlaceReviewService _placeReviewService;
     private readonly AuthService _authService;
+    private readonly PlaceReviewPhotoService _photoService;
+    private readonly PlaceReviewService _placeReviewService;
+    private readonly PlaceService _placeService;
 
     public DeletePlaceReviewPhotoUseCase(IServiceProvider services)
     {
@@ -21,14 +21,15 @@ public class DeletePlaceReviewPhotoUseCase
         _placeReviewService = services.GetRequiredService<PlaceReviewService>();
         _authService = services.GetRequiredService<AuthService>();
     }
-    
-    public async Task<ActionResult<PhotoRecord>> DeleteAsync(long placeId, long photoId, ClaimsPrincipal claimsPrincipal)
+
+    public async Task<ActionResult<PhotoRecord>> DeleteAsync(long placeId, long photoId,
+        ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         if (currentUserResult.IsFailed)
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
-        
+
         var placeWithIdResult = await _placeService.GetByIdAsync(placeId);
         if (placeWithIdResult.IsFailed)
             return new BadRequestObjectResult(placeWithIdResult.GetReport());
@@ -45,7 +46,7 @@ public class DeletePlaceReviewPhotoUseCase
         if (getPlaceReviewWithIdResult.IsFailed)
             return new BadRequestObjectResult(getPlaceReviewWithIdResult.GetReport());
         var review = getPlaceReviewWithIdResult.Value;
-        
+
         var canUpdatePlaceReviewResult = _placeReviewService.CanUpdate(place, review, currentUser);
         if (canUpdatePlaceReviewResult.IsFailed)
             return new ObjectResult(canUpdatePlaceReviewResult.GetReport())

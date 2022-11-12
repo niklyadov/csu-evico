@@ -9,15 +9,15 @@ namespace Evico.Api.UseCases.Place.Category;
 
 public class DeletePlaceCategoryUseCase
 {
-    private readonly PlaceCategoryService _categoryService;
     private readonly AuthService _authService;
+    private readonly PlaceCategoryService _categoryService;
 
     public DeletePlaceCategoryUseCase(PlaceCategoryService categoryService, AuthService authService)
     {
         _categoryService = categoryService;
         _authService = authService;
     }
-    
+
     public async Task<ActionResult<List<PlaceCategoryRecord>>> DeleteAsync(long categoryId, ClaimsPrincipal userClaims)
     {
         var currentUserResult = await _authService.GetCurrentUser(userClaims);
@@ -29,7 +29,7 @@ public class DeletePlaceCategoryUseCase
         if (categoryRecordWithIdResult.IsFailed)
             return new BadRequestObjectResult(categoryRecordWithIdResult.GetReport());
         var categoryRecord = categoryRecordWithIdResult.Value;
-        
+
         var canDeleteCategoryResult = _categoryService.CanDelete(categoryRecord, currentUser);
         if (canDeleteCategoryResult.IsFailed)
             return new ObjectResult(canDeleteCategoryResult.GetReport())

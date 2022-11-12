@@ -40,7 +40,7 @@ public class DeletePlaceReviewUseCase
             {
                 StatusCode = StatusCodes.Status403Forbidden
             };
-        
+
         var placeReviewWithIdResult = await _placeReviewService.GetByIdAsync(reviewId);
         if (placeReviewWithIdResult.IsFailed)
             return new BadRequestObjectResult(placeReviewWithIdResult.GetReport());

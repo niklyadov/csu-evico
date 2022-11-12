@@ -6,7 +6,7 @@ public class AllowedContentTypeAttribute : ValidationAttribute
 {
     private readonly string[] _contentTypes;
 
-    public AllowedContentTypeAttribute(String[] contentTypes)
+    public AllowedContentTypeAttribute(string[] contentTypes)
     {
         _contentTypes = contentTypes;
     }
@@ -14,18 +14,11 @@ public class AllowedContentTypeAttribute : ValidationAttribute
     protected override ValidationResult? IsValid(
         object? value, ValidationContext validationContext)
     {
-        if (value is null)
-        {
-            return new ValidationResult("Input file is null");
-        }
+        if (value is null) return new ValidationResult("Input file is null");
 
         if (value is IFormFile file)
-        {
             if (!_contentTypes.Contains(file.ContentType))
-            {
                 return new ValidationResult(GetErrorMessage());
-            }
-        }
 
         return ValidationResult.Success;
     }

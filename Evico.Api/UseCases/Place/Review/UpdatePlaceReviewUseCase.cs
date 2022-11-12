@@ -41,7 +41,7 @@ public class UpdatePlaceReviewUseCase
             {
                 StatusCode = StatusCodes.Status403Forbidden
             };
-        
+
         var placeReviewWithIdResult = await _placeReviewService.GetByIdAsync(inputModel.Id);
         if (placeReviewWithIdResult.IsFailed)
             return new BadRequestObjectResult(placeReviewWithIdResult.GetReport());

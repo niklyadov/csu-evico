@@ -9,9 +9,9 @@ namespace Evico.Api.UseCases.Event.Photo;
 
 public class DeleteEventPhotoUseCase
 {
-    private readonly EventPhotoService _photoService;
-    private readonly EventService _eventService;
     private readonly AuthService _authService;
+    private readonly EventService _eventService;
+    private readonly EventPhotoService _photoService;
 
     public DeleteEventPhotoUseCase(IServiceProvider services)
     {
@@ -19,19 +19,20 @@ public class DeleteEventPhotoUseCase
         _eventService = services.GetRequiredService<EventService>();
         _authService = services.GetRequiredService<AuthService>();
     }
-    
-    public async Task<ActionResult<PhotoRecord>> DeleteAsync(long eventId, long photoId, ClaimsPrincipal claimsPrincipal)
+
+    public async Task<ActionResult<PhotoRecord>> DeleteAsync(long eventId, long photoId,
+        ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         if (currentUserResult.IsFailed)
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
-        
+
         var getEventWithIdResult = await _eventService.GetByIdAsync(eventId);
         if (getEventWithIdResult.IsFailed)
             return new BadRequestObjectResult(getEventWithIdResult.GetReport());
         var eventRecord = getEventWithIdResult.Value;
-        
+
         var canUpdateEventResult = _eventService.CanUpdate(eventRecord, currentUser);
         if (canUpdateEventResult.IsFailed)
             return new ObjectResult(canUpdateEventResult.GetReport())

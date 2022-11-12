@@ -10,7 +10,7 @@ public sealed class ApplicationContext : DbContext
         //Database.EnsureDeleted();
         Database.EnsureCreated();
     }
-    
+
     public DbSet<CategoryRecord> Categories { get; set; } = default!;
     public DbSet<PlaceRecord> Places { get; set; } = default!;
     public DbSet<EventRecord> Events { get; set; } = default!;
@@ -27,7 +27,7 @@ public sealed class ApplicationContext : DbContext
         modelBuilder.Entity<EventRecord>()
             .HasMany(x => x.Photos)
             .WithOne(y => y.Event);
-        
+
         modelBuilder.Entity<PlaceRecord>()
             .HasOne(x => x.Owner)
             .WithMany(y => y.OwnPlaces);
@@ -35,7 +35,7 @@ public sealed class ApplicationContext : DbContext
         modelBuilder.Entity<PlaceRecord>()
             .HasMany(x => x.Photos)
             .WithOne(y => y.Place);
-        
+
         modelBuilder.Entity<EventReviewRecord>()
             .HasOne(x => x.Author)
             .WithMany(y => y.OwnEventReviews);
@@ -71,7 +71,7 @@ public sealed class ApplicationContext : DbContext
         modelBuilder.Entity<ProfileRecord>()
             .HasIndex(x => x.Name)
             .IsUnique();
-        
+
         modelBuilder.Entity<PhotoRecord>()
             .HasIndex(x => x.MinioInternalId)
             .IsUnique();

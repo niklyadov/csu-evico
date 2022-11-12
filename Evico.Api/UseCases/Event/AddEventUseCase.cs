@@ -12,11 +12,12 @@ namespace Evico.Api.UseCases.Event;
 public class AddEventUseCase
 {
     private readonly AuthService _authService;
+    private readonly EventCategoryService _categoryService;
     private readonly EventService _eventService;
     private readonly PlaceService _placeService;
-    private readonly EventCategoryService _categoryService;
 
-    public AddEventUseCase(EventService eventService, AuthService authService, PlaceService placeService, EventCategoryService categoryService)
+    public AddEventUseCase(EventService eventService, AuthService authService, PlaceService placeService,
+        EventCategoryService categoryService)
     {
         _eventService = eventService;
         _authService = authService;
@@ -58,7 +59,7 @@ public class AddEventUseCase
             if (categoriesResult.IsFailed)
             {
                 var categoriesResultError =
-                    new Error($"Failed to get categories with ids {String.Join(',', inputModel.CategoryIds)}").CausedBy(
+                    new Error($"Failed to get categories with ids {string.Join(',', inputModel.CategoryIds)}").CausedBy(
                         categoriesResult.Errors);
                 return new BadRequestObjectResult(Result.Fail(categoriesResultError));
             }

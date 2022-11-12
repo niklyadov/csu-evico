@@ -59,14 +59,15 @@ public class UpdatePlaceUseCase
             {
                 var parentPlaceError = new Error("Can`t add parent place")
                     .CausedBy(parentPlaceResult.Errors);
-                
+
                 return new BadRequestObjectResult(Result.Fail(parentPlaceError).GetReport());
             }
+
             var parentPlace = parentPlaceResult.Value;
 
             place.Parent = parentPlace;
         }
-        
+
         var updatePlaceResult = await _placeService.UpdateAsync(place);
         if (updatePlaceResult.IsFailed)
             return new BadRequestObjectResult(updatePlaceResult.GetReport());

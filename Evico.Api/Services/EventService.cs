@@ -107,7 +107,7 @@ public class EventService
             return Result.Fail($"Event with id: {eventRecord.Id} was already deleted");
 
         // todo добавить проверку на роль. модератор тоже должен уметь удалять обновлять
-        
+
         return Result.OkIf(eventRecord.OwnerId == userRecord.Id,
             "Only owner or moderator can update this event");
     }

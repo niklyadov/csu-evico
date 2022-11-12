@@ -9,9 +9,9 @@ namespace Evico.Api.UseCases.Place.Photo;
 
 public class DeletePlacePhotoUseCase
 {
+    private readonly AuthService _authService;
     private readonly PlacePhotoService _photoService;
     private readonly PlaceService _placeService;
-    private readonly AuthService _authService;
 
     public DeletePlacePhotoUseCase(IServiceProvider services)
     {
@@ -19,19 +19,20 @@ public class DeletePlacePhotoUseCase
         _placeService = services.GetRequiredService<PlaceService>();
         _authService = services.GetRequiredService<AuthService>();
     }
-    
-    public async Task<ActionResult<PhotoRecord>> DeleteAsync(long placeId, long photoId, ClaimsPrincipal claimsPrincipal)
+
+    public async Task<ActionResult<PhotoRecord>> DeleteAsync(long placeId, long photoId,
+        ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         if (currentUserResult.IsFailed)
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
-        
+
         var getPlaceWithIdResult = await _placeService.GetByIdAsync(placeId);
         if (getPlaceWithIdResult.IsFailed)
             return new BadRequestObjectResult(getPlaceWithIdResult.GetReport());
         var place = getPlaceWithIdResult.Value;
-        
+
         var canUpdatePlaceResult = _placeService.CanUpdate(place, currentUser);
         if (canUpdatePlaceResult.IsFailed)
             return new ObjectResult(canUpdatePlaceResult.GetReport())

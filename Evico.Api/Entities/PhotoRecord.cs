@@ -7,13 +7,14 @@ namespace Evico.Api.Entities;
 public record PhotoRecord : EntityRecord
 {
     public long? AuthorId { get; set; }
-    [JsonIgnore]
-    public ProfileRecord? Author { get; set; }
-    public String? Comment { get; set; }
-    [NotMapped]
-    public Uri Uri => new Uri($"/photo/{Id}");
-    [JsonIgnore]
-    public MinioBucketNames MinioBucket { get; set; }
-    [JsonIgnore]
-    public Guid MinioInternalId { get; set; }
+
+    [JsonIgnore] public ProfileRecord? Author { get; set; }
+
+    public string? Comment { get; set; }
+
+    [NotMapped] public Uri Uri => new($"/photo/{Id}");
+
+    [JsonIgnore] public MinioBucketNames MinioBucket { get; set; }
+
+    [JsonIgnore] public Guid MinioInternalId { get; set; }
 }

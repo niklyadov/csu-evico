@@ -10,11 +10,11 @@ namespace Evico.Api.UseCases.Place.Review.Photo;
 
 public class AddPlaceReviewPhotoUseCase
 {
-    private readonly PlaceReviewPhotoService _photoService;
-    private readonly FileService _fileService;
-    private readonly PlaceService _placeService;
-    private readonly PlaceReviewService _placeReviewService;
     private readonly AuthService _authService;
+    private readonly FileService _fileService;
+    private readonly PlaceReviewPhotoService _photoService;
+    private readonly PlaceReviewService _placeReviewService;
+    private readonly PlaceService _placeService;
 
     public AddPlaceReviewPhotoUseCase(IServiceProvider services)
     {
@@ -24,13 +24,15 @@ public class AddPlaceReviewPhotoUseCase
         _placeReviewService = services.GetRequiredService<PlaceReviewService>();
         _authService = services.GetRequiredService<AuthService>();
     }
-    public async Task<ActionResult<PhotoRecord>> AddAsync(PhotoUploadInputModel inputModel, long placeId, long reviewId, ClaimsPrincipal claimsPrincipal)
+
+    public async Task<ActionResult<PhotoRecord>> AddAsync(PhotoUploadInputModel inputModel, long placeId, long reviewId,
+        ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         if (currentUserResult.IsFailed)
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
-        
+
         var placeWithIdResult = await _placeService.GetByIdAsync(placeId);
         if (placeWithIdResult.IsFailed)
             return new BadRequestObjectResult(placeWithIdResult.GetReport());
@@ -42,19 +44,19 @@ public class AddPlaceReviewPhotoUseCase
             {
                 StatusCode = StatusCodes.Status403Forbidden
             };
-        
+
         var getReviewWithIdResult = await _placeReviewService.GetByIdAsync(reviewId);
         if (getReviewWithIdResult.IsFailed)
             return new BadRequestObjectResult(getReviewWithIdResult.GetReport());
         var review = getReviewWithIdResult.Value;
-        
+
         var canUpdateReviewResult = _placeReviewService.CanUpdate(place, review, currentUser);
         if (canUpdateReviewResult.IsFailed)
             return new ObjectResult(canUpdateReviewResult.GetReport())
             {
                 StatusCode = StatusCodes.Status403Forbidden
             };
-        
+
         var canUploadPhotoResult = _photoService.CanUpload(currentUser);
         if (canUploadPhotoResult.IsFailed)
             return new BadRequestObjectResult(canUploadPhotoResult.GetReport());
@@ -70,8 +72,8 @@ public class AddPlaceReviewPhotoUseCase
             Comment = inputModel.Comment,
             Review = review
         };
-        
-        var photoUploadFileResult = await _fileService.UploadFile(inputModel.Image, minioBucket, 
+
+        var photoUploadFileResult = await _fileService.UploadFile(inputModel.Image, minioBucket,
             internalOperationId.ToString());
         if (photoUploadFileResult.IsFailed)
             return new BadRequestObjectResult(photoUploadFileResult.GetReport());
@@ -80,13 +82,13 @@ public class AddPlaceReviewPhotoUseCase
         if (addPhotoResult.IsFailed)
             return new BadRequestObjectResult(addPhotoResult.GetReport());
         var addedPhoto = addPhotoResult.Value;
-        
+
         review.Photos.Add(addedPhoto);
-        
+
         var updatePlaceResult = await _placeReviewService.UpdateAsync(review);
         if (updatePlaceResult.IsFailed)
             return new BadRequestObjectResult(updatePlaceResult.GetReport());
-        
+
         return addedPhoto;
     }
 }

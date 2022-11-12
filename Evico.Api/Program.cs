@@ -223,7 +223,7 @@ builder.Services.Configure<MinioBucketsConfiguration>(builder.Configuration.GetS
 builder.Services.AddMinio(config =>
 {
     config.Endpoint = builder.Configuration["Minio:Endpoint"];
-    
+
     config.ConfigureClient(clientConfig =>
     {
         clientConfig.WithCredentials(
@@ -244,7 +244,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-Result.Setup(config => 
+Result.Setup(config =>
     config.Logger = new FluentResultsLogger(app.Logger));
 
 app.UseCustomExceptionHandler();

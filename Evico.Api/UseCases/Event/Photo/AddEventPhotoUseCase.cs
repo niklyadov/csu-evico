@@ -10,10 +10,10 @@ namespace Evico.Api.UseCases.Event.Photo;
 
 public class AddEventPhotoUseCase
 {
-    private readonly EventPhotoService _photoService;
-    private readonly FileService _fileService;
-    private readonly EventService _eventService;
     private readonly AuthService _authService;
+    private readonly EventService _eventService;
+    private readonly FileService _fileService;
+    private readonly EventPhotoService _photoService;
 
     public AddEventPhotoUseCase(IServiceProvider services)
     {
@@ -22,26 +22,27 @@ public class AddEventPhotoUseCase
         _eventService = services.GetRequiredService<EventService>();
         _authService = services.GetRequiredService<AuthService>();
     }
-    
-    public async Task<ActionResult<PhotoRecord>> AddAsync(PhotoUploadInputModel inputModel, long eventId, ClaimsPrincipal claimsPrincipal)
+
+    public async Task<ActionResult<PhotoRecord>> AddAsync(PhotoUploadInputModel inputModel, long eventId,
+        ClaimsPrincipal claimsPrincipal)
     {
-               var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
+        var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         if (currentUserResult.IsFailed)
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
-        
+
         var getEventWithIdResult = await _eventService.GetByIdAsync(eventId);
         if (getEventWithIdResult.IsFailed)
             return new BadRequestObjectResult(getEventWithIdResult.GetReport());
         var eventRecord = getEventWithIdResult.Value;
-        
+
         var canUpdateEventResult = _eventService.CanUpdate(eventRecord, currentUser);
         if (canUpdateEventResult.IsFailed)
             return new ObjectResult(canUpdateEventResult.GetReport())
             {
                 StatusCode = StatusCodes.Status403Forbidden
             };
-        
+
         var canUploadPhotoResult = _photoService.CanUpload(currentUser);
         if (canUploadPhotoResult.IsFailed)
             return new BadRequestObjectResult(canUploadPhotoResult.GetReport());
@@ -57,8 +58,8 @@ public class AddEventPhotoUseCase
             Comment = inputModel.Comment,
             Event = eventRecord
         };
-        
-        var photoUploadFileResult = await _fileService.UploadFile(inputModel.Image, minioBucket, 
+
+        var photoUploadFileResult = await _fileService.UploadFile(inputModel.Image, minioBucket,
             internalOperationId.ToString());
         if (photoUploadFileResult.IsFailed)
             return new BadRequestObjectResult(photoUploadFileResult.GetReport());
@@ -67,13 +68,13 @@ public class AddEventPhotoUseCase
         if (addPhotoResult.IsFailed)
             return new BadRequestObjectResult(addPhotoResult.GetReport());
         var addedPhoto = addPhotoResult.Value;
-        
+
         eventRecord.Photos.Add(addedPhoto);
-        
+
         var updateEventResult = await _eventService.UpdateAsync(eventRecord);
         if (updateEventResult.IsFailed)
             return new BadRequestObjectResult(updateEventResult.GetReport());
-        
+
         return addedPhoto;
     }
 }

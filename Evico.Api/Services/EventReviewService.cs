@@ -80,13 +80,13 @@ public class EventReviewService
     {
         if (eventRecord.IsDeleted)
             return Result.Fail("This event is deleted");
-        
+
         if (eventReviewRecord.IsDeleted)
             return Result.Fail("This review is deleted");
-        
+
         if (eventRecord.Id != eventReviewRecord.EventId)
             return Result.Fail($"Place id {eventRecord.Id} must be {eventReviewRecord.EventId}");
-        
+
         // todo добавить проверку на роль. модератор тоже должен уметь обновлять отзывы
 
         return Result.OkIf(eventReviewRecord.AuthorId == profileRecord.Id,
@@ -100,7 +100,7 @@ public class EventReviewService
 
         if (eventRecord.Id != eventReviewRecord.EventId)
             return Result.Fail($"Place id {eventRecord.Id} must be {eventReviewRecord.EventId}");
-        
+
         // todo добавить проверку на роль. модератор тоже должен уметь удалять отзывы
 
         return Result.OkIf(eventReviewRecord.AuthorId == profileRecord.Id,

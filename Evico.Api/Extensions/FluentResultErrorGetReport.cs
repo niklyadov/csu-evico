@@ -8,14 +8,14 @@ public static class FluentResultErrorGetReport
     public static string GetReport<T>(this Result<T> result, bool formatted = true)
     {
         result.Log();
-        
+
         return result.GetReport(formatted, typeof(T));
     }
 
     public static string GetReport(this Result result, bool formatted = true)
     {
         result.Log();
-        
+
         return result.GetReport(formatted, null);
     }
 
@@ -28,10 +28,10 @@ public static class FluentResultErrorGetReport
             //Reasons = result.Reasons
         };
 
-        return JsonConvert.SerializeObject(report, 
+        return JsonConvert.SerializeObject(report,
             formatted ? Formatting.Indented : Formatting.None);
     }
-    
+
     public static ReportException GetReportException<T>(this Result<T> result)
     {
         return new ReportException(GetReport(result, false).Replace('"', '\''));
@@ -46,7 +46,6 @@ internal record ErrorReport
     public DateTime GeneratedAtUtc { get; set; } = DateTime.UtcNow;
     public Type? ResultType { get; set; }
 }
-
 
 public class ReportException : Exception
 {
