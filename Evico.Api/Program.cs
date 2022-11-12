@@ -56,7 +56,6 @@ builder.Services.AddScoped<PlaceReviewPhotoQueryBuilder>();
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<PlaceService>();
 builder.Services.AddScoped<ProfileService>();
-builder.Services.AddScoped<ExternalPhotoService>();
 builder.Services.AddScoped<EventReviewService>();
 builder.Services.AddScoped<PlaceReviewService>();
 builder.Services.AddScoped<EventCategoryService>();

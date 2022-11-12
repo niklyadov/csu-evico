@@ -13,14 +13,14 @@ public class PlaceReviewService
         _applicationContext = applicationContext;
     }
 
-    private PlaceReviewQueryBuilder _placeReviewQueryBuilder
+    private PlaceReviewQueryBuilder PlaceReviewQueryBuilder
         => new(_applicationContext);
 
     public async Task<Result<PlaceReviewRecord>> GetByIdAsync(long id)
     {
         return await Result.Try(async () =>
         {
-            return await _placeReviewQueryBuilder
+            return await PlaceReviewQueryBuilder
                 .WithId(id)
                 .SingleAsync();
         });
@@ -30,7 +30,7 @@ public class PlaceReviewService
     {
         return await Result.Try(async () =>
         {
-            return await _placeReviewQueryBuilder
+            return await PlaceReviewQueryBuilder
                 .ToListAsync();
         });
     }
@@ -39,7 +39,7 @@ public class PlaceReviewService
     {
         return await Result.Try(async () =>
         {
-            return await _placeReviewQueryBuilder
+            return await PlaceReviewQueryBuilder
                 .UpdateAsync(placeReview);
         });
     }
@@ -48,7 +48,7 @@ public class PlaceReviewService
     {
         return await Result.Try(async () =>
         {
-            return await _placeReviewQueryBuilder
+            return await PlaceReviewQueryBuilder
                 .DeleteAsync(placeReview);
         });
     }
@@ -57,7 +57,7 @@ public class PlaceReviewService
     {
         return await Result.Try(async () =>
         {
-            return await _placeReviewQueryBuilder
+            return await PlaceReviewQueryBuilder
                 .AddAsync(placeReview);
         });
     }

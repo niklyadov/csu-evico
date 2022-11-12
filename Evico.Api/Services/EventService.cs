@@ -13,19 +13,18 @@ public class EventService
         _context = context;
     }
 
-    private EventQueryBuilder _eventQueryBuilder => new(_context);
-    private PlaceQueryBuilder _placeQueryBuilder => new(_context);
+    private EventQueryBuilder EventQueryBuilder => new(_context);
 
     public async Task<Result<EventRecord>> AddAsync(EventRecord eventRecord)
     {
-        return await Result.Try(async () => { return await _eventQueryBuilder.AddAsync(eventRecord); });
+        return await Result.Try(async () => { return await EventQueryBuilder.AddAsync(eventRecord); });
     }
 
     public async Task<Result<List<EventRecord>>> GetAllAsync()
     {
         return await Result.Try(async () =>
         {
-            return await _eventQueryBuilder
+            return await EventQueryBuilder
                 .Include(x => x.Categories)
                 .WhereNotDeleted()
                 .ToListAsync();
@@ -36,7 +35,7 @@ public class EventService
     {
         return await Result.Try(async () =>
         {
-            return await _eventQueryBuilder
+            return await EventQueryBuilder
                 .Include(x => x.Categories)
                 .Include(x => x.Place)
                 .WhereNotDeleted()
@@ -49,7 +48,7 @@ public class EventService
     {
         return await Result.Try(async () =>
         {
-            var eventWithId = await _eventQueryBuilder.WithId(eventId).FirstOrDefaultAsync();
+            var eventWithId = await EventQueryBuilder.WithId(eventId).FirstOrDefaultAsync();
 
             if (eventWithId == null)
                 throw new InvalidOperationException($"Event with id {eventId} is not found.");
@@ -58,7 +57,7 @@ public class EventService
                 throw new InvalidOperationException(
                     $"Event with id {eventId} was already deleted at {eventWithId.DeletedDateTime.ToString()}");
 
-            return await _eventQueryBuilder
+            return await EventQueryBuilder
                 .DeleteAsync(eventWithId);
         });
     }
@@ -71,14 +70,14 @@ public class EventService
                 throw new InvalidOperationException(
                     $"Event with id {eventRecord.Id} was already deleted at {eventRecord.DeletedDateTime.ToString()}");
 
-            return await _eventQueryBuilder
+            return await EventQueryBuilder
                 .DeleteAsync(eventRecord);
         });
     }
 
     public async Task<Result<EventRecord>> UpdateAsync(EventRecord eventRecord)
     {
-        return await Result.Try(async () => { return await _eventQueryBuilder.UpdateAsync(eventRecord); });
+        return await Result.Try(async () => { return await EventQueryBuilder.UpdateAsync(eventRecord); });
     }
 
     public Result CanCreate(PlaceRecord placeRecord, ProfileRecord userRecord)

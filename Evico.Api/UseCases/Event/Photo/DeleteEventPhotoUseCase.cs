@@ -10,14 +10,12 @@ namespace Evico.Api.UseCases.Event.Photo;
 public class DeleteEventPhotoUseCase
 {
     private readonly EventPhotoService _photoService;
-    private readonly FileService _fileService;
     private readonly EventService _eventService;
     private readonly AuthService _authService;
 
     public DeleteEventPhotoUseCase(IServiceProvider services)
     {
         _photoService = services.GetRequiredService<EventPhotoService>();
-        _fileService = services.GetRequiredService<FileService>();
         _eventService = services.GetRequiredService<EventService>();
         _authService = services.GetRequiredService<AuthService>();
     }

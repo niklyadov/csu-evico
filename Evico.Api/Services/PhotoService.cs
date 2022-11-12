@@ -7,7 +7,7 @@ namespace Evico.Api.Services;
 public class PhotoService
 {
     private readonly ApplicationContext _applicationContext;
-    private PhotoQueryBuilder _photoQueryBuilder => new(_applicationContext);
+    private PhotoQueryBuilder PhotoQueryBuilder => new(_applicationContext);
 
     public PhotoService(ApplicationContext applicationContext)
     {
@@ -18,7 +18,7 @@ public class PhotoService
     {
         return await Result.Try(async () =>
         {
-            return await _photoQueryBuilder.WithId(id).SingleAsync();
+            return await PhotoQueryBuilder.WithId(id).SingleAsync();
         });
     }
 
@@ -26,7 +26,7 @@ public class PhotoService
     {
         return await Result.Try(async () =>
         {
-            return await _photoQueryBuilder.AddAsync(photoRecord);
+            return await PhotoQueryBuilder.AddAsync(photoRecord);
         });
     }
     
@@ -34,7 +34,7 @@ public class PhotoService
     {
         return await Result.Try(async () =>
         {
-            return await _photoQueryBuilder.DeleteAsync(photoRecord);
+            return await PhotoQueryBuilder.DeleteAsync(photoRecord);
         });
     }
 

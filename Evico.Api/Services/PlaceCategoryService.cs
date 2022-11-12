@@ -7,7 +7,7 @@ namespace Evico.Api.Services;
 public class PlaceCategoryService
 {
     private readonly ApplicationContext _applicationContext;
-    private PlaceCategoryQueryBuilder _queryBuilder => new(_applicationContext);
+    private PlaceCategoryQueryBuilder QueryBuilder => new(_applicationContext);
     
     public PlaceCategoryService(ApplicationContext applicationContext)
     {
@@ -18,7 +18,7 @@ public class PlaceCategoryService
     {
         return await Result.Try(async () =>
         {
-            return await _queryBuilder.AddAsync(category);
+            return await QueryBuilder.AddAsync(category);
         });
     }
     
@@ -26,7 +26,7 @@ public class PlaceCategoryService
     {
         return await Result.Try(async () =>
         {
-            return await _queryBuilder.WithId(id).SingleAsync();
+            return await QueryBuilder.WithId(id).SingleAsync();
         });
     }
     
@@ -34,7 +34,7 @@ public class PlaceCategoryService
     {
         return await Result.Try(async () =>
         {
-            return await _queryBuilder.ToListAsync();
+            return await QueryBuilder.ToListAsync();
         });
     }
 
@@ -42,7 +42,7 @@ public class PlaceCategoryService
     {
         return await Result.Try(async () =>
         {
-            return await _queryBuilder.UpdateAsync(categoryRecord);
+            return await QueryBuilder.UpdateAsync(categoryRecord);
         });
     }
     
@@ -50,7 +50,7 @@ public class PlaceCategoryService
     {
         return await Result.Try(async () =>
         {
-            return await _queryBuilder.DeleteAsync(categoryRecord);
+            return await QueryBuilder.DeleteAsync(categoryRecord);
         });
     }
     

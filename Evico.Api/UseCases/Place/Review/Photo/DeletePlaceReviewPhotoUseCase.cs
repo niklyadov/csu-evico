@@ -10,7 +10,6 @@ namespace Evico.Api.UseCases.Place.Review.Photo;
 public class DeletePlaceReviewPhotoUseCase
 {
     private readonly PlaceReviewPhotoService _photoService;
-    private readonly FileService _fileService;
     private readonly PlaceService _placeService;
     private readonly PlaceReviewService _placeReviewService;
     private readonly AuthService _authService;
@@ -18,7 +17,6 @@ public class DeletePlaceReviewPhotoUseCase
     public DeletePlaceReviewPhotoUseCase(IServiceProvider services)
     {
         _photoService = services.GetRequiredService<PlaceReviewPhotoService>();
-        _fileService = services.GetRequiredService<FileService>();
         _placeService = services.GetRequiredService<PlaceService>();
         _placeReviewService = services.GetRequiredService<PlaceReviewService>();
         _authService = services.GetRequiredService<AuthService>();

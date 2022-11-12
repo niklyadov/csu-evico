@@ -1,7 +1,6 @@
 using Evico.Api.Extensions;
 using Evico.Api.Services.Auth;
 using Evico.Api.Services.Auth.Vk;
-using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.UseCases.Auth;

@@ -1,5 +1,4 @@
 using Evico.Api.Entities;
-using Evico.Api.InputModels;
 using Evico.Api.InputModels.Photo;
 using Evico.Api.InputModels.Place;
 using Evico.Api.UseCases.Place;

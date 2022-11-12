@@ -4,7 +4,6 @@ using Evico.Api.Extensions;
 using Evico.Api.InputModels.Event;
 using Evico.Api.Services;
 using Evico.Api.Services.Auth;
-using Evico.Api.UseCases.Place.Category;
 using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 

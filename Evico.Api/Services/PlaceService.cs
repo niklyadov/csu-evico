@@ -13,13 +13,13 @@ public class PlaceService
         _context = context;
     }
 
-    private PlaceQueryBuilder _placeQueryBuilder => new(_context);
+    private PlaceQueryBuilder PlaceQueryBuilder => new(_context);
 
     public async Task<Result<PlaceRecord>> AddAsync(PlaceRecord place)
     {
         return await Result.Try(async () =>
         {
-            return await _placeQueryBuilder.AddAsync(place);
+            return await PlaceQueryBuilder.AddAsync(place);
         });
     }
 
@@ -27,7 +27,7 @@ public class PlaceService
     {
         return await Result.Try(async () =>
         {
-            return await _placeQueryBuilder
+            return await PlaceQueryBuilder
                 .Include(x => x.Categories)
                 .ToListAsync();
         });
@@ -37,7 +37,7 @@ public class PlaceService
     {
         return await Result.Try(async () =>
         {
-            return await _placeQueryBuilder
+            return await PlaceQueryBuilder
                 .WithId(id)
                 .Include(x => x.Categories)
                 .SingleAsync();
@@ -46,12 +46,12 @@ public class PlaceService
 
     public async Task<Result<PlaceRecord>> UpdateAsync(PlaceRecord place)
     {
-        return await Result.Try(async () => { return await _placeQueryBuilder.UpdateAsync(place); });
+        return await Result.Try(async () => { return await PlaceQueryBuilder.UpdateAsync(place); });
     }
 
     public async Task<Result<PlaceRecord>> DeleteAsync(PlaceRecord place)
     {
-        return await Result.Try(async () => { return await _placeQueryBuilder.DeleteAsync(place); });
+        return await Result.Try(async () => { return await PlaceQueryBuilder.DeleteAsync(place); });
     }
 
     public Result CanView(PlaceRecord place, ProfileRecord? profile)
