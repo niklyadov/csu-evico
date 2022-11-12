@@ -19,7 +19,7 @@ public class VkProfileInfo
     [JsonPropertyName("has_photo")]
     public bool HasPhoto { get; set; }
 
-    [JsonPropertyName("photo_50")] public Uri PhotoUri { get; set; }
+    [JsonPropertyName("photo_50")] public Uri PhotoUri { get; set; } = default!;
 
     [JsonPropertyName("sex")] public int Sex { get; set; }
 }

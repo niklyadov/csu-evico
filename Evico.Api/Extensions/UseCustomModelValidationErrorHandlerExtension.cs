@@ -17,18 +17,18 @@ public static class UseCustomModelValidationErrorHandlerExtension
                 foreach (var modelStateKeyValue in actionContext.ModelState)
                 {
                     var modelState = modelStateKeyValue.Value;
-            
+
                     if (modelState.ValidationState == ModelValidationState.Valid)
                         continue;
 
                     var mainValidateError = new Error("One or more errors occurred when validate model");
                     mainValidateError.Metadata.Add("ValidationState", modelState.ValidationState.ToString());
-            
+
                     result = Result.Fail(mainValidateError
                         .CausedBy(modelState.Errors.Select(MapError))
                     );
                 }
-        
+
                 return new BadRequestObjectResult(result?.GetReport());
             };
         });

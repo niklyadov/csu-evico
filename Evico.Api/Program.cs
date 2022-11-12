@@ -56,7 +56,6 @@ builder.Services.AddScoped<PlaceReviewPhotoQueryBuilder>();
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<PlaceService>();
 builder.Services.AddScoped<ProfileService>();
-builder.Services.AddScoped<ExternalPhotoService>();
 builder.Services.AddScoped<EventReviewService>();
 builder.Services.AddScoped<PlaceReviewService>();
 builder.Services.AddScoped<EventCategoryService>();
@@ -224,7 +223,7 @@ builder.Services.Configure<MinioBucketsConfiguration>(builder.Configuration.GetS
 builder.Services.AddMinio(config =>
 {
     config.Endpoint = builder.Configuration["Minio:Endpoint"];
-    
+
     config.ConfigureClient(clientConfig =>
     {
         clientConfig.WithCredentials(
@@ -245,7 +244,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-Result.Setup(config => 
+Result.Setup(config =>
     config.Logger = new FluentResultsLogger(app.Logger));
 
 app.UseCustomExceptionHandler();

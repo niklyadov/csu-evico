@@ -9,9 +9,9 @@ namespace Evico.Api.Services.Auth.Vk;
 public class VkAuthService
 {
     private readonly VkAuthServiceConfiguration _configuration;
-    private readonly ProfileService _profileService;
     private readonly FileService _fileService;
     private readonly ProfilePhotoService _photoService;
+    private readonly ProfileService _profileService;
 
     public VkAuthService(ProfileService profileService, FileService fileService, ProfilePhotoService photoService,
         IOptions<VkAuthServiceConfiguration> configuration)
@@ -26,7 +26,7 @@ public class VkAuthService
     {
         return await _profileService.GetByVkIdAsync(vkProfileInfo.UserId);
     }
-    
+
     public async Task<Result<ProfileRecord>> RegisterVkUser(VkProfileInfo vkProfileInfo)
     {
         ProfileRecord newUser = new()
@@ -45,12 +45,12 @@ public class VkAuthService
             newUser.BirthDate = birthDate;
 
         var addUserResult = await _profileService.AddAsync(newUser);
-        if(addUserResult.IsFailed)
+        if (addUserResult.IsFailed)
             return Result.Fail(new Error("Add user failed")
                 .CausedBy(addUserResult.Errors));
 
         var addedUser = addUserResult.Value;
-        
+
         // todo: обработать результат загрузки фото профиля (или не обрабатывать вообще)
         await UploadProfilePhoto(vkProfileInfo, addedUser);
 
@@ -61,7 +61,7 @@ public class VkAuthService
     {
         if (!vkProfileInfo.HasPhoto)
             return Result.Ok();
-        
+
         var minioBucket = MinioBucketNames.UserAvatars;
         var minioInternalId = Guid.NewGuid();
 
@@ -70,7 +70,7 @@ public class VkAuthService
         if (fileUploadResult.IsFailed)
             return Result.Fail(new Error("Photo uploading error")
                 .CausedBy(fileUploadResult.Errors));
-            
+
         var userPhotoResult = await _photoService.AddAsync(new ProfilePhotoRecord
         {
             MinioBucket = minioBucket,
@@ -80,13 +80,13 @@ public class VkAuthService
         if (userPhotoResult.IsFailed)
             return Result.Fail(new Error("Photo adding error")
                 .CausedBy(userPhotoResult.Errors));
-            
+
         profile.Photo = userPhotoResult.Value;
 
         var userUpdateResult = await _profileService.UpdateAsync(profile);
         if (userUpdateResult.IsFailed)
             return Result.Fail(new Error("User updating failed"));
-        
+
         return Result.Ok();
     }
 

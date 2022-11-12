@@ -4,7 +4,6 @@ using Evico.Api.Extensions;
 using Evico.Api.InputModels.Event;
 using Evico.Api.Services;
 using Evico.Api.Services.Auth;
-using Evico.Api.UseCases.Place.Category;
 using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,16 +11,17 @@ namespace Evico.Api.UseCases.Event.Category;
 
 public class AddEventCategoryUseCase
 {
-    private readonly EventCategoryService _categoryService;
     private readonly AuthService _authService;
+    private readonly EventCategoryService _categoryService;
 
     public AddEventCategoryUseCase(EventCategoryService categoryService, AuthService authService)
     {
         _categoryService = categoryService;
         _authService = authService;
     }
-    
-    public async Task<ActionResult<EventCategoryRecord>> AddAsync(AddEventCategoryInputModel inputModel, ClaimsPrincipal userClaims)
+
+    public async Task<ActionResult<EventCategoryRecord>> AddAsync(AddEventCategoryInputModel inputModel,
+        ClaimsPrincipal userClaims)
     {
         var currentUserResult = await _authService.GetCurrentUser(userClaims);
         if (currentUserResult.IsFailed)
@@ -34,21 +34,22 @@ public class AddEventCategoryUseCase
             {
                 StatusCode = StatusCodes.Status403Forbidden
             };
-        
+
         var categoryRecord = new EventCategoryRecord
         {
             Name = inputModel.Name,
             Description = inputModel.Description
         };
 
-        if (inputModel.ParentCategoryId.HasValue && inputModel.ParentCategoryId.Value >0)
+        if (inputModel.ParentCategoryId.HasValue && inputModel.ParentCategoryId.Value > 0)
         {
             var parentCategoryRecordResult = await _categoryService.GetByIdAsync(inputModel.ParentCategoryId.Value);
             if (parentCategoryRecordResult.IsFailed)
             {
-                var parentCategoryRecordResultError = new Error($"Failed to set parent category id {inputModel.ParentCategoryId.Value} to category")
-                    .CausedBy(parentCategoryRecordResult.Errors);
-                
+                var parentCategoryRecordResultError =
+                    new Error($"Failed to set parent category id {inputModel.ParentCategoryId.Value} to category")
+                        .CausedBy(parentCategoryRecordResult.Errors);
+
                 return new BadRequestObjectResult(Result.Fail(parentCategoryRecordResultError).GetReport());
             }
 
@@ -59,7 +60,7 @@ public class AddEventCategoryUseCase
         if (createCategoryResult.IsFailed)
             return new BadRequestObjectResult(createCategoryResult.GetReport());
         var createdCategory = createCategoryResult.Value;
-        
+
         return new OkObjectResult(createdCategory);
     }
 }

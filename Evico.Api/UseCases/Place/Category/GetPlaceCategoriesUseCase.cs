@@ -9,15 +9,15 @@ namespace Evico.Api.UseCases.Place.Category;
 
 public class GetPlaceCategoriesUseCase
 {
-    private readonly PlaceCategoryService _categoryService;
     private readonly AuthService _authService;
+    private readonly PlaceCategoryService _categoryService;
 
     public GetPlaceCategoriesUseCase(PlaceCategoryService categoryService, AuthService authService)
     {
         _categoryService = categoryService;
         _authService = authService;
     }
-    
+
     public async Task<ActionResult<List<PlaceCategoryRecord>>> GetAllAsync(ClaimsPrincipal userClaims)
     {
         var currentUserResult = await _authService.GetCurrentUser(userClaims);

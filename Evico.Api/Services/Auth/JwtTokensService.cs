@@ -60,6 +60,6 @@ public class JwtTokensService
 
     public JwtSecurityToken ParseToken(string jwtBase64)
     {
-        return new(jwtBase64);
+        return new JwtSecurityToken(jwtBase64);
     }
 }

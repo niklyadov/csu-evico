@@ -16,8 +16,9 @@ public class MinioBucketConfiguration
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public MinioBucketNames Name { get; set; }
-    public String Location { get; set; } = String.Empty;
-    public String NameString => Name.ToString().ToLower();
+
+    public string Location { get; set; } = string.Empty;
+    public string NameString => Name.ToString().ToLower();
 }
 
 public enum MinioBucketNames

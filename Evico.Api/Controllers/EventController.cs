@@ -14,9 +14,13 @@ namespace Evico.Api.Controllers;
 [Route("[controller]")]
 public class EventController : BaseController
 {
+    private readonly AddEventPhotoUseCase _addEventPhotoUseCase;
+    private readonly AddEventReviewPhotoUseCase _addEventReviewPhotoUseCase;
     private readonly AddEventReviewUseCase _addEventReviewUseCase;
     private readonly AddEventUseCase _addEventUseCase;
     private readonly DeleteEventByIdUseCase _deleteEventByIdUseCase;
+    private readonly DeleteEventPhotoUseCase _deleteEventPhotoUseCase;
+    private readonly DeleteEventReviewPhotoUseCase _deleteEventReviewPhotoUseCase;
     private readonly DeleteEventReviewUseCase _deleteEventReviewUseCase;
     private readonly GetEventByIdUseCase _getEventByIdUseCase;
     private readonly GetEventReviewByIdUseCase _getEventReviewByIdUseCase;
@@ -24,10 +28,6 @@ public class EventController : BaseController
     private readonly GetEventsUseCase _getEventsUseCase;
     private readonly UpdateEventReviewUseCase _updateEventReviewUseCase;
     private readonly UpdateEventUseCase _updateEventUseCase;
-    private readonly AddEventPhotoUseCase _addEventPhotoUseCase;
-    private readonly DeleteEventPhotoUseCase _deleteEventPhotoUseCase;
-    private readonly AddEventReviewPhotoUseCase _addEventReviewPhotoUseCase;
-    private readonly DeleteEventReviewPhotoUseCase _deleteEventReviewPhotoUseCase;
 
     public EventController(IServiceProvider services)
     {
@@ -78,9 +78,10 @@ public class EventController : BaseController
     {
         return await _deleteEventByIdUseCase.DeleteByIdAsync(eventId, User);
     }
-    
+
     [HttpPost("{eventId}/photo")]
-    public async Task<ActionResult<PhotoRecord>> AddPhoto([FromForm] PhotoUploadInputModel inputModel, [FromRoute] long eventId)
+    public async Task<ActionResult<PhotoRecord>> AddPhoto([FromForm] PhotoUploadInputModel inputModel,
+        [FromRoute] long eventId)
     {
         return await _addEventPhotoUseCase.AddAsync(inputModel, eventId, User);
     }
@@ -92,14 +93,16 @@ public class EventController : BaseController
     }
 
     [HttpPost("{eventId}/review")]
-    public async Task<ActionResult<EventReviewRecord>> AddReview([FromRoute] long eventId, [FromBody] AddEventReviewInputModel inputModel)
+    public async Task<ActionResult<EventReviewRecord>> AddReview([FromRoute] long eventId,
+        [FromBody] AddEventReviewInputModel inputModel)
     {
         return await _addEventReviewUseCase.AddAsync(eventId, inputModel, User);
     }
 
     [AllowAnonymous]
     [HttpGet("{eventId}/review/{reviewId}")]
-    public async Task<ActionResult<EventReviewRecord>> GetReviewById([FromRoute] long eventId, [FromRoute] long reviewId)
+    public async Task<ActionResult<EventReviewRecord>> GetReviewById([FromRoute] long eventId,
+        [FromRoute] long reviewId)
     {
         return await _getEventReviewByIdUseCase.GetByIdAsync(eventId, reviewId, User);
     }
@@ -123,16 +126,16 @@ public class EventController : BaseController
     {
         return await _deleteEventReviewUseCase.DeleteByIdAsync(eventId, reviewId, User);
     }
-    
+
     [HttpPost("{eventId}/review/{reviewId}/photo")]
-    public async Task<ActionResult<PhotoRecord>> AddReviewPhoto([FromForm] PhotoUploadInputModel inputModel, 
+    public async Task<ActionResult<PhotoRecord>> AddReviewPhoto([FromForm] PhotoUploadInputModel inputModel,
         [FromRoute] long eventId, [FromRoute] long reviewId)
     {
         return await _addEventReviewPhotoUseCase.AddAsync(inputModel, eventId, reviewId, User);
     }
 
     [HttpDelete("{eventId}/review/{reviewId}/photo/{photoId}")]
-    public async Task<ActionResult<PhotoRecord>> DeleteReviewPhoto([FromRoute] long eventId, 
+    public async Task<ActionResult<PhotoRecord>> DeleteReviewPhoto([FromRoute] long eventId,
         [FromRoute] long reviewId, [FromRoute] long photoId)
     {
         return await _deleteEventReviewPhotoUseCase.DeleteAsync(eventId, photoId, User);

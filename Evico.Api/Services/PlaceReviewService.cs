@@ -13,14 +13,14 @@ public class PlaceReviewService
         _applicationContext = applicationContext;
     }
 
-    private PlaceReviewQueryBuilder _placeReviewQueryBuilder
+    private PlaceReviewQueryBuilder PlaceReviewQueryBuilder
         => new(_applicationContext);
 
     public async Task<Result<PlaceReviewRecord>> GetByIdAsync(long id)
     {
         return await Result.Try(async () =>
         {
-            return await _placeReviewQueryBuilder
+            return await PlaceReviewQueryBuilder
                 .WithId(id)
                 .SingleAsync();
         });
@@ -30,7 +30,7 @@ public class PlaceReviewService
     {
         return await Result.Try(async () =>
         {
-            return await _placeReviewQueryBuilder
+            return await PlaceReviewQueryBuilder
                 .ToListAsync();
         });
     }
@@ -39,7 +39,7 @@ public class PlaceReviewService
     {
         return await Result.Try(async () =>
         {
-            return await _placeReviewQueryBuilder
+            return await PlaceReviewQueryBuilder
                 .UpdateAsync(placeReview);
         });
     }
@@ -48,7 +48,7 @@ public class PlaceReviewService
     {
         return await Result.Try(async () =>
         {
-            return await _placeReviewQueryBuilder
+            return await PlaceReviewQueryBuilder
                 .DeleteAsync(placeReview);
         });
     }
@@ -57,7 +57,7 @@ public class PlaceReviewService
     {
         return await Result.Try(async () =>
         {
-            return await _placeReviewQueryBuilder
+            return await PlaceReviewQueryBuilder
                 .AddAsync(placeReview);
         });
     }
@@ -85,10 +85,10 @@ public class PlaceReviewService
 
         if (placeReview.IsDeleted)
             return Result.Fail($"Place review with id {placeReview.Id} is deleted");
-     
-        if(placeRecord.Id != placeReview.PlaceId)
+
+        if (placeRecord.Id != placeReview.PlaceId)
             return Result.Fail($"Place id {placeRecord.Id} must be {placeReview.PlaceId}");
-        
+
         // todo добавить проверку на роль. модератор тоже должен уметь изменять отзывы
 
         return Result.OkIf(placeReview.AuthorId == user.Id,
@@ -99,13 +99,13 @@ public class PlaceReviewService
     {
         if (placeRecord.IsDeleted)
             return Result.Fail($"Place with id {placeRecord.Id} is deleted");
-        
+
         if (placeReview.IsDeleted)
             return Result.Fail($"Place review with id {placeReview.Id} is deleted");
 
-        if(placeRecord.Id != placeReview.PlaceId)
+        if (placeRecord.Id != placeReview.PlaceId)
             return Result.Fail($"Place id {placeRecord.Id} must be {placeReview.PlaceId}");
-        
+
         // todo добавить проверку на роль. модератор тоже должен уметь удалять отзывы
 
         return Result.OkIf(placeReview.AuthorId == user.Id,

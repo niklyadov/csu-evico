@@ -9,15 +9,15 @@ namespace Evico.Api.UseCases.Event.Category;
 
 public class DeleteEventCategoryUseCase
 {
-    private readonly EventCategoryService _categoryService;
     private readonly AuthService _authService;
+    private readonly EventCategoryService _categoryService;
 
     public DeleteEventCategoryUseCase(EventCategoryService categoryService, AuthService authService)
     {
         _categoryService = categoryService;
         _authService = authService;
     }
-    
+
     public async Task<ActionResult<List<EventCategoryRecord>>> DeleteAsync(long categoryId, ClaimsPrincipal userClaims)
     {
         var currentUserResult = await _authService.GetCurrentUser(userClaims);
@@ -29,7 +29,7 @@ public class DeleteEventCategoryUseCase
         if (categoryRecordWithIdResult.IsFailed)
             return new BadRequestObjectResult(categoryRecordWithIdResult.GetReport());
         var categoryRecord = categoryRecordWithIdResult.Value;
-        
+
         var canDeleteCategoryResult = _categoryService.CanDelete(categoryRecord, currentUser);
         if (canDeleteCategoryResult.IsFailed)
             return new ObjectResult(canDeleteCategoryResult.GetReport())

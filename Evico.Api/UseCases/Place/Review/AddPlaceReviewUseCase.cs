@@ -41,7 +41,7 @@ public class AddPlaceReviewUseCase
             {
                 StatusCode = StatusCodes.Status403Forbidden
             };
-        
+
         var canCreateResult = _placeReviewService.CanCreate(place, currentUser);
         if (canCreateResult.IsFailed)
             return new ObjectResult(canCreateResult.GetReport())

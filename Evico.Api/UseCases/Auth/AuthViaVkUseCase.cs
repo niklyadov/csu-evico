@@ -1,7 +1,6 @@
 using Evico.Api.Extensions;
 using Evico.Api.Services.Auth;
 using Evico.Api.Services.Auth.Vk;
-using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Evico.Api.UseCases.Auth;
@@ -27,7 +26,7 @@ public class AuthViaVkUseCase
         if (vkProfileInfoResult.IsFailed)
             return new BadRequestObjectResult(vkProfileInfoResult.GetReport());
         var vkProfileInfo = vkProfileInfoResult.Value;
-        
+
         var userRegistered = false;
         var vkUser = (await _vkAuthService.GetExistingProfileAsync(vkProfileInfo)).ValueOrDefault;
 
