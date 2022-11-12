@@ -72,10 +72,6 @@ public sealed class ApplicationContext : DbContext
             .HasIndex(x => x.Name)
             .IsUnique();
         
-        modelBuilder.Entity<ProfileRecord>()
-            .HasOne(x => x.Photo)
-            .WithOne(y => y.Profile);
-        
         modelBuilder.Entity<PhotoRecord>()
             .HasIndex(x => x.MinioInternalId)
             .IsUnique();
@@ -86,7 +82,7 @@ public sealed class ApplicationContext : DbContext
             .HasValue<PhotoRecord>(0)
             .HasValue<PlacePhotoRecord>(10)
             .HasValue<EventPhotoRecord>(20)
-            .HasValue<PhofilePhotoRecord>(30)
+            .HasValue<ProfilePhotoRecord>(30)
             .HasValue<PlaceReviewPhotoRecord>(40)
             .HasValue<EventReviewPhotoRecord>(50);
 
