@@ -10,13 +10,14 @@ public record PlaceRecord : EntityRecord
 
     public long OwnerId { get; set; }
     public ProfileRecord Owner { get; set; } = default!;
-    public String Name { get; set; } = String.Empty;
-    public String Description { get; set; } = String.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public virtual List<PlacePhotoRecord> Photos { get; set; } = new();
-    [JsonIgnore]
-    public virtual List<PlaceReviewRecord> Reviews { get; set; } = new();
+
+    [JsonIgnore] public virtual List<PlaceReviewRecord> Reviews { get; set; } = new();
+
     public virtual List<PlaceCategoryRecord> Categories { get; set; } = new();
-    
+
     public long? ParentId { get; set; }
     public PlaceRecord? Parent { get; set; }
 }

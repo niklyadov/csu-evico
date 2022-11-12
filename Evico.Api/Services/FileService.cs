@@ -8,9 +8,9 @@ namespace Evico.Api.Services;
 
 public class FileService
 {
-    private readonly MinioClient _minioClient;
-    private readonly MinioBucketsConfiguration _bucketsConfiguration;
     private const long MaxFileLenght = 10 * 1024 * 1024;
+    private readonly MinioBucketsConfiguration _bucketsConfiguration;
+    private readonly MinioClient _minioClient;
 
     public FileService(MinioClient minioClient, IOptions<MinioBucketsConfiguration> bucketsConfiguration)
     {
@@ -18,7 +18,7 @@ public class FileService
         _bucketsConfiguration = bucketsConfiguration.Value;
     }
 
-    public async Task<Result> UploadFileFromUri(Uri inputFileUri, MinioBucketNames bucket, String internalId)
+    public async Task<Result> UploadFileFromUri(Uri inputFileUri, MinioBucketNames bucket, string internalId)
     {
         try
         {
@@ -31,11 +31,11 @@ public class FileService
             var streamData = await responseAsync.Content.ReadAsStreamAsync();
             var contentType = responseAsync.Content.Headers.ContentType?.MediaType;
             var contentLength = responseAsync.Content.Headers.ContentLength;
-            
-            if (String.IsNullOrEmpty(contentType))
+
+            if (string.IsNullOrEmpty(contentType))
                 return Result.Fail(new Error("Content type is not specified"));
-            
-            if(!contentLength.HasValue)
+
+            if (!contentLength.HasValue)
                 return Result.Fail(new Error("Content lenght is not specified"));
 
             return await AddFile(streamData, contentType, contentLength.Value, bucket, internalId);
@@ -47,13 +47,13 @@ public class FileService
         }
     }
 
-    public async Task<Result> UploadFile(IFormFile inputFile, MinioBucketNames bucket, String internalId)
+    public async Task<Result> UploadFile(IFormFile inputFile, MinioBucketNames bucket, string internalId)
     {
-        return await AddFile(inputFile.OpenReadStream(), 
+        return await AddFile(inputFile.OpenReadStream(),
             inputFile.ContentType, inputFile.Length, bucket, internalId);
     }
 
-    public async Task<Result<FileStreamResult>> DownloadFile(MinioBucketNames bucket, String internalId)
+    public async Task<Result<FileStreamResult>> DownloadFile(MinioBucketNames bucket, string internalId)
     {
         var bucketValidationResult = ValidateBucketsConfiguration();
         if (bucketValidationResult.IsFailed)
@@ -66,18 +66,15 @@ public class FileService
             return Result.Fail(new Error($"Error when check Bucket {bucketConfiguration.NameString}")
                 .CausedBy(checkBucketResult.Errors));
 
-        
+
         return await Result.Try(async () =>
         {
             var fileStream = new MemoryStream();
-            
+
             var objectStat = await _minioClient.GetObjectAsync(new GetObjectArgs()
                 .WithObject(internalId)
                 .WithBucket(bucketConfiguration.NameString)
-                .WithCallbackStream(stream =>
-                {
-                    stream.CopyTo(fileStream);
-                })
+                .WithCallbackStream(stream => { stream.CopyTo(fileStream); })
             );
 
             if (fileStream == null)
@@ -92,7 +89,7 @@ public class FileService
         });
     }
 
-    public async Task<Result> DeleteFile(MinioBucketNames bucket, String internalId)
+    public async Task<Result> DeleteFile(MinioBucketNames bucket, string internalId)
     {
         var bucketValidationResult = ValidateBucketsConfiguration();
         if (bucketValidationResult.IsFailed)
@@ -104,7 +101,7 @@ public class FileService
         if (checkBucketResult.IsFailed)
             return Result.Fail(new Error($"Error when check Bucket {bucketConfiguration.NameString}")
                 .CausedBy(checkBucketResult.Errors));
-        
+
         return await Result.Try(async () =>
         {
             await _minioClient.RemoveObjectAsync(new RemoveObjectArgs()
@@ -112,12 +109,13 @@ public class FileService
                 .WithObject(internalId));
         });
     }
-    
-    private async Task<Result> AddFile(Stream streamData, String contentType, long fileLength, MinioBucketNames bucket, String internalId)
+
+    private async Task<Result> AddFile(Stream streamData, string contentType, long fileLength, MinioBucketNames bucket,
+        string internalId)
     {
-        if(fileLength > MaxFileLenght)
+        if (fileLength > MaxFileLenght)
             return Result.Fail("Max file size reached");
-        
+
         var bucketValidationResult = ValidateBucketsConfiguration();
         if (bucketValidationResult.IsFailed)
             return Result.Fail(new Error("Error when Validate Buckets Configuration")
@@ -128,7 +126,7 @@ public class FileService
         if (checkBucketResult.IsFailed)
             return Result.Fail(new Error($"Error when check Bucket {bucketConfiguration.NameString}")
                 .CausedBy(checkBucketResult.Errors));
-        
+
         return await Result.Try(async () =>
         {
             await _minioClient.PutObjectAsync(new PutObjectArgs()
@@ -156,14 +154,14 @@ public class FileService
     {
         return Result.Try(() =>
         {
-            var minioBucketsEnumValues = (MinioBucketNames[]) 
+            var minioBucketsEnumValues = (MinioBucketNames[])
                 Enum.GetValues(typeof(MinioBucketNames));
-            
+
             if (minioBucketsEnumValues
                 .Any(bucket => _bucketsConfiguration.Buckets
                     .All(b => b.Name != bucket)))
             {
-                var bucketNames = String.Join(",", Enum.GetNames(typeof(MinioBucketNames)));
+                var bucketNames = string.Join(",", Enum.GetNames(typeof(MinioBucketNames)));
                 throw new InvalidOperationException("Not all minio buckets configured in app configuration! " +
                                                     $"Please, specify all this list: {bucketNames}");
             }

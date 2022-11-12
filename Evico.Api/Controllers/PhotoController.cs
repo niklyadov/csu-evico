@@ -11,7 +11,7 @@ public class PhotoController : BaseController
     {
         _getPhotoByIdUseCase = services.GetRequiredService<GetPhotoByIdUseCase>();
     }
-    
+
     [HttpGet("{photoId}")]
     public async Task<IActionResult> GetById([FromRoute] long photoId)
     {

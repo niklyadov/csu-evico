@@ -11,16 +11,17 @@ namespace Evico.Api.UseCases.Place.Category;
 
 public class AddPlaceCategoryUseCase
 {
-    private readonly PlaceCategoryService _categoryService;
     private readonly AuthService _authService;
+    private readonly PlaceCategoryService _categoryService;
 
     public AddPlaceCategoryUseCase(PlaceCategoryService categoryService, AuthService authService)
     {
         _categoryService = categoryService;
         _authService = authService;
     }
-    
-    public async Task<ActionResult<PlaceCategoryRecord>> AddAsync(AddPlaceCategoryInputModel inputModel, ClaimsPrincipal userClaims)
+
+    public async Task<ActionResult<PlaceCategoryRecord>> AddAsync(AddPlaceCategoryInputModel inputModel,
+        ClaimsPrincipal userClaims)
     {
         var currentUserResult = await _authService.GetCurrentUser(userClaims);
         if (currentUserResult.IsFailed)
@@ -33,14 +34,14 @@ public class AddPlaceCategoryUseCase
             {
                 StatusCode = StatusCodes.Status403Forbidden
             };
-        
+
         var categoryRecord = new PlaceCategoryRecord
         {
             Name = inputModel.Name,
             Description = inputModel.Description
         };
 
-        if (inputModel.ParentCategoryId.HasValue && inputModel.ParentCategoryId.Value >0)
+        if (inputModel.ParentCategoryId.HasValue && inputModel.ParentCategoryId.Value > 0)
         {
             var parentCategoryRecordResult = await _categoryService.GetByIdAsync(inputModel.ParentCategoryId.Value);
             if (parentCategoryRecordResult.IsFailed)
@@ -48,7 +49,7 @@ public class AddPlaceCategoryUseCase
                 var parentCategoryRecordResultError = new Error(
                         $"Failed to set parent category id {inputModel.ParentCategoryId.Value} to category")
                     .CausedBy(parentCategoryRecordResult.Errors);
-                
+
                 return new BadRequestObjectResult(Result.Fail(parentCategoryRecordResultError).GetReport());
             }
 
@@ -59,7 +60,7 @@ public class AddPlaceCategoryUseCase
         if (createCategoryResult.IsFailed)
             return new BadRequestObjectResult(createCategoryResult.GetReport());
         var createdCategory = createCategoryResult.Value;
-        
+
         return new OkObjectResult(createdCategory);
     }
 }

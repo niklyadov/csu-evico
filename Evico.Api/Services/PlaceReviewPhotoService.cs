@@ -7,35 +7,27 @@ namespace Evico.Api.Services;
 public class PlaceReviewPhotoService
 {
     private readonly ApplicationContext _applicationContext;
-    private PlaceReviewPhotoQueryBuilder _photoQueryBuilder => new(_applicationContext);
 
     public PlaceReviewPhotoService(ApplicationContext applicationContext)
     {
         _applicationContext = applicationContext;
     }
-    
+
+    private PlaceReviewPhotoQueryBuilder PhotoQueryBuilder => new(_applicationContext);
+
     public async Task<Result<PlaceReviewPhotoRecord>> GetByIdAsync(long id)
     {
-        return await Result.Try(async () =>
-        {
-            return await _photoQueryBuilder.WithId(id).SingleAsync();
-        });
+        return await Result.Try(async () => { return await PhotoQueryBuilder.WithId(id).SingleAsync(); });
     }
 
     public async Task<Result<PlaceReviewPhotoRecord>> AddAsync(PlaceReviewPhotoRecord photoRecord)
     {
-        return await Result.Try(async () =>
-        {
-            return await _photoQueryBuilder.AddAsync(photoRecord);
-        });
+        return await Result.Try(async () => { return await PhotoQueryBuilder.AddAsync(photoRecord); });
     }
-    
+
     public async Task<Result<PlaceReviewPhotoRecord>> DeleteAsync(PlaceReviewPhotoRecord photoRecord)
     {
-        return await Result.Try(async () =>
-        {
-            return await _photoQueryBuilder.DeleteAsync(photoRecord);
-        });
+        return await Result.Try(async () => { return await PhotoQueryBuilder.DeleteAsync(photoRecord); });
     }
 
     public Result CanDelete(PlaceReviewPhotoRecord photo, ProfileRecord profile)
@@ -46,7 +38,7 @@ public class PlaceReviewPhotoService
         return Result.OkIf(photo.AuthorId == profile.Id, 
             new Error("Only author or moderator can delete this photo"));
     }
-    
+
     public Result CanUpload(ProfileRecord profile)
     {
         return Result.Ok();

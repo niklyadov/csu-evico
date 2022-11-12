@@ -9,11 +9,11 @@ namespace Evico.Api.Controllers;
 public class PlaceCategoryController : BaseController
 {
     private readonly AddPlaceCategoryUseCase _addPlaceCategoryUseCase;
-    private readonly GetPlaceCategoryByIdUseCase _getPlaceCategoryByIdUseCase;
-    private readonly GetPlaceCategoriesUseCase _getPlaceCategoriesUseCase;
-    private readonly UpdatePlaceCategoryUseCase _updatePlaceCategoryUseCase;
     private readonly DeletePlaceCategoryUseCase _deletePlaceCategoryUseCase;
-        
+    private readonly GetPlaceCategoriesUseCase _getPlaceCategoriesUseCase;
+    private readonly GetPlaceCategoryByIdUseCase _getPlaceCategoryByIdUseCase;
+    private readonly UpdatePlaceCategoryUseCase _updatePlaceCategoryUseCase;
+
     public PlaceCategoryController(IServiceProvider services)
     {
         _addPlaceCategoryUseCase = services.GetRequiredService<AddPlaceCategoryUseCase>();
@@ -22,32 +22,34 @@ public class PlaceCategoryController : BaseController
         _updatePlaceCategoryUseCase = services.GetRequiredService<UpdatePlaceCategoryUseCase>();
         _deletePlaceCategoryUseCase = services.GetRequiredService<DeletePlaceCategoryUseCase>();
     }
+
     [HttpPost]
     public async Task<ActionResult<PlaceCategoryRecord>> Add([FromBody] AddPlaceCategoryInputModel inputModel)
     {
         return await _addPlaceCategoryUseCase.AddAsync(inputModel, User);
     }
-    
+
     [HttpGet("{categoryId}")]
     [AllowAnonymous]
     public async Task<ActionResult<PlaceCategoryRecord>> GetById(long categoryId)
     {
         return await _getPlaceCategoryByIdUseCase.GetByIdAsync(categoryId, User);
     }
-    
+
     [HttpGet]
     [AllowAnonymous]
     public async Task<ActionResult<List<PlaceCategoryRecord>>> GetAll()
     {
         return await _getPlaceCategoriesUseCase.GetAllAsync(User);
     }
-    
+
     [HttpPut]
-    public async Task<ActionResult<List<PlaceCategoryRecord>>> Update([FromBody] UpdatePlaceCategoryInputModel inputModel)
+    public async Task<ActionResult<List<PlaceCategoryRecord>>> Update(
+        [FromBody] UpdatePlaceCategoryInputModel inputModel)
     {
         return await _updatePlaceCategoryUseCase.UpdateAsync(inputModel, User);
     }
-    
+
     [HttpDelete("{categoryId}")]
     public async Task<ActionResult<List<PlaceCategoryRecord>>> Delete(long categoryId)
     {

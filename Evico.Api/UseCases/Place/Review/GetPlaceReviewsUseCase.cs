@@ -37,7 +37,7 @@ public class GetPlaceReviewsUseCase
             {
                 StatusCode = StatusCodes.Status403Forbidden
             };
-        
+
         var canViewResult = _placeReviewService.CanViewAll(place, currentUser);
         if (canViewResult.IsFailed)
             return new ObjectResult(canViewResult.GetReport())

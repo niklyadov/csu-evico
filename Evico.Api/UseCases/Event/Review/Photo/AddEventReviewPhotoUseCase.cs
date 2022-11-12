@@ -10,11 +10,11 @@ namespace Evico.Api.UseCases.Event.Review.Photo;
 
 public class AddEventReviewPhotoUseCase
 {
-    private readonly EventReviewPhotoService _photoService;
-    private readonly FileService _fileService;
-    private readonly EventService _eventService;
-    private readonly EventReviewService _eventReviewService;
     private readonly AuthService _authService;
+    private readonly EventReviewService _eventReviewService;
+    private readonly EventService _eventService;
+    private readonly FileService _fileService;
+    private readonly EventReviewPhotoService _photoService;
 
     public AddEventReviewPhotoUseCase(IServiceProvider services)
     {
@@ -24,8 +24,9 @@ public class AddEventReviewPhotoUseCase
         _eventReviewService = services.GetRequiredService<EventReviewService>();
         _authService = services.GetRequiredService<AuthService>();
     }
-    
-    public async Task<ActionResult<PhotoRecord>> AddAsync(PhotoUploadInputModel inputModel, long eventId, long reviewId, ClaimsPrincipal claimsPrincipal)
+
+    public async Task<ActionResult<PhotoRecord>> AddAsync(PhotoUploadInputModel inputModel, long eventId, long reviewId,
+        ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         if (currentUserResult.IsFailed)
@@ -43,19 +44,19 @@ public class AddEventReviewPhotoUseCase
             {
                 StatusCode = StatusCodes.Status403Forbidden
             };
-        
+
         var getReviewWithIdResult = await _eventReviewService.GetByIdAsync(reviewId);
         if (getReviewWithIdResult.IsFailed)
             return new BadRequestObjectResult(getReviewWithIdResult.GetReport());
         var review = getReviewWithIdResult.Value;
-        
+
         var canUpdateReviewResult = _eventReviewService.CanUpdate(eventRecord, review, currentUser);
         if (canUpdateReviewResult.IsFailed)
             return new ObjectResult(canUpdateReviewResult.GetReport())
             {
                 StatusCode = StatusCodes.Status403Forbidden
             };
-        
+
         var canUploadPhotoResult = _photoService.CanUpload(currentUser);
         if (canUploadPhotoResult.IsFailed)
             return new BadRequestObjectResult(canUploadPhotoResult.GetReport());
@@ -71,8 +72,8 @@ public class AddEventReviewPhotoUseCase
             Comment = inputModel.Comment,
             Review = review
         };
-        
-        var photoUploadFileResult = await _fileService.UploadFile(inputModel.Image, minioBucket, 
+
+        var photoUploadFileResult = await _fileService.UploadFile(inputModel.Image, minioBucket,
             internalOperationId.ToString());
         if (photoUploadFileResult.IsFailed)
             return new BadRequestObjectResult(photoUploadFileResult.GetReport());
@@ -81,13 +82,13 @@ public class AddEventReviewPhotoUseCase
         if (addPhotoResult.IsFailed)
             return new BadRequestObjectResult(addPhotoResult.GetReport());
         var addedPhoto = addPhotoResult.Value;
-        
+
         review.Photos.Add(addedPhoto);
-        
+
         var updateEventResult = await _eventReviewService.Update(review);
         if (updateEventResult.IsFailed)
             return new BadRequestObjectResult(updateEventResult.GetReport());
-        
+
         return addedPhoto;
     }
 }

@@ -80,10 +80,10 @@ public class EventReviewService
     {
         if (eventRecord.IsDeleted)
             return Result.Fail("This event is deleted");
-        
+
         if (eventReviewRecord.IsDeleted)
             return Result.Fail("This review is deleted");
-        
+
         if (eventRecord.Id != eventReviewRecord.EventId)
             return Result.Fail($"Place id {eventRecord.Id} must be {eventReviewRecord.EventId}");
         
