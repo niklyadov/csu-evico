@@ -4,11 +4,14 @@ namespace Evico.Api.Entities;
 
 public record ProfileRecord : User
 {
-    public string Firstname { get; set; } = string.Empty;
-    public string Lastname { get; set; } = string.Empty;
+    public String Firstname { get; set; } = String.Empty;
+    public String Lastname { get; set; } = String.Empty;
 
-    public ProfilePhotoRecord? Photo { get; set; } = null;
+    public ProfilePhotoRecord? Photo { get; set; }
     public long? VkUserId { get; set; }
+    
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public UserRoles Role { get; set; } = UserRoles.Default;
     public DateTime? BirthDate { get; set; }
     public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
 
