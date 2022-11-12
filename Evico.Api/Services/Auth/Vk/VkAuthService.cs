@@ -44,32 +44,50 @@ public class VkAuthService
                 out var birthDate))
             newUser.BirthDate = birthDate;
 
-        if (vkProfileInfo.HasPhoto)
+        var addUserResult = await _profileService.AddAsync(newUser);
+        if(addUserResult.IsFailed)
+            return Result.Fail(new Error("Add user failed")
+                .CausedBy(addUserResult.Errors));
+
+        var addedUser = addUserResult.Value;
+        
+        // todo: обработать результат загрузки фото профиля (или не обрабатывать вообще)
+        await UploadProfilePhoto(vkProfileInfo, addedUser);
+
+        return addedUser;
+    }
+
+    private async Task<Result> UploadProfilePhoto(VkProfileInfo vkProfileInfo, ProfileRecord profile)
+    {
+        if (!vkProfileInfo.HasPhoto)
+            return Result.Ok();
+        
+        var minioBucket = MinioBucketNames.UserAvatars;
+        var minioInternalId = Guid.NewGuid();
+
+        var fileUploadResult = await _fileService.UploadFileFromUri(vkProfileInfo.PhotoUri,
+            minioBucket, minioInternalId.ToString());
+        if (fileUploadResult.IsFailed)
+            return Result.Fail(new Error("Photo uploading error")
+                .CausedBy(fileUploadResult.Errors));
+            
+        var userPhotoResult = await _photoService.AddAsync(new ProfilePhotoRecord
         {
-            var minioBucket = MinioBucketNames.UserAvatars;
-            var minioInternalId = Guid.NewGuid();
-
-            var fileUploadResult = await _fileService.UploadFileFromUri(vkProfileInfo.PhotoUri,
-                minioBucket, minioInternalId.ToString());
-            if (fileUploadResult.IsFailed)
-                return Result.Fail(new Error("Photo uploading error")
-                    .CausedBy(fileUploadResult.Errors));
+            MinioBucket = minioBucket,
+            MinioInternalId = minioInternalId,
+            Author = profile
+        });
+        if (userPhotoResult.IsFailed)
+            return Result.Fail(new Error("Photo adding error")
+                .CausedBy(userPhotoResult.Errors));
             
-            var userPhotoResult = await _photoService.AddAsync(new ProfilePhotoRecord
-            {
-                MinioBucket = minioBucket,
-                MinioInternalId = minioInternalId
-            });
-            var userPhoto = userPhotoResult.Value;
+        profile.Photo = userPhotoResult.Value;
 
-            if (userPhotoResult.IsFailed)
-                return Result.Fail(new Error("Photo adding error")
-                    .CausedBy(userPhotoResult.Errors));
-            
-            newUser.Photo = userPhoto;
-        }
-
-        return await _profileService.AddAsync(newUser);
+        var userUpdateResult = await _profileService.UpdateAsync(profile);
+        if (userUpdateResult.IsFailed)
+            return Result.Fail(new Error("User updating failed"));
+        
+        return Result.Ok();
     }
 
     public async Task<Result<VkProfileInfo>> GetVkProfileInfoAsync(string accessToken,
