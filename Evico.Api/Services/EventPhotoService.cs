@@ -32,9 +32,10 @@ public class EventPhotoService
 
     public Result CanDelete(EventPhotoRecord photo, ProfileRecord profile)
     {
-        // todo: добавить проверку: модератор тоже может удалить это фото
-
-        return Result.OkIf(photo.AuthorId == profile.Id,
+        if (profile.Role == UserRoles.Moderator)
+            return Result.Ok();
+        
+        return Result.OkIf(photo.AuthorId == profile.Id, 
             new Error("Only author or moderator can delete this photo"));
     }
 

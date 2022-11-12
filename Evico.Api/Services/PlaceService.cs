@@ -69,7 +69,9 @@ public class PlaceService
         if (place.IsDeleted)
             return Result.Fail($"Event with id: {place.Id} was already deleted");
 
-        // todo добавить проверку на роль. модератор тоже должен уметь удалять места
+        if (profile.Role == UserRoles.Moderator)
+            return Result.Ok();
+        
         // todo что будет с событиями если удалить место?
 
         return Result.OkIf(place.OwnerId == profile.Id,
@@ -81,7 +83,8 @@ public class PlaceService
         if (place.IsDeleted)
             return Result.Fail($"Event with id: {place.Id} is deleted");
 
-        // todo добавить проверку на роль. модератор тоже должен уметь изменять места
+        if (profile.Role == UserRoles.Moderator)
+            return Result.Ok();
 
         return Result.OkIf(place.OwnerId == profile.Id,
             "Only owner or moderator can delete this Place");

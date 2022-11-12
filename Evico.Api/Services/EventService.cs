@@ -90,25 +90,27 @@ public class EventService
         return Result.Ok();
     }
 
-    public Result CanDelete(EventRecord eventRecord, ProfileRecord userRecord)
+    public Result CanDelete(EventRecord eventRecord, ProfileRecord profile)
     {
         if (eventRecord.IsDeleted)
             return Result.Fail($"Event with id: {eventRecord.Id} was already deleted");
 
-        // todo добавить проверку на роль. модератор тоже должен уметь удалять события
-
-        return Result.OkIf(eventRecord.OwnerId == userRecord.Id,
+        if (profile.Role == UserRoles.Moderator)
+            return Result.Ok();
+        
+        return Result.OkIf(eventRecord.OwnerId == profile.Id,
             "Only owner or moderator can delete this event");
     }
 
-    public Result CanUpdate(EventRecord eventRecord, ProfileRecord userRecord)
+    public Result CanUpdate(EventRecord eventRecord, ProfileRecord profile)
     {
         if (eventRecord.IsDeleted)
             return Result.Fail($"Event with id: {eventRecord.Id} was already deleted");
 
-        // todo добавить проверку на роль. модератор тоже должен уметь удалять обновлять
-
-        return Result.OkIf(eventRecord.OwnerId == userRecord.Id,
+        if (profile.Role == UserRoles.Moderator)
+            return Result.Ok();
+        
+        return Result.OkIf(eventRecord.OwnerId == profile.Id,
             "Only owner or moderator can update this event");
     }
 

@@ -78,7 +78,7 @@ public class PlaceReviewService
         return Result.Ok();
     }
 
-    public Result CanUpdate(PlaceRecord placeRecord, PlaceReviewRecord placeReview, ProfileRecord user)
+    public Result CanUpdate(PlaceRecord placeRecord, PlaceReviewRecord placeReview, ProfileRecord profile)
     {
         if (placeRecord.IsDeleted)
             return Result.Fail($"Place with id {placeRecord.Id} is deleted");
@@ -88,14 +88,15 @@ public class PlaceReviewService
 
         if (placeRecord.Id != placeReview.PlaceId)
             return Result.Fail($"Place id {placeRecord.Id} must be {placeReview.PlaceId}");
-
-        // todo добавить проверку на роль. модератор тоже должен уметь изменять отзывы
-
-        return Result.OkIf(placeReview.AuthorId == user.Id,
+        
+        if (profile.Role == UserRoles.Moderator)
+            return Result.Ok();
+        
+        return Result.OkIf(placeReview.AuthorId == profile.Id,
             "Only owner or moderator can update this Review");
     }
 
-    public Result CanDelete(PlaceRecord placeRecord, PlaceReviewRecord placeReview, ProfileRecord user)
+    public Result CanDelete(PlaceRecord placeRecord, PlaceReviewRecord placeReview, ProfileRecord profile)
     {
         if (placeRecord.IsDeleted)
             return Result.Fail($"Place with id {placeRecord.Id} is deleted");
@@ -105,10 +106,11 @@ public class PlaceReviewService
 
         if (placeRecord.Id != placeReview.PlaceId)
             return Result.Fail($"Place id {placeRecord.Id} must be {placeReview.PlaceId}");
-
-        // todo добавить проверку на роль. модератор тоже должен уметь удалять отзывы
-
-        return Result.OkIf(placeReview.AuthorId == user.Id,
+        
+        if (profile.Role == UserRoles.Moderator)
+            return Result.Ok();
+        
+        return Result.OkIf(placeReview.AuthorId == profile.Id,
             "Only owner or moderator can delete this Review");
     }
 
