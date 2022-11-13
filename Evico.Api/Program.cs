@@ -122,9 +122,9 @@ builder.Services.AddScoped<DeleteEventCategoryUseCase>();
 
 builder.Services.AddScoped<AddPlaceCategoryUseCase>();
 builder.Services.AddScoped<GetPlaceCategoryByIdUseCase>();
-builder.Services.AddScoped<GetPlaceCategoryByIdUseCase>();
-builder.Services.AddScoped<GetPlaceCategoryByIdUseCase>();
-builder.Services.AddScoped<GetPlaceCategoryByIdUseCase>();
+builder.Services.AddScoped<GetPlaceCategoriesUseCase>();
+builder.Services.AddScoped<UpdatePlaceCategoryUseCase>();
+builder.Services.AddScoped<DeletePlaceCategoryUseCase>();
 
 #region Auth
 
