@@ -1,4 +1,5 @@
 using Evico.Api.Entities;
+using Evico.Api.InputModels.Event;
 using Evico.Api.QueryBuilders;
 using FluentResults;
 
@@ -30,7 +31,78 @@ public class EventService
                 .ToListAsync();
         });
     }
+    
+    public async Task<Result<List<EventRecord>>> SearchAsync(EventSearchFilters filters)
+    {
+        return await Result.Try(async () =>
+        {
+            EventQueryBuilder eventsQueryBuilder = (EventQueryBuilder)EventQueryBuilder
+                .Include(x => x.Categories)
+                .Include(x => x.Participants)
+                .WhereNotDeleted();
 
+            eventsQueryBuilder = WithSearchQueryFilter(eventsQueryBuilder, filters);
+            eventsQueryBuilder = WithOrganizersFilter(eventsQueryBuilder, filters);
+            eventsQueryBuilder = WithInCategoriesFilter(eventsQueryBuilder, filters);
+            eventsQueryBuilder = WithNotInCategoriesFilter(eventsQueryBuilder, filters);
+            eventsQueryBuilder = eventsQueryBuilder.Sort(filters.SortBy, filters.SortOrder);
+            eventsQueryBuilder = (EventQueryBuilder)eventsQueryBuilder.Skip(filters.Offset);
+            eventsQueryBuilder = (EventQueryBuilder)eventsQueryBuilder.Limit(filters.Limit);
+            
+            return await eventsQueryBuilder.ToListAsync();
+        });
+    }
+
+    private EventQueryBuilder WithSearchQueryFilter(EventQueryBuilder queryBuilder, EventSearchFilters filters)
+    {
+        if (!String.IsNullOrEmpty(filters.SearchQuery))
+        {
+            return queryBuilder.SearchString(filters.SearchQuery);
+        }
+        
+        return queryBuilder;
+    }
+
+    private EventQueryBuilder WithOrganizersFilter(EventQueryBuilder queryBuilder, EventSearchFilters filters)
+    {
+        if (!String.IsNullOrEmpty(filters.Organizers))
+        {
+            var withOrganizers = filters.Organizers.Split(',')
+                .Select(x=> long.Parse(x)).ToList();
+
+            return queryBuilder.WithOrganizers(withOrganizers);    
+        }
+
+        return queryBuilder;
+    }
+
+    private EventQueryBuilder WithInCategoriesFilter(EventQueryBuilder queryBuilder, EventSearchFilters filters)
+    {
+                    
+        if (!String.IsNullOrEmpty(filters.InCategories))
+        {
+            var inCategories = filters.InCategories.Split(',')
+                .Select(x=> long.Parse(x)).ToList();
+
+           return queryBuilder.WhereCategoriesIn(inCategories);
+        }
+
+        return queryBuilder;
+    }
+
+    private EventQueryBuilder WithNotInCategoriesFilter(EventQueryBuilder queryBuilder, EventSearchFilters filters)
+    {
+        if (!String.IsNullOrEmpty(filters.NotInCategories))
+        {
+            var notInCategories = filters.NotInCategories.Split(',')
+                .Select(x=> long.Parse(x)).ToList();
+
+            return queryBuilder.WhereCategoriesNotIn(notInCategories);
+        }
+
+        return queryBuilder;
+    }
+    
     public async Task<Result<EventRecord>> GetByIdAsync(long eventId)
     {
         return await Result.Try(async () =>
@@ -41,24 +113,6 @@ public class EventService
                 .WhereNotDeleted()
                 .WithId(eventId)
                 .SingleAsync();
-        });
-    }
-
-    public async Task<Result<EventRecord>> DeleteByIdAsync(long eventId)
-    {
-        return await Result.Try(async () =>
-        {
-            var eventWithId = await EventQueryBuilder.WithId(eventId).FirstOrDefaultAsync();
-
-            if (eventWithId == null)
-                throw new InvalidOperationException($"Event with id {eventId} is not found.");
-
-            if (eventWithId.IsDeleted)
-                throw new InvalidOperationException(
-                    $"Event with id {eventId} was already deleted at {eventWithId.DeletedDateTime.ToString()}");
-
-            return await EventQueryBuilder
-                .DeleteAsync(eventWithId);
         });
     }
 
