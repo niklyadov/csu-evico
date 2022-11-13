@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Evico.Api.Entities;
 using Evico.Api.Extensions;
+using Evico.Api.InputModels.Event;
 using Evico.Api.Services;
 using Evico.Api.Services.Auth;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,8 @@ public class GetEventsUseCase
         _authService = authService;
     }
 
-    public async Task<ActionResult<List<EventRecord>>> GetAllAsync(ClaimsPrincipal claimsPrincipal)
+    public async Task<ActionResult<List<EventRecord>>> SearchAsync(EventSearchFilters filters, 
+        ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         var currentUser = currentUserResult.ValueOrDefault;
@@ -29,12 +31,12 @@ public class GetEventsUseCase
             {
                 StatusCode = StatusCodes.Status403Forbidden
             };
+        
+        var searchResult = await _eventService.SearchAsync(filters);
 
-        var getAllResult = await _eventService.GetAllAsync();
+        if (searchResult.IsFailed)
+            return new BadRequestObjectResult(searchResult.GetReport());
 
-        if (getAllResult.IsFailed)
-            return new BadRequestObjectResult(getAllResult.GetReport());
-
-        return new OkObjectResult(getAllResult.Value);
+        return new OkObjectResult(searchResult.Value);
     }
 }

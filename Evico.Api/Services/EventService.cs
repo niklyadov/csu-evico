@@ -1,7 +1,8 @@
+using System.Globalization;
 using Evico.Api.Entities;
+using Evico.Api.InputModels.Event;
 using Evico.Api.QueryBuilders;
 using FluentResults;
-
 namespace Evico.Api.Services;
 
 public class EventService
@@ -17,20 +18,125 @@ public class EventService
 
     public async Task<Result<EventRecord>> AddAsync(EventRecord eventRecord)
     {
-        return await Result.Try(async () => { return await EventQueryBuilder.AddAsync(eventRecord); });
+        return await Result.Try(async () =>
+        {
+            return await EventQueryBuilder.AddAsync(eventRecord);
+        }, exception => throw new InvalidOperationException(
+            "Can't create new event. See inner error for details.", exception));
     }
 
-    public async Task<Result<List<EventRecord>>> GetAllAsync()
+    public async Task<Result<List<EventRecord>>> SearchAsync(EventSearchFilters filters)
     {
         return await Result.Try(async () =>
         {
-            return await EventQueryBuilder
+            EventQueryBuilder eventsQueryBuilder = (EventQueryBuilder)EventQueryBuilder
                 .Include(x => x.Categories)
-                .WhereNotDeleted()
-                .ToListAsync();
-        });
+                .Include(x => x.Participants)
+                .WhereNotDeleted();
+
+            eventsQueryBuilder = WithSearchQueryFilter(eventsQueryBuilder, filters);
+            eventsQueryBuilder = WithPlaceId(eventsQueryBuilder, filters);
+            eventsQueryBuilder = WithStartDateFilter(eventsQueryBuilder, filters);
+            eventsQueryBuilder = WithEndDateFilter(eventsQueryBuilder, filters);
+            eventsQueryBuilder = WithOrganizersFilter(eventsQueryBuilder, filters);
+            eventsQueryBuilder = WithInCategoriesFilter(eventsQueryBuilder, filters);
+            eventsQueryBuilder = WithNotInCategoriesFilter(eventsQueryBuilder, filters);
+            eventsQueryBuilder = eventsQueryBuilder.Sort(filters.SortBy, filters.SortOrder);
+            eventsQueryBuilder = (EventQueryBuilder)eventsQueryBuilder.Skip(filters.Offset);
+            eventsQueryBuilder = (EventQueryBuilder)eventsQueryBuilder.Limit(filters.Limit);
+            
+            return await eventsQueryBuilder.ToListAsync();
+        }, exception => throw new InvalidOperationException(
+            "Search failed. See inner error for details.", exception));
     }
 
+    private EventQueryBuilder WithSearchQueryFilter(EventQueryBuilder queryBuilder, EventSearchFilters filters)
+    {
+        if (!String.IsNullOrEmpty(filters.SearchQuery))
+        {
+            return queryBuilder.SearchString(filters.SearchQuery);
+        }
+        
+        return queryBuilder;
+    }
+    
+    private EventQueryBuilder WithPlaceId(EventQueryBuilder queryBuilder, EventSearchFilters filters)
+    {
+        if (filters.PlaceId.HasValue)
+        {
+            return queryBuilder.WithPlaceId(filters.PlaceId.Value);
+        }
+        
+        return queryBuilder;
+    }
+    
+    private EventQueryBuilder WithStartDateFilter(EventQueryBuilder queryBuilder, EventSearchFilters filters)
+    {
+        if (!String.IsNullOrEmpty(filters.StartDateBetweenA) 
+            && !String.IsNullOrEmpty(filters.StartDateBetweenB))
+        {
+            var betweenA = DateTime.Parse(filters.StartDateBetweenA, CultureInfo.InvariantCulture);
+            var betweenB = DateTime.Parse(filters.StartDateBetweenB, CultureInfo.InvariantCulture);
+
+            return queryBuilder.WithStartDateBetween(betweenA, betweenB);
+        }
+        
+        return queryBuilder;
+    }
+    
+    private EventQueryBuilder WithEndDateFilter(EventQueryBuilder queryBuilder, EventSearchFilters filters)
+    {
+        if (!String.IsNullOrEmpty(filters.EndDateBetweenA) 
+            && !String.IsNullOrEmpty(filters.EndDateBetweenB))
+        {
+            var betweenA = DateTime.Parse(filters.EndDateBetweenA, CultureInfo.InvariantCulture);
+            var betweenB = DateTime.Parse(filters.EndDateBetweenB, CultureInfo.InvariantCulture);
+
+            return queryBuilder.WithEndDateBetween(betweenA, betweenB);
+        }
+        
+        return queryBuilder;
+    }
+
+    private EventQueryBuilder WithOrganizersFilter(EventQueryBuilder queryBuilder, EventSearchFilters filters)
+    {
+        if (!String.IsNullOrEmpty(filters.Organizers))
+        {
+            var withOrganizers = filters.Organizers.Split(',')
+                .Select(x=> long.Parse(x)).ToList();
+
+            return queryBuilder.WithOrganizers(withOrganizers);    
+        }
+
+        return queryBuilder;
+    }
+
+    private EventQueryBuilder WithInCategoriesFilter(EventQueryBuilder queryBuilder, EventSearchFilters filters)
+    { 
+        if (!String.IsNullOrEmpty(filters.InCategories))
+        {
+            var inCategories = filters.InCategories.Split(',')
+                .Select(x=> long.Parse(x)).ToList();
+
+           return queryBuilder.WhereCategoriesIn(inCategories);
+        }
+
+        return queryBuilder;
+    }
+
+    private EventQueryBuilder WithNotInCategoriesFilter(EventQueryBuilder queryBuilder, EventSearchFilters filters)
+    {
+        if (!String.IsNullOrEmpty(filters.NotInCategories))
+        {
+            var notInCategories = filters.NotInCategories.Split(',')
+                .Select(x=> long.Parse(x)).ToList();
+
+            return queryBuilder.WhereCategoriesNotIn(notInCategories);
+        }
+
+        return queryBuilder;
+    }
+    
     public async Task<Result<EventRecord>> GetByIdAsync(long eventId)
     {
         return await Result.Try(async () =>
@@ -41,25 +147,8 @@ public class EventService
                 .WhereNotDeleted()
                 .WithId(eventId)
                 .SingleAsync();
-        });
-    }
-
-    public async Task<Result<EventRecord>> DeleteByIdAsync(long eventId)
-    {
-        return await Result.Try(async () =>
-        {
-            var eventWithId = await EventQueryBuilder.WithId(eventId).FirstOrDefaultAsync();
-
-            if (eventWithId == null)
-                throw new InvalidOperationException($"Event with id {eventId} is not found.");
-
-            if (eventWithId.IsDeleted)
-                throw new InvalidOperationException(
-                    $"Event with id {eventId} was already deleted at {eventWithId.DeletedDateTime.ToString()}");
-
-            return await EventQueryBuilder
-                .DeleteAsync(eventWithId);
-        });
+        }, exception => throw new InvalidOperationException(
+            $"Can't get event by id: {eventId}. See inner error for details.", exception));
     }
 
     public async Task<Result<EventRecord>> DeleteAsync(EventRecord eventRecord)
@@ -72,12 +161,17 @@ public class EventService
 
             return await EventQueryBuilder
                 .DeleteAsync(eventRecord);
-        });
+        }, exception => throw new InvalidOperationException(
+            $"Can't delete event with id {eventRecord.Id}. Event is not found?", exception));
     }
 
     public async Task<Result<EventRecord>> UpdateAsync(EventRecord eventRecord)
     {
-        return await Result.Try(async () => { return await EventQueryBuilder.UpdateAsync(eventRecord); });
+        return await Result.Try(async () =>
+        {
+            return await EventQueryBuilder.UpdateAsync(eventRecord);
+        }, exception => throw new InvalidOperationException(
+            $"Can't update event with id {eventRecord.Id}. Event is not found?", exception));
     }
 
     public Result CanCreate(PlaceRecord placeRecord, ProfileRecord userRecord)
