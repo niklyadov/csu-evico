@@ -9,8 +9,6 @@ public record ProfileRecord : User
 
     public ProfilePhotoRecord? Photo { get; set; }
     public long? VkUserId { get; set; }
-    
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public UserRoles Role { get; set; } = UserRoles.Default;
     public DateTime? BirthDate { get; set; }
     public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
