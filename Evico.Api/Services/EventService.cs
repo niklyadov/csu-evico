@@ -1,8 +1,8 @@
+using System.Globalization;
 using Evico.Api.Entities;
 using Evico.Api.InputModels.Event;
 using Evico.Api.QueryBuilders;
 using FluentResults;
-
 namespace Evico.Api.Services;
 
 public class EventService
@@ -42,6 +42,9 @@ public class EventService
                 .WhereNotDeleted();
 
             eventsQueryBuilder = WithSearchQueryFilter(eventsQueryBuilder, filters);
+            eventsQueryBuilder = WithPlaceId(eventsQueryBuilder, filters);
+            eventsQueryBuilder = WithStartDateFilter(eventsQueryBuilder, filters);
+            eventsQueryBuilder = WithEndDateFilter(eventsQueryBuilder, filters);
             eventsQueryBuilder = WithOrganizersFilter(eventsQueryBuilder, filters);
             eventsQueryBuilder = WithInCategoriesFilter(eventsQueryBuilder, filters);
             eventsQueryBuilder = WithNotInCategoriesFilter(eventsQueryBuilder, filters);
@@ -58,6 +61,44 @@ public class EventService
         if (!String.IsNullOrEmpty(filters.SearchQuery))
         {
             return queryBuilder.SearchString(filters.SearchQuery);
+        }
+        
+        return queryBuilder;
+    }
+    
+    private EventQueryBuilder WithPlaceId(EventQueryBuilder queryBuilder, EventSearchFilters filters)
+    {
+        if (filters.PlaceId.HasValue)
+        {
+            return queryBuilder.WithPlaceId(filters.PlaceId.Value);
+        }
+        
+        return queryBuilder;
+    }
+    
+    private EventQueryBuilder WithStartDateFilter(EventQueryBuilder queryBuilder, EventSearchFilters filters)
+    {
+        if (!String.IsNullOrEmpty(filters.StartDateBetweenA) 
+            && !String.IsNullOrEmpty(filters.StartDateBetweenB))
+        {
+            var betweenA = DateTime.Parse(filters.StartDateBetweenA, CultureInfo.InvariantCulture);
+            var betweenB = DateTime.Parse(filters.StartDateBetweenB, CultureInfo.InvariantCulture);
+
+            return queryBuilder.WithStartDateBetween(betweenA, betweenB);
+        }
+        
+        return queryBuilder;
+    }
+    
+    private EventQueryBuilder WithEndDateFilter(EventQueryBuilder queryBuilder, EventSearchFilters filters)
+    {
+        if (!String.IsNullOrEmpty(filters.EndDateBetweenA) 
+            && !String.IsNullOrEmpty(filters.EndDateBetweenB))
+        {
+            var betweenA = DateTime.Parse(filters.EndDateBetweenA, CultureInfo.InvariantCulture);
+            var betweenB = DateTime.Parse(filters.EndDateBetweenB, CultureInfo.InvariantCulture);
+
+            return queryBuilder.WithEndDateBetween(betweenA, betweenB);
         }
         
         return queryBuilder;
