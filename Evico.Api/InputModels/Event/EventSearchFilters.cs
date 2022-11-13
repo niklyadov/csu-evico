@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Evico.Api.Enums;
 
 namespace Evico.Api.InputModels.Event;
@@ -17,6 +18,7 @@ public class EventSearchFilters : BaseSearchInputModel
         ErrorMessage = "Invalid patten. Valid pattern: '1,2,99'.")]
     [StringLength(64)]
     public String? Organizers { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public EventSearchSortType SortBy { get; set; }
         = EventSearchSortType.Id;
     public long? PlaceId { get; set; }
