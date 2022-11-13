@@ -22,6 +22,8 @@ public class EventSearchFilters : BaseSearchInputModel
     public long? PlaceId { get; set; }
     // todo: avg rate sort
     // public Rate? RateMoreThan { get; set; }
-    public String? StartDate { get; set; }
-    public String? EndDate { get; set; }
+    public String? StartDateBetweenA { get; set; }
+    public String? StartDateBetweenB { get; set; }
+    public String? EndDateBetweenA { get; set; }
+    public String? EndDateBetweenB { get; set; }
 }
