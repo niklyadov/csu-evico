@@ -18,20 +18,13 @@ public class EventService
 
     public async Task<Result<EventRecord>> AddAsync(EventRecord eventRecord)
     {
-        return await Result.Try(async () => { return await EventQueryBuilder.AddAsync(eventRecord); });
-    }
-
-    public async Task<Result<List<EventRecord>>> GetAllAsync()
-    {
         return await Result.Try(async () =>
         {
-            return await EventQueryBuilder
-                .Include(x => x.Categories)
-                .WhereNotDeleted()
-                .ToListAsync();
-        });
+            return await EventQueryBuilder.AddAsync(eventRecord);
+        }, exception => throw new InvalidOperationException(
+            "Can't create new event. See inner error for details.", exception));
     }
-    
+
     public async Task<Result<List<EventRecord>>> SearchAsync(EventSearchFilters filters)
     {
         return await Result.Try(async () =>
@@ -53,7 +46,8 @@ public class EventService
             eventsQueryBuilder = (EventQueryBuilder)eventsQueryBuilder.Limit(filters.Limit);
             
             return await eventsQueryBuilder.ToListAsync();
-        });
+        }, exception => throw new InvalidOperationException(
+            "Search failed. See inner error for details.", exception));
     }
 
     private EventQueryBuilder WithSearchQueryFilter(EventQueryBuilder queryBuilder, EventSearchFilters filters)
@@ -118,8 +112,7 @@ public class EventService
     }
 
     private EventQueryBuilder WithInCategoriesFilter(EventQueryBuilder queryBuilder, EventSearchFilters filters)
-    {
-                    
+    { 
         if (!String.IsNullOrEmpty(filters.InCategories))
         {
             var inCategories = filters.InCategories.Split(',')
@@ -154,7 +147,8 @@ public class EventService
                 .WhereNotDeleted()
                 .WithId(eventId)
                 .SingleAsync();
-        });
+        }, exception => throw new InvalidOperationException(
+            $"Can't get event by id: {eventId}. See inner error for details.", exception));
     }
 
     public async Task<Result<EventRecord>> DeleteAsync(EventRecord eventRecord)
@@ -167,12 +161,17 @@ public class EventService
 
             return await EventQueryBuilder
                 .DeleteAsync(eventRecord);
-        });
+        }, exception => throw new InvalidOperationException(
+            $"Can't delete event with id {eventRecord.Id}. Event is not found?", exception));
     }
 
     public async Task<Result<EventRecord>> UpdateAsync(EventRecord eventRecord)
     {
-        return await Result.Try(async () => { return await EventQueryBuilder.UpdateAsync(eventRecord); });
+        return await Result.Try(async () =>
+        {
+            return await EventQueryBuilder.UpdateAsync(eventRecord);
+        }, exception => throw new InvalidOperationException(
+            $"Can't update event with id {eventRecord.Id}. Event is not found?", exception));
     }
 
     public Result CanCreate(PlaceRecord placeRecord, ProfileRecord userRecord)
