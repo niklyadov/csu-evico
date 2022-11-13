@@ -47,24 +47,24 @@ public class EventQueryBuilder : QueryBuilder<EventRecord, ApplicationContext>
         {
             default:
             case EventSearchSortType.Id:
-                Query = Query.OrderBy(e => e.Id, desc);
+                Query = Query.SortBy(e => e.Id, desc);
                 break;
             case EventSearchSortType.Name:
-                Query = Query.OrderBy(e => e.Name, desc);
+                Query = Query.SortBy(e => e.Name, desc);
                 break;
             // todo: avg rate
             //case EventSearchSortType.AvgRate:
             //    Query = Query.OrderBy(e => e.Id, orderBy == SearchSortOrderType.Desc);
             //    break;
             case EventSearchSortType.StartDate:
-                Query = Query.OrderBy(e => e.Start, desc);
+                Query = Query.SortBy(e => e.Start, desc);
                 break;
             case EventSearchSortType.EndDate:
-                Query = Query.OrderBy(e => e.End, desc);
+                Query = Query.SortBy(e => e.End, desc);
                 break;
             // todo: Participants Count
             case EventSearchSortType.ParticipantsCount:
-                Query = Query.OrderBy(e => e.Participants.Count, desc);
+                Query = Query.SortBy(e => e.Participants.Count, desc);
                 break;
             // todo: Subscribers count
             //case EventSearchSortType.SubscribersCount:

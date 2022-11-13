@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using System.Text.Json.Serialization;
 using Evico.Api;
 using Evico.Api.Extensions;
 using Evico.Api.QueryBuilders;
@@ -31,7 +32,11 @@ const string allowAnyCorsOrigin = "Allow any";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("Default"),
