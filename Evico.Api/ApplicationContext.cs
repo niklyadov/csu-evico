@@ -1,5 +1,6 @@
 using Evico.Api.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Evico.Api;
 
@@ -71,6 +72,10 @@ public sealed class ApplicationContext : DbContext
         modelBuilder.Entity<ProfileRecord>()
             .HasIndex(x => x.Name)
             .IsUnique();
+        
+        modelBuilder.Entity<ProfileRecord>()
+            .Property(e => e.Role)
+            .HasConversion(new EnumToStringConverter<UserRoles>());
 
         modelBuilder.Entity<PhotoRecord>()
             .HasIndex(x => x.MinioInternalId)
