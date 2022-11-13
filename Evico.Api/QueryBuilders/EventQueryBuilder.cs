@@ -1,6 +1,7 @@
 using Evico.Api.Entities;
 using Evico.Api.Enums;
 using Evico.Api.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Evico.Api.QueryBuilders;
 
@@ -77,7 +78,9 @@ public class EventQueryBuilder : QueryBuilder<EventRecord, ApplicationContext>
 
     public EventQueryBuilder SearchString(String searchString)
     {
-        Query = Query.Where(e => SearchString(e, searchString));
+        Query = Query.Where(e => 
+            EF.Functions.Like(e.Name, $"%{searchString}%") 
+            || EF.Functions.Like(e.Description, $"%{searchString}%"));
         
         return this;
     }
@@ -104,8 +107,4 @@ public class EventQueryBuilder : QueryBuilder<EventRecord, ApplicationContext>
         
         return this;
     }
-
-    private bool SearchString(EventRecord eventRecord, String searchString)
-        => eventRecord.Name.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)
-           || eventRecord.Description.Contains(searchString, StringComparison.InvariantCultureIgnoreCase);
 }
