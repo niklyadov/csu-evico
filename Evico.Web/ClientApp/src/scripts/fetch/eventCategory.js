@@ -1,14 +1,15 @@
 import { EventCategory } from "../../components/classes/EventCategory";
 import config from "../../config"
 
+/*
 const token = "token";
 const eventCategory = {
     "name": "name",
     "description": "desc",
 }
+*/
 
-
-export const createEventCategory = function () {
+export const createEventCategory = function (eventCategory) {
     return new Promise(async (resolve, reject) => {
         return fetch (`${config.api}eventcategory`, {
             method: "POST",
@@ -68,7 +69,7 @@ export const getEventCategoryById = function (categoryId) {
 }
 
 
-export const changeEventCategory = function () {
+export const changeEventCategory = function (changedEventCategory) {
     return new Promise(async (resolve, reject) => {
         return fetch(`${config.api}eventcategory`, {
             method: "PUT",
@@ -76,7 +77,8 @@ export const changeEventCategory = function () {
             headers: {
                 "accept": "text/plain",
                 "Authorization": `Bearer ${token}`
-            }
+            },
+            body: JSON.stringify(changedEventCategory)
         })
         .then(response => response.json())
         .then(data => resolve(data));

@@ -66,10 +66,13 @@ export const getReviewByIdByEventId = function (eventId, reviewId) {
 
 }
 
-
-export const changeEventReview = function (eventId) {
+/**
+ * 
+ * @param {EventReview} changedEventReview 
+ */
+export const changeEventReview = function (changedEventReview) {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}event/${eventId}/review`, {
+        return fetch(`${config.api}event/${changedEventReview.eventId}/review`, {
             method: "PUT",
             mode: 'cors',
             headers: {
@@ -81,7 +84,6 @@ export const changeEventReview = function (eventId) {
         })
         .then(response => response.json())
         .then(data => resolve(data));
-        
     });
 }
 
