@@ -16,7 +16,7 @@ export class PlaceCategory{
     parentId = null;
 
     /**
-     * @type {[{}]}
+     * @type {Array<{}>}
      */
     places = [];
 
