@@ -5,10 +5,13 @@ const token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImY1YmJjYmM5LWJlYjct
 const eventReview = new EventReview("Comment21312313123123123123",1);
 const changedEventReview = {"id": 1,"comment":"12321323123Comment", "rate":2};
 
-
-export const createEventReview = function (eventId) {
+/**
+ * 
+ * @param {EventReview} eventReview 
+ */
+export const createEventReview = function (eventReview) {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}event/${eventId}/review`, {
+        return fetch(`${config.api}event/${eventReview.eventId}/review`, {
             method: "POST",
             mode: 'cors',
             headers: {

@@ -5,7 +5,10 @@ const token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjUyZWVlYWNkLWNiOTMt
 //const placeRecord = {"locationLatitude": 0, "locationLongitude": 0, "name": "string", "description": "string"};
 //const changedPlaceRecord = {"id": 1, "locationLatitude": 1, "locationLongitude": 1, "name": "string123", "description": "string123"};
 
-
+/**
+ * 
+ * @param {Place} placeRecord 
+ */
 export const createPlace = function (placeRecord) {
     return new Promise(async (resolve, reject) => {
         return fetch(`${config.api}place`, {
@@ -18,8 +21,11 @@ export const createPlace = function (placeRecord) {
             },
             body: JSON.stringify(placeRecord)
         })
-        .then(response => response.json())
-        .then(data => resolve(data));
+        .then(response => { console.log(response); response.json(); })
+        .then(data => {
+            console.log(data);
+            resolve(data);
+        });
     });
 }
 
@@ -65,7 +71,10 @@ export const getPlaceById = function (placeId) {
     });
 }
 
-
+/**
+ * 
+ * @param {Place} changedPlaceRecord 
+ */
 export const changePlace = function (changedPlaceRecord) {
     return new Promise(async (resolve, reject) => {
         return fetch(`${config.api}place`, {

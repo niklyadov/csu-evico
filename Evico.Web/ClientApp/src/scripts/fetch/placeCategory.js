@@ -8,7 +8,11 @@ const placeCategory = {
 }
 
 
-export const createPlaceCategory = function () {
+/**
+ * 
+ * @param {PlaceCategory} placeCategory 
+ */
+export const createPlaceCategory = function (placeCategory) {
     return new Promise(async (resolve, reject) => {
         return fetch (`${config.api}placecategory`, {
             method: "POST",
@@ -67,8 +71,11 @@ export const getPlaceCategoryById = function (categoryId) {
     });
 }
 
-
-export const changePlaceCategory = function () {
+/**
+ * 
+ * @param {PlaceCategory} changedPlaceCategory 
+ */
+export const changePlaceCategory = function (changedPlaceCategory) {
     return new Promise(async (resolve, reject) => {
         return fetch(`${config.api}placecategory`, {
             method: "PUT",
@@ -76,7 +83,8 @@ export const changePlaceCategory = function () {
             headers: {
                 "accept": "text/plain",
                 "Authorization": `Bearer ${token}`
-            }
+            },
+            body: JSON.stringify(changedPlaceCategory)
         })
         .then(response => response.json())
         .then(data => resolve(data));

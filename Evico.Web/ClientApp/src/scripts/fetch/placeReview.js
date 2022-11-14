@@ -5,10 +5,13 @@ const token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjUyZWVlYWNkLWNiOTMt
 const placeReview = {"comment":"Comment21312313123123123123", "rate":1};
 const changedPlaceReview = {"id": 1,"comment":"12321323123Comment", "rate":2};
 
-
-export const createPlaceReview = function (placeId) {
+/**
+ * 
+ * @param {PlaceReview} placeReview 
+ */
+export const createPlaceReview = function (placeReview) {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}place/${placeId}/review`, {
+        return fetch(`${config.api}place/${placeReview.placeId}/review`, {
             method: "POST",
             mode: 'cors',
             headers: {
@@ -66,9 +69,14 @@ export const getReviewByIdByPlaceId = function (placeId, reviewId) {
 }
 
 
-export const changePlaceReview = function (placeId) {
+
+/**
+ * 
+ * @param {PlaceReview} changedPlaceReview 
+ */
+export const changePlaceReview = function (changedPlaceReview) {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}place/${placeId}/review`, {
+        return fetch(`${config.api}place/${changedPlaceReview.placeId}/review`, {
             method: "PUT",
             mode: 'cors',
             headers: {

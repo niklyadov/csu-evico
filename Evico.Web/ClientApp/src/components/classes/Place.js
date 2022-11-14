@@ -44,12 +44,12 @@ export class Place {
      * Координата X.
      * @type {number?}
     */
-    locationLatitude = null;
+    locationLatitude = 0;
     /**
      * Координата Y.
      * @type {number?}
     */
-    locationLongitude = null;
+    locationLongitude = 0;
     /**
      * Время удаления записи.
      * @type {Date}
@@ -58,7 +58,7 @@ export class Place {
 
     /** @param {Place} args */
     constructor(args) {
-
+        console.log(args);
         Object.keys(this).forEach(k => args[k] !== undefined ? this[k] = args[k] : 0);
 
     };

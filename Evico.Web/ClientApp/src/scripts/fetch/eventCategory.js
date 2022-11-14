@@ -9,6 +9,11 @@ const eventCategory = {
 }
 */
 
+
+/**
+ * 
+ * @param {EventCategory} eventCategory 
+ */
 export const createEventCategory = function (eventCategory) {
     return new Promise(async (resolve, reject) => {
         return fetch (`${config.api}eventcategory`, {
@@ -68,7 +73,10 @@ export const getEventCategoryById = function (categoryId) {
     });
 }
 
-
+/**
+ * 
+ * @param {EventCategory} changedEventCategory 
+ */
 export const changeEventCategory = function (changedEventCategory) {
     return new Promise(async (resolve, reject) => {
         return fetch(`${config.api}eventcategory`, {
