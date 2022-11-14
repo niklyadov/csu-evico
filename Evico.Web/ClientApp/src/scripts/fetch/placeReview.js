@@ -1,14 +1,14 @@
-import { Place } from "../../components/classes/Place";
+import { PlaceReview } from "../../components/classes/PlaceReview";
 import config from "../../config"
 
 const token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjUyZWVlYWNkLWNiOTMtNGE4Yy05ZjFiLTRmNTBlNTVjZmU3MyIsInN1YiI6IjEiLCJuYW1lIjoiTmlraXRhX2hvdGRvZyIsImVtYWlsIjoiIiwianRpIjoiOWMzNjZjNTctZTlhNC00ODg0LTkwMDUtYWY5MDAwNDE4Mzc5IiwibmJmIjoxNjY4MTU2MzM3LCJleHAiOjE2Njg3NjExMzcsImlhdCI6MTY2ODE1NjMzNywiaXNzIjoiQ1NVLUVWSUNPIiwiYXVkIjoiQ1NVLUVWSUNPIn0.VEAw-QDPRCIQcdqVnRIXmyXrlfm_RE4EYxw-X2dVeomNL7EBDAV5Kn7SzfpZOkDat9Ho1uHfdNkSGm06ZXq_4w";
-const placeRecord = {"locationLatitude": 0, "locationLongitude": 0, "name": "string", "description": "string"};
-const changedPlaceRecord = {"id": 1, "locationLatitude": 1, "locationLongitude": 1, "name": "string123", "description": "string123"};
+const placeReview = {"comment":"Comment21312313123123123123", "rate":1};
+const changedPlaceReview = {"id": 1,"comment":"12321323123Comment", "rate":2};
 
 
-export const createPlace = function () {
+export const createPlaceReview = function (placeId) {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}place`, {
+        return fetch(`${config.api}place/${placeId}/review`, {
             method: "POST",
             mode: 'cors',
             headers: {
@@ -16,7 +16,7 @@ export const createPlace = function () {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(placeRecord)
+            body: JSON.stringify(placeReview)
         })
         .then(response => response.json())
         .then(data => resolve(data));
@@ -24,10 +24,10 @@ export const createPlace = function () {
 }
 
 
-export const getPlacesList = function () {
+export const getReviewsByPlaceId = function (placeId) {
     return new Promise(async (resolve, reject) => {
-        let placesList = [];
-        return fetch(`${config.api}place`, {
+        let reviewsList = [];
+        return fetch(`${config.api}place/${placeId}/review`, { 
             method: "GET",
             mode: 'cors',
             headers: {
@@ -37,19 +37,19 @@ export const getPlacesList = function () {
         })
         .then(response => response.json())
         .then(data => {
-            for(const place of data){
-                let placeObj = new Place(place);
-                placesList.push(placeObj);
+            for (const review of data){
+                let reviewObj = new PlaceReview(review);
+                reviewsList.push(reviewObj);
             }
-            resolve(placesList);
+            resolve(reviewsList);
         });
     });
 }
 
 
-export const getPlaceById = function (placeId) {
+export const getReviewByIdByPlaceId = function (placeId, reviewId) {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}place/${placeId}`, {
+        return fetch(`${config.api}place/${placeId}/review/${reviewId}`, { 
             method: "GET",
             mode: 'cors',
             headers: {
@@ -59,16 +59,16 @@ export const getPlaceById = function (placeId) {
         })
         .then(response => response.json())
         .then(data => {
-            let placeObj = new Place(data);
-            resolve(placeObj);
+            let reviewObj = new PlaceReview(data);
+            resolve(reviewObj);
         });
     });
 }
 
 
-export const changePlace = function () {
+export const changePlaceReview = function (placeId) {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}place`, {
+        return fetch(`${config.api}place/${placeId}/review`, {
             method: "PUT",
             mode: 'cors',
             headers: {
@@ -76,7 +76,7 @@ export const changePlace = function () {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(changedPlaceRecord)
+            body: JSON.stringify(changedPlaceReview)
         })
         .then(response => response.json())
         .then(data => resolve(data));
@@ -84,11 +84,11 @@ export const changePlace = function () {
 }
 
 
-export const deletePlaceById = function (placeId) {
+export const deleteReviewById = function (placeId, reviewId) {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}place/${placeId}`, {
+        return fetch(`${config.api}place/${placeId}/review/${reviewId}`, { 
             method: "DELETE",
-            mode: "cors",
+            mode: 'cors',
             headers: {
                 "accept": "text/plain",
                 "Authorization": `Bearer ${token}`
