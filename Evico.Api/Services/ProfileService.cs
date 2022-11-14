@@ -58,4 +58,10 @@ public class ProfileService
                 })
         );
     }
+
+    public async Task<Result<ProfileRecord>> UpdateAsync(ProfileRecord profile)
+    {
+        return await Result.Try(async ()
+            => await _profileQueryBuilder.UpdateAsync(profile));
+    }
 }

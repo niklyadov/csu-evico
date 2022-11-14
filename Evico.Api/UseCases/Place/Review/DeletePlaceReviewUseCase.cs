@@ -29,12 +29,24 @@ public class DeletePlaceReviewUseCase
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
 
+        var placeWithIdResult = await _placeService.GetByIdAsync(placeId);
+        if (placeWithIdResult.IsFailed)
+            return new BadRequestObjectResult(placeWithIdResult.GetReport());
+        var place = placeWithIdResult.Value;
+
+        var canViewPlaceResult = _placeService.CanView(place, currentUser);
+        if (canViewPlaceResult.IsFailed)
+            return new ObjectResult(canViewPlaceResult.GetReport())
+            {
+                StatusCode = StatusCodes.Status403Forbidden
+            };
+
         var placeReviewWithIdResult = await _placeReviewService.GetByIdAsync(reviewId);
         if (placeReviewWithIdResult.IsFailed)
             return new BadRequestObjectResult(placeReviewWithIdResult.GetReport());
         var placeReview = placeReviewWithIdResult.Value;
 
-        var canDeleteResult = _placeReviewService.CanDelete(placeReview, currentUser);
+        var canDeleteResult = _placeReviewService.CanDelete(place, placeReview, currentUser);
         if (canDeleteResult.IsFailed)
             return new ObjectResult(canDeleteResult.GetReport())
             {

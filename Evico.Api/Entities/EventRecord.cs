@@ -12,8 +12,7 @@ public record EventRecord : EntityRecord
     public string Description { get; set; } = string.Empty;
     public DateTime? Start { get; set; } = null;
     public DateTime? End { get; set; } = null;
-    public long? PhotoId { get; set; } = null;
-    public ExternalPhotoRecord? Photo { get; set; } = null;
+    public virtual List<EventPhotoRecord> Photos { get; set; } = new();
     public virtual List<ProfileRecord> Organizers { get; set; } = new();
     public virtual List<ProfileRecord> Participants { get; set; } = new();
 

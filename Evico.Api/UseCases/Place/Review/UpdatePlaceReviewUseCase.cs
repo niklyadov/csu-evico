@@ -30,12 +30,24 @@ public class UpdatePlaceReviewUseCase
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
 
+        var placeWithIdResult = await _placeService.GetByIdAsync(placeId);
+        if (placeWithIdResult.IsFailed)
+            return new BadRequestObjectResult(placeWithIdResult.GetReport());
+        var place = placeWithIdResult.Value;
+
+        var canViewPlaceResult = _placeService.CanView(place, currentUser);
+        if (canViewPlaceResult.IsFailed)
+            return new ObjectResult(canViewPlaceResult.GetReport())
+            {
+                StatusCode = StatusCodes.Status403Forbidden
+            };
+
         var placeReviewWithIdResult = await _placeReviewService.GetByIdAsync(inputModel.Id);
         if (placeReviewWithIdResult.IsFailed)
             return new BadRequestObjectResult(placeReviewWithIdResult.GetReport());
         var placeReview = placeReviewWithIdResult.Value;
 
-        var canUpdateResult = _placeReviewService.CanUpdate(placeReview, currentUser);
+        var canUpdateResult = _placeReviewService.CanUpdate(place, placeReview, currentUser);
         if (canUpdateResult.IsFailed)
             return new ObjectResult(canUpdateResult.GetReport())
             {

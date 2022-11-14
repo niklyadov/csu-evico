@@ -25,19 +25,26 @@ public class AuthViaVkUseCase
         var vkProfileInfoResult = await _vkAuthService.GetVkProfileInfoAsync(vkAccessTokenResult.Value);
         if (vkProfileInfoResult.IsFailed)
             return new BadRequestObjectResult(vkProfileInfoResult.GetReport());
+        var vkProfileInfo = vkProfileInfoResult.Value;
 
-        var registeredUserResult = await _vkAuthService.RegisterOrGetExistingProfileAsync(vkProfileInfoResult.Value);
-        if (registeredUserResult.IsFailed)
-            return new BadRequestObjectResult(registeredUserResult.GetReport());
-        var vkUser = registeredUserResult.Value;
+        var userRegistered = false;
+        var vkUser = (await _vkAuthService.GetExistingProfileAsync(vkProfileInfo)).ValueOrDefault;
+
+        if (vkUser is null)
+        {
+            var userRegisterResult = await _vkAuthService.RegisterVkUser(vkProfileInfo);
+            if (userRegisterResult.IsFailed)
+                return new BadRequestObjectResult(userRegisterResult.GetReport());
+            vkUser = userRegisterResult.Value;
+            userRegistered = true;
+        }
 
         var barerToken = _tokensService.CreateAccessTokenForUser(vkUser);
         var refreshToken = _tokensService.CreateRefreshTokenForUser(vkUser);
         var tokens = new BearerRefreshTokenPair(barerToken, refreshToken);
 
-        // todo: доделать возврат кода 201, если пользователь был именно зарегистрирован
-        //if (userRegistered)
-        //    return new ObjectResult(tokens) {StatusCode = StatusCodes.Status201Created};
+        if (userRegistered)
+            return new ObjectResult(tokens) {StatusCode = StatusCodes.Status201Created};
 
         return new OkObjectResult(tokens);
     }

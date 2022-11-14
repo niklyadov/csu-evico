@@ -6,9 +6,7 @@ namespace Evico.Api.InputModels.Place;
 public class AddPlaceReviewInputModel
 {
     [StringLength(1024, MinimumLength = 8)]
-    public string Comment { get; set; } = string.Empty;
+    public string? Comment { get; set; }
 
     public Rate Rate { get; set; }
-
-    [MaxLength(16)] public virtual List<ExternalPhotoRecord> Photos { get; set; } = new();
 }

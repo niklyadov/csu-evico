@@ -29,7 +29,7 @@ public class DeleteEventReviewUseCase
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
 
-        var eventReviewByIdResult = await _eventReviewService.GetById(reviewId);
+        var eventReviewByIdResult = await _eventReviewService.GetByIdAsync(reviewId);
         if (eventReviewByIdResult.IsFailed)
             return new BadRequestObjectResult(eventReviewByIdResult.GetReport());
         var eventReview = eventReviewByIdResult.Value;

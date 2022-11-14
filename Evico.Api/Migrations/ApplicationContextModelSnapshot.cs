@@ -19,6 +19,21 @@ namespace Evico.Api.Migrations
                 .HasAnnotation("ProductVersion", "6.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("EventCategoryRecordEventRecord", b =>
+                {
+                    b.Property<long>("CategoriesId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("EventsId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("CategoriesId", "EventsId");
+
+                    b.HasIndex("EventsId");
+
+                    b.ToTable("EventCategoryRecordEventRecord");
+                });
+
             modelBuilder.Entity("EventRecordProfileRecord", b =>
                 {
                     b.Property<long>("OrganizerEventsId")
@@ -49,7 +64,7 @@ namespace Evico.Api.Migrations
                     b.ToTable("EventRecordProfileRecord1");
                 });
 
-            modelBuilder.Entity("Evico.Api.Entity.EventRecord", b =>
+            modelBuilder.Entity("Evico.Api.Entities.EventCategoryRecord", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,13 +73,49 @@ namespace Evico.Api.Migrations
                     b.Property<DateTime?>("DeletedDateTime")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<long?>("ParentId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EventCategoryRecord");
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.EventRecord", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletedDateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime?>("End")
                         .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<long?>("PhotoId")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("OwnerId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("PlaceId")
@@ -75,45 +126,96 @@ namespace Evico.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PhotoId");
+                    b.HasIndex("OwnerId");
 
                     b.HasIndex("PlaceId");
 
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("Evico.Api.Entity.ExternalPhoto", b =>
+            modelBuilder.Entity("Evico.Api.Entities.EventReviewRecord", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
+                    b.Property<long>("AuthorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime?>("DeletedDateTime")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<long>("EventId")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<long?>("PlaceRecordId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("ReviewRecordId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Uri")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<byte>("Rate")
+                        .HasColumnType("tinyint unsigned");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlaceRecordId");
+                    b.HasIndex("AuthorId");
 
-                    b.HasIndex("ReviewRecordId");
+                    b.HasIndex("EventId");
 
-                    b.ToTable("Photos");
+                    b.ToTable("EventReviewRecord");
                 });
 
-            modelBuilder.Entity("Evico.Api.Entity.PlaceRecord", b =>
+            modelBuilder.Entity("Evico.Api.Entities.PhotoRecord", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("AuthorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedDateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<long?>("EventReviewRecordId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("MinioBucket")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("MinioInternalId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("PhotoType")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("PlaceReviewRecordId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("EventReviewRecordId");
+
+                    b.HasIndex("MinioInternalId")
+                        .IsUnique();
+
+                    b.HasIndex("PlaceReviewRecordId");
+
+                    b.ToTable("Photo", (string)null);
+
+                    b.HasDiscriminator<int>("PhotoType").HasValue(0);
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.PlaceCategoryRecord", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -121,6 +223,38 @@ namespace Evico.Api.Migrations
 
                     b.Property<DateTime?>("DeletedDateTime")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<long?>("ParentId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlaceCategoryRecord");
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.PlaceRecord", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletedDateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -135,31 +269,71 @@ namespace Evico.Api.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<long?>("PhotoId")
+                    b.Property<long>("OwnerId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("TempId1")
-                        .HasColumnType("int");
+                    b.Property<long?>("ParentId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("TempId1");
+                    b.HasIndex("OwnerId");
 
-                    b.HasIndex("PhotoId");
+                    b.HasIndex("ParentId");
 
                     b.ToTable("Places");
                 });
 
-            modelBuilder.Entity("Evico.Api.Entity.ProfileRecord", b =>
+            modelBuilder.Entity("Evico.Api.Entities.PlaceReviewRecord", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
+                    b.Property<long>("AuthorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DeletedDateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<long>("PlaceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<byte>("Rate")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("PlaceId");
+
+                    b.ToTable("PlaceReviewRecord");
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.ProfileRecord", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("BirthDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<DateTime?>("DeletedDateTime")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Firstname")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -172,63 +346,125 @@ namespace Evico.Api.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<long?>("PhotoId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime>("RegistrationDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<byte>("Role")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<long?>("VkUserId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.HasIndex("PhotoId");
 
                     b.ToTable("Profiles");
                 });
 
-            modelBuilder.Entity("Evico.Api.Entity.ReviewRecord", b =>
+            modelBuilder.Entity("PlaceCategoryRecordPlaceRecord", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<long>("CategoriesId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("AuthorId")
+                    b.Property<long>("PlacesId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.HasKey("CategoriesId", "PlacesId");
 
-                    b.Property<DateTime?>("DeletedDateTime")
-                        .HasColumnType("datetime(6)");
+                    b.HasIndex("PlacesId");
 
-                    b.Property<long?>("EventRecordId")
+                    b.ToTable("PlaceCategoryRecordPlaceRecord");
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.EventPhotoRecord", b =>
+                {
+                    b.HasBaseType("Evico.Api.Entities.PhotoRecord");
+
+                    b.Property<long>("EventId")
                         .HasColumnType("bigint");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
+                    b.HasIndex("EventId");
 
-                    b.Property<long?>("PlaceRecordId")
+                    b.HasDiscriminator().HasValue(20);
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.EventReviewPhotoRecord", b =>
+                {
+                    b.HasBaseType("Evico.Api.Entities.PhotoRecord");
+
+                    b.Property<long>("ReviewId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+                    b.HasIndex("ReviewId");
 
-                    b.HasIndex("AuthorId");
+                    b.HasDiscriminator().HasValue(50);
+                });
 
-                    b.HasIndex("EventRecordId");
+            modelBuilder.Entity("Evico.Api.Entities.PlacePhotoRecord", b =>
+                {
+                    b.HasBaseType("Evico.Api.Entities.PhotoRecord");
 
-                    b.HasIndex("PlaceRecordId");
+                    b.Property<long>("PlaceId")
+                        .HasColumnType("bigint");
 
-                    b.ToTable("Reviews");
+                    b.HasIndex("PlaceId");
+
+                    b.HasDiscriminator().HasValue(10);
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.PlaceReviewPhotoRecord", b =>
+                {
+                    b.HasBaseType("Evico.Api.Entities.PhotoRecord");
+
+                    b.Property<long>("ReviewId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("PlaceReviewPhotoRecord_ReviewId");
+
+                    b.HasIndex("ReviewId");
+
+                    b.HasDiscriminator().HasValue(40);
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.ProfilePhotoRecord", b =>
+                {
+                    b.HasBaseType("Evico.Api.Entities.PhotoRecord");
+
+                    b.HasDiscriminator().HasValue(30);
+                });
+
+            modelBuilder.Entity("EventCategoryRecordEventRecord", b =>
+                {
+                    b.HasOne("Evico.Api.Entities.EventCategoryRecord", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Evico.Api.Entities.EventRecord", null)
+                        .WithMany()
+                        .HasForeignKey("EventsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EventRecordProfileRecord", b =>
                 {
-                    b.HasOne("Evico.Api.Entity.EventRecord", null)
+                    b.HasOne("Evico.Api.Entities.EventRecord", null)
                         .WithMany()
                         .HasForeignKey("OrganizerEventsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Evico.Api.Entity.ProfileRecord", null)
+                    b.HasOne("Evico.Api.Entities.ProfileRecord", null)
                         .WithMany()
                         .HasForeignKey("OrganizersId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -237,99 +473,211 @@ namespace Evico.Api.Migrations
 
             modelBuilder.Entity("EventRecordProfileRecord1", b =>
                 {
-                    b.HasOne("Evico.Api.Entity.EventRecord", null)
+                    b.HasOne("Evico.Api.Entities.EventRecord", null)
                         .WithMany()
                         .HasForeignKey("ParticipantEventsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Evico.Api.Entity.ProfileRecord", null)
+                    b.HasOne("Evico.Api.Entities.ProfileRecord", null)
                         .WithMany()
                         .HasForeignKey("ParticipantsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Evico.Api.Entity.EventRecord", b =>
+            modelBuilder.Entity("Evico.Api.Entities.EventRecord", b =>
                 {
-                    b.HasOne("Evico.Api.Entity.ExternalPhoto", "Photo")
-                        .WithMany()
-                        .HasForeignKey("PhotoId");
+                    b.HasOne("Evico.Api.Entities.ProfileRecord", "Owner")
+                        .WithMany("OwnEvents")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Evico.Api.Entity.PlaceRecord", "Place")
+                    b.HasOne("Evico.Api.Entities.PlaceRecord", "Place")
                         .WithMany()
                         .HasForeignKey("PlaceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Photo");
+                    b.Navigation("Owner");
 
                     b.Navigation("Place");
                 });
 
-            modelBuilder.Entity("Evico.Api.Entity.ExternalPhoto", b =>
+            modelBuilder.Entity("Evico.Api.Entities.EventReviewRecord", b =>
                 {
-                    b.HasOne("Evico.Api.Entity.PlaceRecord", null)
-                        .WithMany("Photos")
-                        .HasForeignKey("PlaceRecordId");
-
-                    b.HasOne("Evico.Api.Entity.ReviewRecord", null)
-                        .WithMany("Photos")
-                        .HasForeignKey("ReviewRecordId");
-                });
-
-            modelBuilder.Entity("Evico.Api.Entity.PlaceRecord", b =>
-                {
-                    b.HasOne("Evico.Api.Entity.ExternalPhoto", "Photo")
-                        .WithMany()
-                        .HasForeignKey("PhotoId");
-
-                    b.Navigation("Photo");
-                });
-
-            modelBuilder.Entity("Evico.Api.Entity.ProfileRecord", b =>
-                {
-                    b.HasOne("Evico.Api.Entity.ExternalPhoto", "Photo")
-                        .WithMany()
-                        .HasForeignKey("PhotoId");
-
-                    b.Navigation("Photo");
-                });
-
-            modelBuilder.Entity("Evico.Api.Entity.ReviewRecord", b =>
-                {
-                    b.HasOne("Evico.Api.Entity.ProfileRecord", "Author")
-                        .WithMany()
+                    b.HasOne("Evico.Api.Entities.ProfileRecord", "Author")
+                        .WithMany("OwnEventReviews")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Evico.Api.Entity.EventRecord", null)
+                    b.HasOne("Evico.Api.Entities.EventRecord", "Event")
                         .WithMany("Reviews")
-                        .HasForeignKey("EventRecordId");
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Evico.Api.Entity.PlaceRecord", null)
-                        .WithMany("Reviews")
-                        .HasForeignKey("PlaceRecordId");
+                    b.Navigation("Author");
+
+                    b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.PhotoRecord", b =>
+                {
+                    b.HasOne("Evico.Api.Entities.ProfileRecord", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.HasOne("Evico.Api.Entities.EventReviewRecord", null)
+                        .WithMany("Photos")
+                        .HasForeignKey("EventReviewRecordId");
+
+                    b.HasOne("Evico.Api.Entities.PlaceReviewRecord", null)
+                        .WithMany("Photos")
+                        .HasForeignKey("PlaceReviewRecordId");
 
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("Evico.Api.Entity.EventRecord", b =>
+            modelBuilder.Entity("Evico.Api.Entities.PlaceRecord", b =>
                 {
-                    b.Navigation("Reviews");
+                    b.HasOne("Evico.Api.Entities.ProfileRecord", "Owner")
+                        .WithMany("OwnPlaces")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Evico.Api.Entities.PlaceRecord", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId");
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("Evico.Api.Entity.PlaceRecord", b =>
+            modelBuilder.Entity("Evico.Api.Entities.PlaceReviewRecord", b =>
+                {
+                    b.HasOne("Evico.Api.Entities.ProfileRecord", "Author")
+                        .WithMany("OwnPlaceReviews")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Evico.Api.Entities.PlaceRecord", "Place")
+                        .WithMany("Reviews")
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Place");
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.ProfileRecord", b =>
+                {
+                    b.HasOne("Evico.Api.Entities.ProfilePhotoRecord", "Photo")
+                        .WithMany()
+                        .HasForeignKey("PhotoId");
+
+                    b.Navigation("Photo");
+                });
+
+            modelBuilder.Entity("PlaceCategoryRecordPlaceRecord", b =>
+                {
+                    b.HasOne("Evico.Api.Entities.PlaceCategoryRecord", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Evico.Api.Entities.PlaceRecord", null)
+                        .WithMany()
+                        .HasForeignKey("PlacesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.EventPhotoRecord", b =>
+                {
+                    b.HasOne("Evico.Api.Entities.EventRecord", "Event")
+                        .WithMany("Photos")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.EventReviewPhotoRecord", b =>
+                {
+                    b.HasOne("Evico.Api.Entities.EventReviewRecord", "Review")
+                        .WithMany()
+                        .HasForeignKey("ReviewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Review");
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.PlacePhotoRecord", b =>
+                {
+                    b.HasOne("Evico.Api.Entities.PlaceRecord", "Place")
+                        .WithMany("Photos")
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.PlaceReviewPhotoRecord", b =>
+                {
+                    b.HasOne("Evico.Api.Entities.PlaceReviewRecord", "Review")
+                        .WithMany()
+                        .HasForeignKey("ReviewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Review");
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.EventRecord", b =>
                 {
                     b.Navigation("Photos");
 
                     b.Navigation("Reviews");
                 });
 
-            modelBuilder.Entity("Evico.Api.Entity.ReviewRecord", b =>
+            modelBuilder.Entity("Evico.Api.Entities.EventReviewRecord", b =>
                 {
                     b.Navigation("Photos");
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.PlaceRecord", b =>
+                {
+                    b.Navigation("Photos");
+
+                    b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.PlaceReviewRecord", b =>
+                {
+                    b.Navigation("Photos");
+                });
+
+            modelBuilder.Entity("Evico.Api.Entities.ProfileRecord", b =>
+                {
+                    b.Navigation("OwnEventReviews");
+
+                    b.Navigation("OwnEvents");
+
+                    b.Navigation("OwnPlaceReviews");
+
+                    b.Navigation("OwnPlaces");
                 });
 #pragma warning restore 612, 618
         }

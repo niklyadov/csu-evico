@@ -9,15 +9,15 @@ namespace Evico.Api.UseCases.Event.Category;
 
 public class GetEventCategoriesUseCase
 {
-    private readonly EventCategoryService _categoryService;
     private readonly AuthService _authService;
+    private readonly EventCategoryService _categoryService;
 
     public GetEventCategoriesUseCase(EventCategoryService categoryService, AuthService authService)
     {
         _categoryService = categoryService;
         _authService = authService;
     }
-    
+
     public async Task<ActionResult<List<EventCategoryRecord>>> GetAllAsync(ClaimsPrincipal userClaims)
     {
         var currentUserResult = await _authService.GetCurrentUser(userClaims);

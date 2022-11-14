@@ -11,16 +11,17 @@ namespace Evico.Api.UseCases.Event.Category;
 
 public class UpdateEventCategoryUseCase
 {
-    private readonly EventCategoryService _categoryService;
     private readonly AuthService _authService;
+    private readonly EventCategoryService _categoryService;
 
     public UpdateEventCategoryUseCase(EventCategoryService categoryService, AuthService authService)
     {
         _categoryService = categoryService;
         _authService = authService;
     }
-    
-    public async Task<ActionResult<List<EventCategoryRecord>>> UpdateAsync(UpdateEventCategoryInputModel inputModel, ClaimsPrincipal userClaims)
+
+    public async Task<ActionResult<List<EventCategoryRecord>>> UpdateAsync(UpdateEventCategoryInputModel inputModel,
+        ClaimsPrincipal userClaims)
     {
         var currentUserResult = await _authService.GetCurrentUser(userClaims);
         if (currentUserResult.IsFailed)
@@ -31,7 +32,7 @@ public class UpdateEventCategoryUseCase
         if (getCategoryByIdResult.IsFailed)
             return new BadRequestObjectResult(getCategoryByIdResult.GetReport());
         var categoryRecord = getCategoryByIdResult.Value;
-        
+
         var canUpdateCategoryResult = _categoryService.CanView(categoryRecord, currentUser);
         if (canUpdateCategoryResult.IsFailed)
             return new ObjectResult(canUpdateCategoryResult.GetReport())
@@ -39,13 +40,13 @@ public class UpdateEventCategoryUseCase
                 StatusCode = StatusCodes.Status403Forbidden
             };
 
-        if (!String.IsNullOrEmpty(inputModel.Name))
+        if (!string.IsNullOrEmpty(inputModel.Name))
             categoryRecord.Name = inputModel.Name;
 
-        if (!String.IsNullOrEmpty(inputModel.Description))
+        if (!string.IsNullOrEmpty(inputModel.Description))
             categoryRecord.Description = inputModel.Description;
-        
-        if (inputModel.ParentCategoryId.HasValue && inputModel.ParentCategoryId.Value >0)
+
+        if (inputModel.ParentCategoryId.HasValue && inputModel.ParentCategoryId.Value > 0)
         {
             var parentCategoryRecordResult = await _categoryService.GetByIdAsync(inputModel.ParentCategoryId.Value);
             if (parentCategoryRecordResult.IsFailed)
@@ -54,7 +55,7 @@ public class UpdateEventCategoryUseCase
                         $"Failed to set parent category id {inputModel.ParentCategoryId.Value} " +
                         $"to category with id {inputModel.Id}")
                     .CausedBy(parentCategoryRecordResult.Errors);
-                
+
                 return new BadRequestObjectResult(Result.Fail(parentCategoryRecordResultError).GetReport());
             }
 

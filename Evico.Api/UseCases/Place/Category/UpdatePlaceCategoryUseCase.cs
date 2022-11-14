@@ -11,18 +11,19 @@ namespace Evico.Api.UseCases.Place.Category;
 
 public class UpdatePlaceCategoryUseCase
 {
-    private readonly PlaceCategoryService _categoryService;
     private readonly AuthService _authService;
+    private readonly PlaceCategoryService _categoryService;
 
     public UpdatePlaceCategoryUseCase(PlaceCategoryService categoryService, AuthService authService)
     {
         _categoryService = categoryService;
         _authService = authService;
     }
-    
-    public async Task<ActionResult<List<PlaceCategoryRecord>>> UpdateAsync(UpdatePlaceCategoryInputModel inputModel, ClaimsPrincipal userClaims)
+
+    public async Task<ActionResult<List<PlaceCategoryRecord>>> UpdateAsync(UpdatePlaceCategoryInputModel inputModel,
+        ClaimsPrincipal userClaims)
     {
-                var currentUserResult = await _authService.GetCurrentUser(userClaims);
+        var currentUserResult = await _authService.GetCurrentUser(userClaims);
         if (currentUserResult.IsFailed)
             return new UnauthorizedObjectResult(currentUserResult.GetReport());
         var currentUser = currentUserResult.Value;
@@ -31,7 +32,7 @@ public class UpdatePlaceCategoryUseCase
         if (getCategoryByIdResult.IsFailed)
             return new BadRequestObjectResult(getCategoryByIdResult.GetReport());
         var categoryRecord = getCategoryByIdResult.Value;
-        
+
         var canUpdateCategoryResult = _categoryService.CanView(categoryRecord, currentUser);
         if (canUpdateCategoryResult.IsFailed)
             return new ObjectResult(canUpdateCategoryResult.GetReport())
@@ -39,13 +40,13 @@ public class UpdatePlaceCategoryUseCase
                 StatusCode = StatusCodes.Status403Forbidden
             };
 
-        if (!String.IsNullOrEmpty(inputModel.Name))
+        if (!string.IsNullOrEmpty(inputModel.Name))
             categoryRecord.Name = inputModel.Name;
 
-        if (!String.IsNullOrEmpty(inputModel.Description))
+        if (!string.IsNullOrEmpty(inputModel.Description))
             categoryRecord.Description = inputModel.Description;
-        
-        if (inputModel.ParentCategoryId.HasValue && inputModel.ParentCategoryId.Value >0)
+
+        if (inputModel.ParentCategoryId.HasValue && inputModel.ParentCategoryId.Value > 0)
         {
             var parentCategoryRecordResult = await _categoryService.GetByIdAsync(inputModel.ParentCategoryId.Value);
             if (parentCategoryRecordResult.IsFailed)
@@ -54,7 +55,7 @@ public class UpdatePlaceCategoryUseCase
                         $"Failed to set parent category id {inputModel.ParentCategoryId.Value} " +
                         $"to category with id {inputModel.Id}")
                     .CausedBy(parentCategoryRecordResult.Errors);
-                
+
                 return new BadRequestObjectResult(Result.Fail(parentCategoryRecordResultError).GetReport());
             }
 

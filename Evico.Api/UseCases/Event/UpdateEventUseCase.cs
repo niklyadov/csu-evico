@@ -12,9 +12,9 @@ namespace Evico.Api.UseCases.Event;
 public class UpdateEventUseCase
 {
     private readonly AuthService _authService;
+    private readonly EventCategoryService _categoryService;
     private readonly EventService _eventService;
     private readonly PlaceService _placeService;
-    private readonly EventCategoryService _categoryService;
 
     public UpdateEventUseCase(EventService eventService, AuthService authService, PlaceService placeService,
         EventCategoryService categoryService)
@@ -64,10 +64,10 @@ public class UpdateEventUseCase
             eventRecord.Place = place;
         }
 
-        if (!String.IsNullOrEmpty(inputModel.Name))
+        if (!string.IsNullOrEmpty(inputModel.Name))
             eventRecord.Name = inputModel.Name;
 
-        if (!String.IsNullOrEmpty(inputModel.Description))
+        if (!string.IsNullOrEmpty(inputModel.Description))
             eventRecord.Description = inputModel.Description;
 
         if (inputModel.CategoryIds != null)
@@ -82,13 +82,14 @@ public class UpdateEventUseCase
                 if (categoriesResult.IsFailed)
                 {
                     var categoriesResultError =
-                        new Error($"Failed to get categories with ids {String.Join(',', inputModel.CategoryIds)}").CausedBy(
-                            categoriesResult.Errors);
+                        new Error($"Failed to get categories with ids {string.Join(',', inputModel.CategoryIds)}")
+                            .CausedBy(
+                                categoriesResult.Errors);
                     return new BadRequestObjectResult(Result.Fail(categoriesResultError));
                 }
 
                 eventRecord.Categories = categoriesResult.Value;
-            } 
+            }
         }
 
         var updateEventResult = await _eventService.UpdateAsync(eventRecord);

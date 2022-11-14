@@ -13,21 +13,18 @@ public class PlaceService
         _context = context;
     }
 
-    private PlaceQueryBuilder _placeQueryBuilder => new(_context);
+    private PlaceQueryBuilder PlaceQueryBuilder => new(_context);
 
     public async Task<Result<PlaceRecord>> AddAsync(PlaceRecord place)
     {
-        return await Result.Try(async () =>
-        {
-            return await _placeQueryBuilder.AddAsync(place);
-        });
+        return await Result.Try(async () => { return await PlaceQueryBuilder.AddAsync(place); });
     }
 
     public async Task<Result<List<PlaceRecord>>> GetAllAsync()
     {
         return await Result.Try(async () =>
         {
-            return await _placeQueryBuilder
+            return await PlaceQueryBuilder
                 .Include(x => x.Categories)
                 .ToListAsync();
         });
@@ -37,7 +34,7 @@ public class PlaceService
     {
         return await Result.Try(async () =>
         {
-            return await _placeQueryBuilder
+            return await PlaceQueryBuilder
                 .WithId(id)
                 .Include(x => x.Categories)
                 .SingleAsync();
@@ -46,12 +43,12 @@ public class PlaceService
 
     public async Task<Result<PlaceRecord>> UpdateAsync(PlaceRecord place)
     {
-        return await Result.Try(async () => { return await _placeQueryBuilder.UpdateAsync(place); });
+        return await Result.Try(async () => { return await PlaceQueryBuilder.UpdateAsync(place); });
     }
 
     public async Task<Result<PlaceRecord>> DeleteAsync(PlaceRecord place)
     {
-        return await Result.Try(async () => { return await _placeQueryBuilder.DeleteAsync(place); });
+        return await Result.Try(async () => { return await PlaceQueryBuilder.DeleteAsync(place); });
     }
 
     public Result CanView(PlaceRecord place, ProfileRecord? profile)
@@ -72,7 +69,9 @@ public class PlaceService
         if (place.IsDeleted)
             return Result.Fail($"Event with id: {place.Id} was already deleted");
 
-        // todo добавить проверку на роль. модератор тоже должен уметь удалять места
+        if (profile.Role == UserRoles.Moderator)
+            return Result.Ok();
+        
         // todo что будет с событиями если удалить место?
 
         return Result.OkIf(place.OwnerId == profile.Id,
@@ -84,7 +83,8 @@ public class PlaceService
         if (place.IsDeleted)
             return Result.Fail($"Event with id: {place.Id} is deleted");
 
-        // todo добавить проверку на роль. модератор тоже должен уметь изменять места
+        if (profile.Role == UserRoles.Moderator)
+            return Result.Ok();
 
         return Result.OkIf(place.OwnerId == profile.Id,
             "Only owner or moderator can delete this Place");

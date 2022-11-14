@@ -9,8 +9,8 @@ namespace Evico.Api.UseCases.Place.Category;
 
 public class GetPlaceCategoryByIdUseCase
 {
-    private readonly PlaceCategoryService _categoryService;
     private readonly AuthService _authService;
+    private readonly PlaceCategoryService _categoryService;
 
     public GetPlaceCategoryByIdUseCase(PlaceCategoryService categoryService, AuthService authService)
     {
@@ -27,7 +27,7 @@ public class GetPlaceCategoryByIdUseCase
         if (getCategoryByIdResult.IsFailed)
             return new BadRequestObjectResult(getCategoryByIdResult.GetReport());
         var categoryRecord = getCategoryByIdResult.Value;
-        
+
         var canViewCategoryResult = _categoryService.CanView(categoryRecord, currentUser);
         if (canViewCategoryResult.IsFailed)
             return new ObjectResult(canViewCategoryResult.GetReport())
