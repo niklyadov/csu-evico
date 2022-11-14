@@ -32,7 +32,6 @@ function FormPlaceCreate(props) {
         </FormGroup>
         <Button
             onClick={_ => {
-                console.log(place);
                 createPlace(place);
                 setPlace(new Place({}));
             }}
