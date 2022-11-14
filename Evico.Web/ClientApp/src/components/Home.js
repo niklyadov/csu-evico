@@ -55,6 +55,10 @@ function FormEventCreate(props) {
             <Label>Описание</Label>
             <Input id='eventDescription' name='event' placeholder='Опишите Ваше Событие' type='textarea' onChange={e => setEvent({ ...event, description: e.target.value })} />
         </FormGroup>
+        <FormGroup>
+            <Label>Выберите Место</Label>
+            <Input id='eventPlaceId' name='event' placeholder='Укажите ID события :)' type='number' onChange={e => setEvent({ ...event, placeId: e.target.value })} />
+        </FormGroup>
         <Button
             onClick={_ => {
                 createEvent(event);
