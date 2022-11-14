@@ -357,3 +357,8 @@ Evico.Web/appsettings.Development.json
 Evico.Web/ClientApp/package-lock.json
 Evico/Properties/launchSettings.json
 Evico.Web/Properties/launchSettings.json
+.DS_Store
+Evico/appsettings.Development.json
+
+mysql-docker/mysql-data
+minio-docker/minio-data
