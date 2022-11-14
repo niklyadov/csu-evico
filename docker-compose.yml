@@ -1,10 +1,38 @@
 version: '3.8'
 
 services:
+  db:
+    image: mysql:8.0
+    cap_add:
+      - SYS_NICE
+    restart: always
+    environment:
+      - host_cache_size=0
+      - MYSQL_DATABASE=evico_development
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - '3306:3306'
+    volumes:
+        - ./mysql-docker/mysql-data:/var/lib/mysql
+  minio:
+    image: quay.io/minio/minio:RELEASE.2022-11-08T05-27-07Z
+    command: server /data --console-address ":9001"
+    restart: always
+    environment:
+      - MINIO_ROOT_USER=minio
+      - MINIO_ROOT_PASSWORD=minioadmin
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - ./minio-docker/minio-data:/data
   evico-api:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: evico-api
+    volumes:
+      - ./evico-api-docker/appsettings.json:/app/appsettings.json
+      - ./evico-api-docker/logs:/var/log/csu-evico/
     ports:
       - '6661:6661'
