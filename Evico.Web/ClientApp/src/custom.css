@@ -10,7 +10,8 @@
     --color-7: #ffcb5c;
     --color-old-1: #266255;
     --color-old-6: #00c0b0;
-    --color-gray: #cfcfcf;
+    --color-old-gray: #cfcfcf;
+    --color-gray: #d9d9d9;
     --color-white: #fff;
     --color-black: #000;
     /* font */
@@ -18,7 +19,7 @@
     --font-color-dark: #000;
     --font-color-light: #fff;
     /* border */
-    --border-radius: 20px;
+    --border-radius: 12px;
     --border-color-dark: #000;
     --border-color-light: #fff;
     /* margin */
@@ -94,6 +95,16 @@
         ". . .";
 
 }
+#main-home {
+
+    grid-template-areas:
+        ". . . . ."
+        ". h h h ."
+        ". h h h ."
+        ". h h h ."
+        ". . . . .";
+
+}
 #main-setting {
 
     grid-template-areas: 
@@ -117,6 +128,24 @@
     grid-template-columns: 0.35fr 1fr 1fr 1fr 1fr 1fr 1fr;
 
 }
+
+#section-home {
+
+    display: grid;
+    height: var(--height-max);
+    grid-template-areas:
+        "i i i"
+        "l l l";
+    grid-template-rows: 1fr var(--height-min);
+
+}
+#section-home__list {
+
+    grid-area: l;
+    background-color: var(--color-1);
+
+}
+
 #section-navigate {
 
     display: flex;
@@ -124,6 +153,7 @@
     justify-content: space-evenly;
 
 }
+
 #header-attachment {
 
     display: grid;
@@ -167,6 +197,12 @@
     grid-area: w;
 
 }
+
+#div-activity__list {
+
+    grid-area: l;
+
+}
 #div-compilation__list {
 
     grid-area: c;
@@ -185,6 +221,11 @@
 #div-devide__test {
 
     grid-area: e;
+
+}
+#div-devide__home {
+
+    grid-area: h;
 
 }
 #div-devide__setting {
@@ -315,7 +356,7 @@ svg:hover > .g-rotate {
 }
 .button:hover {
 
-    background-color: var(--color-6);
+    background-color: var(--color-4);
 
 }
 .button-svg:hover > .svg > .g-rotate {
@@ -375,6 +416,7 @@ svg:hover > .g-rotate {
 .div-devide__list_item {
 
     display: grid;
+    border-top: 2px solid var(--color-gray);
     grid-template-areas: "p . s";
     grid-template-columns: 4fr 1fr 3fr;
 
@@ -418,8 +460,8 @@ svg:hover > .g-rotate {
 
 .div-devide__folder_item {
 
+    padding-left: 0.35em;
     color: var(--color-white);
-    text-align: center;
 
 }
 .div-devide__folder_item:hover {
@@ -431,8 +473,8 @@ svg:hover > .g-rotate {
 }
 .div-devide__folder_list {
 
-    display: flex;
     grid-area: l;
+    overflow-y: auto;
     flex-direction: column;
     background-color: var(--color-6);
 
@@ -465,6 +507,12 @@ svg:hover > .g-rotate {
     height: var(--height-max);
     align-items: center;
     justify-content: space-evenly;
+
+}
+.div-panel > * {
+
+    margin: 5px;
+    border-radius: var(--border-radius);
 
 }
 
