@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  evico-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: evico-api
+    ports:
+      - '6661:6661'
