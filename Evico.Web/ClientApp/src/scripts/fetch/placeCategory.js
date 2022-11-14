@@ -2,10 +2,6 @@ import { PlaceCategory } from "../../components/classes/PlaceCategory";
 import config from "../../config"
 
 const token = "token";
-const placeCategory = {
-    "name": "name",
-    "description": "desc",
-}
 
 
 /**
