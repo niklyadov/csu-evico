@@ -5,7 +5,7 @@ import Progress from "../../elements/Progress/Progress";
 import { ButtonSvg } from "../../elements/Buttons/Button";
 import { SvgSetting } from "../../elements/Svg/Svg";
 import { getEventsList } from "../../../scripts/fetch/event";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Compilation(props) {
 
@@ -13,13 +13,13 @@ export default function Compilation(props) {
 
     const [items, setItems] = useState([]);
 
-    (async () => {
+    useEffect(async () => {
 
         const l = await getEventsList();
 
         setItems(l);
 
-    })();
+    }, []);
 
     // const items = [] ?? [
 
@@ -40,7 +40,7 @@ export default function Compilation(props) {
             id='div-devide__compilation'
             header='Подборка'
             footer={<Setting />}
-            section={<div className="div-list">{items.map((item, index) => DevideListItem({ ...item, key: index, preview: <Preview {...item}/> }))}</div>}
+            section={<div className="div-list">{items.map((item, index) => DevideListItem({ ...item, key: index, preview: <Preview {...item} title={item.name} /> }))}</div>}
         />
     </Main>
 

@@ -45,6 +45,7 @@ export const createEvent = function () {
 
 // Get list
 export const getEventsList = function () {
+    console.log('gel');
     return new Promise(function(resolve, reject) {
         let eventsList = [];
         return fetch(`${config.api}event`, {
