@@ -1,24 +1,14 @@
-import { Event } from "../../components/classes/Event";
+import { EventReview } from "../../components/classes/EventReview";
 import config from "../../config"
 
 const token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImY1YmJjYmM5LWJlYjctNDBlZS05YzdjLTE3YzY2Mjg3OWVmOCIsInN1YiI6IjEiLCJuYW1lIjoiTmlraXRhX2hvdGRvZyIsImVtYWlsIjoiIiwianRpIjoiMjhiNzBjNTgtYWQxNy00OWNlLWJmOTEtOGVhM2JkZDFjY2UzIiwibmJmIjoxNjY4NDEzNTY3LCJleHAiOjE2NjkwMTgzNjcsImlhdCI6MTY2ODQxMzU2NywiaXNzIjoiQ1NVLUVWSUNPIiwiYXVkIjoiQ1NVLUVWSUNPIn0.pPV-ojMNwAIyo4SB3tlja002xYvMV4JUEInhwwagHhmu_e1TxBeSeGlvxxn_dk0UQoNHNn6B9BnSm_22GstQOA";
-class EventRecord{
-    constructor(id, placeId, start, end, name, description){
-        this.id = id;
-        this.placeId = placeId;
-        this.start = start;
-        this.end = end;
-        this.name = name;
-        this.description = description;
-    }
-}
-const eventRecord = new EventRecord(0,1,"2022-11-07T10:59:09.875Z","2022-11-07T10:59:09.875Z","Text","Description");
-const changedEventRecord = new EventRecord(0,1,"2022-11-07T10:59:09.875Z","2022-11-07T10:59:09.875Z","New Text","New Description");
+const eventReview = new EventReview("Comment21312313123123123123",1);
+const changedEventReview = {"id": 1,"comment":"12321323123Comment", "rate":2};
 
 
-export const createEvent = function () {
+export const createEventReview = function (eventId) {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}event`, {
+        return fetch(`${config.api}event/${eventId}/review`, {
             method: "POST",
             mode: 'cors',
             headers: {
@@ -26,7 +16,7 @@ export const createEvent = function () {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(eventRecord)
+            body: JSON.stringify(eventReview)
         })
         .then(response => response.json())
         .then(data => resolve(data));
@@ -34,10 +24,10 @@ export const createEvent = function () {
 }
 
 
-export const getEventsList = function () {
+export const getReviewsByEventId = function (eventId) {
     return new Promise(async (resolve, reject) => {
-        let eventsList = [];
-        return fetch(`${config.api}event`, {
+        let reviewsList = [];
+        return fetch(`${config.api}event/${eventId}/review`, { 
             method: "GET",
             mode: 'cors',
             headers: {
@@ -47,20 +37,19 @@ export const getEventsList = function () {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-            for (const event of data){
-                let eventObj = new Event(event);
-                eventsList.push(eventObj);
+            for (const review of data){
+                let reviewObj = new EventReview(review);
+                reviewsList.push(reviewObj);
             }
-            resolve(eventsList);
+            resolve(reviewsList);
         });
     });
 }
 
 
-export const getEventById = function (eventId) {
+export const getReviewByIdByEventId = function (eventId, reviewId) {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}event/${eventId}`, {
+        return fetch(`${config.api}event/${eventId}/review/${reviewId}`, { 
             method: "GET",
             mode: 'cors',
             headers: {
@@ -70,16 +59,17 @@ export const getEventById = function (eventId) {
         })
         .then(response => response.json())
         .then(data => {
-            let eventRecord = new Event(data);
-            resolve(eventRecord);
+            let reviewObj = new EventReview(data);
+            resolve(reviewObj);
         });
     });
+
 }
 
 
-export const changeEvent = function () {
+export const changeEventReview = function (eventId) {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}event`, {
+        return fetch(`${config.api}event/${eventId}/review`, {
             method: "PUT",
             mode: 'cors',
             headers: {
@@ -87,19 +77,20 @@ export const changeEvent = function () {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(changedEventRecord)
+            body: JSON.stringify(changedEventReview)
         })
         .then(response => response.json())
         .then(data => resolve(data));
+        
     });
 }
 
 
-export const deleteEventById = function (eventId) {
+export const deleteReviewById = function (eventId, reviewId) {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}event/${eventId}`, {
+        return fetch(`${config.api}event/${eventId}/review/${reviewId}`, { 
             method: "DELETE",
-            mode: "cors",
+            mode: 'cors',
             headers: {
                 "accept": "text/plain",
                 "Authorization": `Bearer ${token}`

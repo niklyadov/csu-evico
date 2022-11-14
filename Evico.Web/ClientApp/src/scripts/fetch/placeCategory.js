@@ -1,16 +1,16 @@
-import { EventCategory } from "../../components/classes/EventCategory";
+import { PlaceCategory } from "../../components/classes/PlaceCategory";
 import config from "../../config"
 
 const token = "token";
-const eventCategory = {
+const placeCategory = {
     "name": "name",
     "description": "desc",
 }
 
 
-export const createEventCategory = function () {
+export const createPlaceCategory = function () {
     return new Promise(async (resolve, reject) => {
-        return fetch (`${config.api}eventcategory`, {
+        return fetch (`${config.api}placecategory`, {
             method: "POST",
             mode: 'cors',
             headers: {
@@ -18,7 +18,7 @@ export const createEventCategory = function () {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(eventCategory)
+            body: JSON.stringify(placeCategory)
         })
         .then(response => response.json())
         .then(data => resolve(data));
@@ -26,10 +26,10 @@ export const createEventCategory = function () {
 }
 
 
-export const getEventCategoriesList = function () {
+export const getPlaceCategoriesList = function () {
     return new Promise(async (resolve, reject) => {
         let categoriesList = [];
-        return fetch(`${config.api}eventcategory`, {
+        return fetch(`${config.api}placecategory`, {
             method: "GET",
             mode: 'cors',
             headers: {
@@ -40,7 +40,7 @@ export const getEventCategoriesList = function () {
         .then(response => response.json())
         .then(data => {
             for (const category of data){
-                let categoryObj = new EventCategory(category);
+                let categoryObj = new PlaceCategory(category);
                 categoriesList.push(categoryObj);
             }
             resolve(categoriesList);
@@ -49,9 +49,9 @@ export const getEventCategoriesList = function () {
 }
 
 
-export const getEventCategoryById = function (categoryId) {
+export const getPlaceCategoryById = function (categoryId) {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}eventcategory/${categoryId}`, {
+        return fetch(`${config.api}placecategory/${categoryId}`, {
             method: "GET",
             mode: 'cors',
             headers: {
@@ -61,16 +61,16 @@ export const getEventCategoryById = function (categoryId) {
         })
         .then(response => response.json())
         .then(data => {
-            let categoryObj = new EventCategory(data);
+            let categoryObj = new PlaceCategory(data);
             resolve(categoryObj);
         });
     });
 }
 
 
-export const changeEventCategory = function () {
+export const changePlaceCategory = function () {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}eventcategory`, {
+        return fetch(`${config.api}placecategory`, {
             method: "PUT",
             mode: 'cors',
             headers: {
@@ -84,9 +84,9 @@ export const changeEventCategory = function () {
 }
 
 
-export const deleteEventCategoryById = function (categoryId) {
+export const deletePlaceCategoryById = function (categoryId) {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}eventcategory/${categoryId}`, {
+        return fetch (`${config.api}placecategory/${categoryId}`, {
             method: "DELETE",
             mode: 'cors',
             headers: {

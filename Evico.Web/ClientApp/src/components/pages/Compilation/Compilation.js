@@ -4,39 +4,43 @@ import DevideListItem from "../../elements/Devide/DevideList/DevideListItem";
 import Progress from "../../elements/Progress/Progress";
 import { ButtonSvg } from "../../elements/Buttons/Button";
 import { SvgSetting } from "../../elements/Svg/Svg";
+import { getEventsList } from "../../../scripts/fetch/event";
+import { useEffect, useState } from "react";
 
 export default function Compilation(props) {
 
     /** @type {[import("../../elements/Devide/DevideList/DevideListItem").TDevideListItem]} */
-    const items = [
 
-        {
-            rait: 97,
-            watchers: 1241,
-            participant: 98,
-            title: 'Мероприятие',
-        },
-        {
-            rait: 73,
-            watchers: 12,
-            participant: 35,
-            title: 'Поход'
-        },
-        {
-            rait: 100,
-            watchers: 74302,
-            participant: 100,
-            title: 'Чемпионат'
-        },
+    const [items, setItems] = useState([]);
 
-    ];
+    useEffect(async () => {
+
+        const l = await getEventsList();
+
+        setItems(l);
+
+    }, []);
+
+    // const items = [] ?? [
+
+        // {
+        //     title: 'Мероприятие',
+        // },
+        // {
+        //     title: 'Поход'
+        // },
+        // {
+        //     title: 'Чемпионат'
+        // },
+
+    // ];
 
     return <Main id='main-compilation'>
         <DevideList
             id='div-devide__compilation'
             header='Подборка'
             footer={<Setting />}
-            section={<div className="div-list">{items.map((item, index) => DevideListItem({ ...item, key: index, preview: <Preview {...item}/> }))}</div>}
+            section={<div className="div-list">{items.map((item, index) => DevideListItem({ ...item, key: index, preview: <Preview {...item} title={item.name} /> }))}</div>}
         />
     </Main>
 
@@ -45,7 +49,7 @@ export default function Compilation(props) {
 function Stat(props) {
 
     return <div className="div-devide__list_stat">
-        <p className="p-devide__list_watchers">Наблюдателей: {props.watchers ?? 0}</p>
+        <p className="p-devide__list_watchers">Подписчики: {props.watchers ?? 0}</p>
     </div>;
 
 };

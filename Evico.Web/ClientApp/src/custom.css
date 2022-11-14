@@ -358,7 +358,7 @@ svg:hover > .g-rotate {
     text-align: center;
     flex-direction: column;
     justify-content: center;
-    background-color: var(--color-6);
+    background-color: var(--color-1);
 
 }
 .div-devide__footer {
@@ -413,6 +413,42 @@ svg:hover > .g-rotate {
 .div-devide__list_participant {
 
     grid-area: p;
+
+}
+
+.div-devide__folder_item {
+
+    color: var(--color-white);
+    text-align: center;
+
+}
+.div-devide__folder_item:hover {
+
+    color: var(--color-black);
+    cursor: pointer;
+    background-color: var(--color-white);
+
+}
+.div-devide__folder_list {
+
+    display: flex;
+    grid-area: l;
+    flex-direction: column;
+    background-color: var(--color-6);
+
+}
+.div-devide__folder_section {
+
+    width: var(--width-max);
+    height: var(--height-max);
+    display: grid;
+    grid-template-areas:
+        "l s"
+        "l s"
+        "l s"
+        "l s"
+        "l s";
+    grid-template-columns: 0.25fr 1fr;
 
 }
 
