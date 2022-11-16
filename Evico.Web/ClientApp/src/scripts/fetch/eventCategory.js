@@ -20,7 +20,8 @@ export const createEventCategory = function (eventCategory) {
             body: JSON.stringify(eventCategory)
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }
 
@@ -43,7 +44,8 @@ export const getEventCategoriesList = function () {
                 categoriesList.push(categoryObj);
             }
             resolve(categoriesList);
-        });
+        })
+        .catch(error => reject(error));
     });
 }
 
@@ -62,7 +64,8 @@ export const getEventCategoryById = function (categoryId) {
         .then(data => {
             let categoryObj = new EventCategory(data);
             resolve(categoryObj);
-        });
+        })
+        .catch(error => reject(error));
     });
 }
 
@@ -82,7 +85,8 @@ export const changeEventCategory = function (changedEventCategory) {
             body: JSON.stringify(changedEventCategory)
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }
 
@@ -98,6 +102,7 @@ export const deleteEventCategoryById = function (categoryId) {
             }
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }

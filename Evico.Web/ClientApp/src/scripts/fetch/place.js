@@ -23,7 +23,8 @@ export const createPlace = function (placeRecord) {
         .then(data => {
             console.log(data);
             resolve(data);
-        });
+        })
+        .catch(error => reject(error));
     });
 }
 
@@ -46,7 +47,8 @@ export const getPlacesList = function () {
                 placesList.push(placeObj);
             }
             resolve(placesList);
-        });
+        })
+        .catch(error => reject(error));
     });
 }
 
@@ -65,7 +67,8 @@ export const getPlaceById = function (placeId) {
         .then(data => {
             let placeObj = new Place(data);
             resolve(placeObj);
-        });
+        })
+        .catch(error => reject(error));
     });
 }
 
@@ -86,7 +89,8 @@ export const changePlace = function (changedPlaceRecord) {
             body: JSON.stringify(changedPlaceRecord)
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }
 
@@ -102,7 +106,8 @@ export const deletePlaceById = function (placeId) {
             }
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }
 
@@ -125,7 +130,8 @@ export const getUserPlacesList = function () {
                 placesList.push(placeObj);
             }
             resolve(placesList);
-        });
+        })
+        .catch(error => reject(error));
     })
 }
 
@@ -144,6 +150,7 @@ export const getUserPlaceById = function (placeId) {
         .then(data => {
             let placeObj = new Place(data);
             resolve(placeObj);
-        });
+        })
+        .catch(error => reject(error));
     })
 }

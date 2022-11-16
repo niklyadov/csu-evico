@@ -21,7 +21,8 @@ export const createPlaceCategory = function (placeCategory) {
             body: JSON.stringify(placeCategory)
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }
 
@@ -44,7 +45,8 @@ export const getPlaceCategoriesList = function () {
                 categoriesList.push(categoryObj);
             }
             resolve(categoriesList);
-        });
+        })
+        .catch(error => reject(error));
     });
 }
 
@@ -63,7 +65,8 @@ export const getPlaceCategoryById = function (categoryId) {
         .then(data => {
             let categoryObj = new PlaceCategory(data);
             resolve(categoryObj);
-        });
+        })
+        .catch(error => reject(error));
     });
 }
 
@@ -83,7 +86,8 @@ export const changePlaceCategory = function (changedPlaceCategory) {
             body: JSON.stringify(changedPlaceCategory)
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }
 
@@ -99,6 +103,7 @@ export const deletePlaceCategoryById = function (categoryId) {
             }
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }
