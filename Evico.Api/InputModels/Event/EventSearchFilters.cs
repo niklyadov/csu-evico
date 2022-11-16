@@ -17,6 +17,7 @@ public class EventSearchFilters : BaseSearchInputModel
         ErrorMessage = "Invalid patten. Valid pattern: '1,2,99'.")]
     [StringLength(64)]
     public String? Organizers { get; set; }
+    [Range(1, Int32.MaxValue)]
     public long? OwnerId { get; set; }
     public EventSearchSortType SortBy { get; set; }
         = EventSearchSortType.Id;
