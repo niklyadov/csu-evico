@@ -107,4 +107,11 @@ public class EventQueryBuilder : QueryBuilder<EventRecord, ApplicationContext>
         
         return this;
     }
+
+    public EventQueryBuilder WithOwnerId(long filtersOwnerId)
+    {
+        Query = Query.Where(e => e.OwnerId == filtersOwnerId);
+        
+        return this;
+    }
 }

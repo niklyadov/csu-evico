@@ -36,6 +36,7 @@ public class EventService
 
             eventsQueryBuilder = WithSearchQueryFilter(eventsQueryBuilder, filters);
             eventsQueryBuilder = WithPlaceId(eventsQueryBuilder, filters);
+            eventsQueryBuilder = WithOwnerId(eventsQueryBuilder, filters);
             eventsQueryBuilder = WithStartDateFilter(eventsQueryBuilder, filters);
             eventsQueryBuilder = WithEndDateFilter(eventsQueryBuilder, filters);
             eventsQueryBuilder = WithOrganizersFilter(eventsQueryBuilder, filters);
@@ -65,6 +66,16 @@ public class EventService
         if (filters.PlaceId.HasValue)
         {
             return queryBuilder.WithPlaceId(filters.PlaceId.Value);
+        }
+        
+        return queryBuilder;
+    }
+    
+    private EventQueryBuilder WithOwnerId(EventQueryBuilder queryBuilder, EventSearchFilters filters)
+    {
+        if (filters.OwnerId.HasValue)
+        {
+            return queryBuilder.WithOwnerId(filters.OwnerId.Value);
         }
         
         return queryBuilder;
