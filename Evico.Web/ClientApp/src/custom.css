@@ -461,8 +461,8 @@ svg:hover > .g-rotate {
 }
 .div-panel {
 
-    display: flex;
     height: var(--height-max);
+    display: flex;
     align-items: center;
     justify-content: space-evenly;
 
@@ -490,7 +490,7 @@ body {
 
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    /* overflow: hidden; */
     white-space: nowrap;
     font-family: var(--font-family);
     text-overflow: clip;

@@ -13,9 +13,9 @@ export default function Compilation(props) {
 
     const [items, setItems] = useState([]);
 
-    useEffect(async () => {
+    useEffect(() => {
 
-        const l = await getEventsList();
+        const l = getEventsList();
 
         setItems(l);
 
