@@ -1,7 +1,8 @@
 import { EventCategory } from "../../components/classes/EventCategory";
-import config from "../../config"
+import config from "../../config";
+import { errorHanlde } from "./errors";
 
-const token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImY1YmJjYmM5LWJlYjctNDBlZS05YzdjLTE3YzY2Mjg3OWVmOCIsInN1YiI6IjEiLCJuYW1lIjoiTmlraXRhX2hvdGRvZyIsImVtYWlsIjoiIiwianRpIjoiMjhiNzBjNTgtYWQxNy00OWNlLWJmOTEtOGVhM2JkZDFjY2UzIiwibmJmIjoxNjY4NDEzNTY3LCJleHAiOjE2NjkwMTgzNjcsImlhdCI6MTY2ODQxMzU2NywiaXNzIjoiQ1NVLUVWSUNPIiwiYXVkIjoiQ1NVLUVWSUNPIn0.pPV-ojMNwAIyo4SB3tlja002xYvMV4JUEInhwwagHhmu_e1TxBeSeGlvxxn_dk0UQoNHNn6B9BnSm_22GstQOA";
+const token = config.bearerToken;
 
 /**
  * 
@@ -21,7 +22,7 @@ export const createEventCategory = function (eventCategory) {
         })
         .then(response => response.json())
         .then(data => resolve(data))
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -45,7 +46,7 @@ export const getEventCategoriesList = function () {
             }
             resolve(categoriesList);
         })
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -65,7 +66,7 @@ export const getEventCategoryById = function (categoryId) {
             let categoryObj = new EventCategory(data);
             resolve(categoryObj);
         })
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -86,7 +87,7 @@ export const changeEventCategory = function (changedEventCategory) {
         })
         .then(response => response.json())
         .then(data => resolve(data))
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -103,6 +104,6 @@ export const deleteEventCategoryById = function (categoryId) {
         })
         .then(response => response.json())
         .then(data => resolve(data))
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
