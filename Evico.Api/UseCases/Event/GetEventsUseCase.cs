@@ -39,4 +39,29 @@ public class GetEventsUseCase
 
         return new OkObjectResult(searchResult.Value);
     }
+    
+    public async Task<ActionResult<List<EventRecord>>> SearchMyAsync(EventSearchFilters filters, 
+        ClaimsPrincipal claimsPrincipal)
+    {
+        var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
+        if (currentUserResult.IsFailed)
+            return new UnauthorizedObjectResult(currentUserResult.GetReport());
+        var currentUser = currentUserResult.Value;
+
+        var canViewAllResult = _eventService.CanViewAll(currentUser);
+        if (canViewAllResult.IsFailed)
+            return new ObjectResult(canViewAllResult.GetReport())
+            {
+                StatusCode = StatusCodes.Status403Forbidden
+            };
+
+        filters.OwnerId = currentUser.Id;
+        
+        var searchResult = await _eventService.SearchAsync(filters);
+
+        if (searchResult.IsFailed)
+            return new BadRequestObjectResult(searchResult.GetReport());
+
+        return new OkObjectResult(searchResult.Value);
+    }
 }
