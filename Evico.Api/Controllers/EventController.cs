@@ -57,8 +57,14 @@ public class EventController : BaseController
     [HttpGet]
     public async Task<ActionResult<List<EventRecord>>> Search([FromQuery] EventSearchFilters filters)
     {
-        //return await _getEventsUseCase.GetAllAsync(User);
         return await _getEventsUseCase.SearchAsync(filters, User);
+    }
+    
+    [AllowAnonymous]
+    [HttpGet("my")]
+    public async Task<ActionResult<List<EventRecord>>> GetMyOnly([FromQuery] EventSearchFilters filters)
+    {
+        return await _getEventsUseCase.SearchMyAsync(filters, User);
     }
 
     [AllowAnonymous]
