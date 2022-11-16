@@ -1,5 +1,6 @@
 import { PlaceCategory } from "../../components/classes/PlaceCategory";
-import config from "../../config"
+import config from "../../config";
+import { errorHanlde } from "./errors";
 
 const token = "token";
 
@@ -22,7 +23,7 @@ export const createPlaceCategory = function (placeCategory) {
         })
         .then(response => response.json())
         .then(data => resolve(data))
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -46,7 +47,7 @@ export const getPlaceCategoriesList = function () {
             }
             resolve(categoriesList);
         })
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -66,7 +67,7 @@ export const getPlaceCategoryById = function (categoryId) {
             let categoryObj = new PlaceCategory(data);
             resolve(categoryObj);
         })
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -87,7 +88,7 @@ export const changePlaceCategory = function (changedPlaceCategory) {
         })
         .then(response => response.json())
         .then(data => resolve(data))
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -104,6 +105,6 @@ export const deletePlaceCategoryById = function (categoryId) {
         })
         .then(response => response.json())
         .then(data => resolve(data))
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }

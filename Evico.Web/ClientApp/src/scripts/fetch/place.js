@@ -1,5 +1,6 @@
 import { Place } from "../../components/classes/Place";
-import config from "../../config"
+import config from "../../config";
+import { errorHanlde } from "./errors";
 
 const token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjUyZWVlYWNkLWNiOTMtNGE4Yy05ZjFiLTRmNTBlNTVjZmU3MyIsInN1YiI6IjEiLCJuYW1lIjoiTmlraXRhX2hvdGRvZyIsImVtYWlsIjoiIiwianRpIjoiOWMzNjZjNTctZTlhNC00ODg0LTkwMDUtYWY5MDAwNDE4Mzc5IiwibmJmIjoxNjY4MTU2MzM3LCJleHAiOjE2Njg3NjExMzcsImlhdCI6MTY2ODE1NjMzNywiaXNzIjoiQ1NVLUVWSUNPIiwiYXVkIjoiQ1NVLUVWSUNPIn0.VEAw-QDPRCIQcdqVnRIXmyXrlfm_RE4EYxw-X2dVeomNL7EBDAV5Kn7SzfpZOkDat9Ho1uHfdNkSGm06ZXq_4w";
 
@@ -24,7 +25,7 @@ export const createPlace = function (placeRecord) {
             console.log(data);
             resolve(data);
         })
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -48,7 +49,7 @@ export const getPlacesList = function () {
             }
             resolve(placesList);
         })
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -68,7 +69,7 @@ export const getPlaceById = function (placeId) {
             let placeObj = new Place(data);
             resolve(placeObj);
         })
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -90,7 +91,7 @@ export const changePlace = function (changedPlaceRecord) {
         })
         .then(response => response.json())
         .then(data => resolve(data))
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -107,7 +108,7 @@ export const deletePlaceById = function (placeId) {
         })
         .then(response => response.json())
         .then(data => resolve(data))
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -131,7 +132,7 @@ export const getUserPlacesList = function () {
             }
             resolve(placesList);
         })
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     })
 }
 
@@ -151,6 +152,6 @@ export const getUserPlaceById = function (placeId) {
             let placeObj = new Place(data);
             resolve(placeObj);
         })
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     })
 }
