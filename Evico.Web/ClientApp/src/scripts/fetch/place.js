@@ -110,7 +110,7 @@ export const deletePlaceById = function (placeId) {
 export const getUserPlacesList = function () {
     return new Promise (async (resolve, reject) => {
         let placesList = [];
-        return fetch(`${config.api}place/`, {
+        return fetch(`${config.api}place/my`, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -125,6 +125,25 @@ export const getUserPlacesList = function () {
                 placesList.push(placeObj);
             }
             resolve(placesList);
+        });
+    })
+}
+
+
+export const getUserPlaceById = function (placeId) {
+    return new Promise (async (resolve, reject) => {
+        return fetch(`${config.api}place/my/${placeId}`, {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                "accept": "text/plain",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            let placeObj = new Place(data);
+            resolve(placeObj);
         });
     })
 }

@@ -96,3 +96,45 @@ export const deleteEventById = function (eventId) {
         .then(data => resolve(data));
     });
 }
+
+
+export const getUserEventsList = function () {
+    return new Promise (async (resolve, reject) => {
+        let eventsList = [];
+        return fetch(`${config.api}event/my`, {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                "accept": "text/plain",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            for (const event of data){
+                let eventObj = new Event(event);
+                eventsList.push(eventObj);
+            }
+            resolve(eventsList);
+        });
+    })
+}
+
+
+export const getUserEventById = function (eventId) {
+    return new Promise (async (resolve, reject) => {
+        return fetch(`${config.api}event/my/${eventId}`, {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                "accept": "text/plain",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            let eventObj = new Event(data);
+            resolve(eventObj);
+        });
+    })
+}
