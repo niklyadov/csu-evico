@@ -105,3 +105,26 @@ export const deletePlaceById = function (placeId) {
         .then(data => resolve(data));
     });
 }
+
+
+export const getUserPlacesList = function () {
+    return new Promise (async (resolve, reject) => {
+        let placesList = [];
+        return fetch(`${config.api}place/`, {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                "accept": "text/plain",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            for (const place of data){
+                let placeObj = new Place(place);
+                placesList.push(placeObj);
+            }
+            resolve(placesList);
+        });
+    })
+}
