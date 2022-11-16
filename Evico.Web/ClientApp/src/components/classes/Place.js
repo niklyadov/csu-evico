@@ -58,7 +58,7 @@ export class Place {
 
     /** @param {Place} args */
     constructor(args) {
-        console.log(args);
+    
         Object.keys(this).forEach(k => args[k] !== undefined ? this[k] = args[k] : 0);
 
     };
