@@ -15,4 +15,5 @@ public class AddPlaceInputModel
     [StringLength(1024)] public string Description { get; set; } = string.Empty;
 
     public long? ParentId { get; set; }
+    public List<long>? CategoryIds { get; set; }
 }
