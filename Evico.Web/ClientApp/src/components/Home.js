@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, FormGroup, Input, Label, ListGroup, ListGroupItem } from 'reactstrap';
-import config from '../config';
 import { createEvent, deleteEventById, getEventsList } from '../scripts/fetch/event';
-import { createPlace, deletePlaceById } from '../scripts/fetch/place';
-import { Event } from './classes/Event';
-import { Place } from './classes/Place';
+import { createPlace, deletePlaceById, getPlacesList } from '../scripts/fetch/place';
 
 export function Home(props) {
 
-    console.log(config);
-
     return <div>
 
-        <ListPlace places={[{ name: 'Ресторан' }, { name: 'sqwdfdvbfrntgf' }]} />
-        <ListEvent events={[{ name: 'Пати' }]} />
+        <ListPlace />
+        <ListEvent />
         <FormPlaceCreate />
         <FormEventCreate />
 
@@ -27,7 +22,7 @@ function PlaceItem(props) {
         <h4>{props.name}</h4>
         <Button>Изменить</Button>
         <Button
-            onClick={deletePlaceById(props.id)}
+            onClick={_ => deletePlaceById(props.id)}
         >Удалить</Button>
     </div>;
 
@@ -38,7 +33,7 @@ function EventItem(props) {
         <h4>{props.name}</h4>
         <Button>Изменить</Button>
         <Button
-            onClick={deleteEventById(props.id)}
+            onClick={_ => deleteEventById(props.id)}
         >Удалить</Button>
     </div>;
 
@@ -49,15 +44,15 @@ function ListPlace(props) {
 
     useEffect(() => {
 
-        const l = getEventsList() ?? [];
+        // const l = getPlacesList() ?? [];
 
-        setList(l);
+        setList([]);
 
     }, []);
 
     return <ListGroup>
         <Label>Места</Label>
-        {props?.places?.map((p, key) =>
+        {list?.map((p, key) =>
             <ListGroupItem key={key}>
                 {PlaceItem({ ...p })}
             </ListGroupItem>)}
@@ -66,19 +61,19 @@ function ListPlace(props) {
 };
 function ListEvent(props) {
 
-    // const [list, setList] = useState([]);
+    const [list, setList] = useState([]);
 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     const l = getEventsList() ?? [];
+        // const l = getEventsList() ?? [];
 
-    //     setItems(l);
+        setList([]);
 
-    // }, []);
+    }, []);
 
     return <ListGroup>
         <Label>Мероприятия</Label>
-        {props?.events?.map((e, key) => <ListGroupItem key={key}>{EventItem({...e })}</ListGroupItem>)}
+        {list?.map((e, key) => <ListGroupItem key={key}>{EventItem({...e })}</ListGroupItem>)}
     </ListGroup>;
 
 };
