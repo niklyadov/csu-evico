@@ -3,7 +3,6 @@ import { Route } from 'react-router';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { AuthDevide } from './components/pages/Auth/Auth';
-
 import './custom.css'
 import './scripts/document.js';
 

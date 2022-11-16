@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, FormGroup, Input, Label, ListGroup, ListGroupItem } from 'reactstrap';
-import { createEvent } from '../scripts/fetch/event';
-import { createPlace } from '../scripts/fetch/place';
+import config from '../config';
+import { createEvent, deleteEventById, getEventsList } from '../scripts/fetch/event';
+import { createPlace, deletePlaceById } from '../scripts/fetch/place';
+import { Event } from './classes/Event';
+import { Place } from './classes/Place';
 
 export function Home(props) {
+
+    console.log(config);
 
     return <div>
 
@@ -16,39 +21,46 @@ export function Home(props) {
 
 };
 
-function Place(props) {
+function PlaceItem(props) {
 
     return <div className='div-panel' key={props.key}>
         <h4>{props.name}</h4>
         <Button>Изменить</Button>
-        <Button>Удалить</Button>
+        <Button
+            onClick={deletePlaceById(props.id)}
+        >Удалить</Button>
     </div>;
 
 };
-function Event(props) {
+function EventItem(props) {
 
     return <div className='div-panel' key={props.key}>
         <h4>{props.name}</h4>
         <Button>Изменить</Button>
-        <Button>Удалить</Button>
+        <Button
+            onClick={deleteEventById(props.id)}
+        >Удалить</Button>
     </div>;
 
 };
 function ListPlace(props) {
 
-    // const [list, setList] = useState([]);
+    const [list, setList] = useState([]);
 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     const l = getEventsList() ?? [];
+        const l = getEventsList() ?? [];
 
-    //     setItems(l);
+        setList(l);
 
-    // }, []);
+    }, []);
 
     return <ListGroup>
         <Label>Места</Label>
-        {props?.places?.map((p, key) => <ListGroupItem key={key}>{Place({ ...p })}</ListGroupItem>)}
+        {props?.places?.map((p, key) =>
+            <ListGroupItem key={key}>
+                {PlaceItem({ ...p })}
+            </ListGroupItem>)}
     </ListGroup>;
 
 };
@@ -66,13 +78,13 @@ function ListEvent(props) {
 
     return <ListGroup>
         <Label>Мероприятия</Label>
-        {props?.events?.map((e, key) => <ListGroupItem key={key}>{Event({...e })}</ListGroupItem>)}
+        {props?.events?.map((e, key) => <ListGroupItem key={key}>{EventItem({...e })}</ListGroupItem>)}
     </ListGroup>;
 
 };
 function FormPlaceCreate(props) {
 
-    const [place, setPlace] = useState(new Place({}));
+    const [place, setPlace] = useState(new PlaceItem({}));
 
     return <Form>
         <Label>Новое место</Label>
@@ -87,7 +99,7 @@ function FormPlaceCreate(props) {
         <Button
             onClick={_ => {
                 createPlace(place);
-                setPlace(new Place({}));
+                setPlace(new PlaceItem({}));
             }}
         >
             Создать
@@ -97,7 +109,7 @@ function FormPlaceCreate(props) {
 };
 function FormEventCreate(props) {
 
-    const [event, setEvent] = useState(new Event({}));
+    const [event, setEvent] = useState(new EventItem({}));
 
     return <Form>
         <Label>Новое событие</Label>
@@ -116,7 +128,7 @@ function FormEventCreate(props) {
         <Button
             onClick={_ => {
                 createEvent(event);
-                setEvent(new Event({}));
+                setEvent(new EventItem({}));
             }}
         >
             Создать
