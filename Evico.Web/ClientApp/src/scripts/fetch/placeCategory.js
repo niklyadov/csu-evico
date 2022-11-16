@@ -2,8 +2,7 @@ import { PlaceCategory } from "../../components/classes/PlaceCategory";
 import config from "../../config";
 import { errorHanlde } from "./errors";
 
-const token = "token";
-
+const token = config.bearerToken;
 
 /**
  * 
