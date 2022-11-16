@@ -20,7 +20,8 @@ export const createPlaceReview = function (placeReview) {
             body: JSON.stringify(placeReview)
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }
 
@@ -43,7 +44,8 @@ export const getReviewsByPlaceId = function (placeId) {
                 reviewsList.push(reviewObj);
             }
             resolve(reviewsList);
-        });
+        })
+        .catch(error => reject(error));
     });
 }
 
@@ -62,7 +64,8 @@ export const getReviewByIdByPlaceId = function (placeId, reviewId) {
         .then(data => {
             let reviewObj = new PlaceReview(data);
             resolve(reviewObj);
-        });
+        })
+        .catch(error => reject(error));
     });
 }
 
@@ -85,7 +88,8 @@ export const changePlaceReview = function (changedPlaceReview) {
             body: JSON.stringify(changedPlaceReview)
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }
 
@@ -101,6 +105,7 @@ export const deleteReviewById = function (placeId, reviewId) {
             }
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }

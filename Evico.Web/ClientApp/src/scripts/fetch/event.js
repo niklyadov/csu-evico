@@ -16,7 +16,8 @@ export const createEvent = function (eventRecord) {
             body: JSON.stringify(eventRecord)
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }
 
@@ -40,7 +41,8 @@ export const getEventsList = function () {
                 eventsList.push(eventObj);
             }
             resolve(eventsList);
-        });
+        })
+        .catch(error => reject(error));
     });
 }
 
@@ -59,7 +61,8 @@ export const getEventById = function (eventId) {
         .then(data => {
             let eventRecord = new Event(data);
             resolve(eventRecord);
-        });
+        })
+        .catch(error => reject(error));
     });
 }
 
@@ -77,7 +80,8 @@ export const changeEvent = function (changedEventRecord) {
             body: JSON.stringify(changedEventRecord)
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }
 
@@ -93,7 +97,8 @@ export const deleteEventById = function (eventId) {
             }
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }
 
@@ -116,7 +121,8 @@ export const getUserEventsList = function () {
                 eventsList.push(eventObj);
             }
             resolve(eventsList);
-        });
+        })
+        .catch(error => reject(error));
     })
 }
 
@@ -135,6 +141,7 @@ export const getUserEventById = function (eventId) {
         .then(data => {
             let eventObj = new Event(data);
             resolve(eventObj);
-        });
+        })
+        .catch(error => reject(error));
     })
 }

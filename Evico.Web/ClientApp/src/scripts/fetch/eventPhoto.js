@@ -15,7 +15,8 @@ export const createEventPhoto = function (eventId, photo) {
             body: photo
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }
 
@@ -31,6 +32,7 @@ export const deleteEventPhotoById = function (eventId, photoId) {
             }
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }

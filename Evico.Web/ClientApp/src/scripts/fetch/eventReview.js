@@ -20,7 +20,8 @@ export const createEventReview = function (eventReview) {
             body: JSON.stringify(eventReview)
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }
 
@@ -43,7 +44,8 @@ export const getReviewsByEventId = function (eventId) {
                 reviewsList.push(reviewObj);
             }
             resolve(reviewsList);
-        });
+        })
+        .catch(error => reject(error));
     });
 }
 
@@ -62,7 +64,8 @@ export const getReviewByIdByEventId = function (eventId, reviewId) {
         .then(data => {
             let reviewObj = new EventReview(data);
             resolve(reviewObj);
-        });
+        })
+        .catch(error => reject(error));
     });
 
 }
@@ -84,7 +87,8 @@ export const changeEventReview = function (changedEventReview) {
             body: JSON.stringify(changedEventReview)
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }
 
@@ -100,6 +104,7 @@ export const deleteReviewById = function (eventId, reviewId) {
             }
         })
         .then(response => response.json())
-        .then(data => resolve(data));
+        .then(data => resolve(data))
+        .catch(error => reject(error));
     });
 }
