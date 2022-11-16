@@ -1,7 +1,8 @@
 import { PlaceReview } from "../../components/classes/PlaceReview";
-import config from "../../config"
+import config from "../../config";
+import { errorHanlde } from "./errors";
 
-const token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjUyZWVlYWNkLWNiOTMtNGE4Yy05ZjFiLTRmNTBlNTVjZmU3MyIsInN1YiI6IjEiLCJuYW1lIjoiTmlraXRhX2hvdGRvZyIsImVtYWlsIjoiIiwianRpIjoiOWMzNjZjNTctZTlhNC00ODg0LTkwMDUtYWY5MDAwNDE4Mzc5IiwibmJmIjoxNjY4MTU2MzM3LCJleHAiOjE2Njg3NjExMzcsImlhdCI6MTY2ODE1NjMzNywiaXNzIjoiQ1NVLUVWSUNPIiwiYXVkIjoiQ1NVLUVWSUNPIn0.VEAw-QDPRCIQcdqVnRIXmyXrlfm_RE4EYxw-X2dVeomNL7EBDAV5Kn7SzfpZOkDat9Ho1uHfdNkSGm06ZXq_4w";
+const token = config.bearerToken;
 
 /**
  * 
@@ -21,7 +22,7 @@ export const createPlaceReview = function (placeReview) {
         })
         .then(response => response.json())
         .then(data => resolve(data))
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -45,7 +46,7 @@ export const getReviewsByPlaceId = function (placeId) {
             }
             resolve(reviewsList);
         })
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -65,7 +66,7 @@ export const getReviewByIdByPlaceId = function (placeId, reviewId) {
             let reviewObj = new PlaceReview(data);
             resolve(reviewObj);
         })
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -89,7 +90,7 @@ export const changePlaceReview = function (changedPlaceReview) {
         })
         .then(response => response.json())
         .then(data => resolve(data))
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
 
@@ -106,6 +107,6 @@ export const deleteReviewById = function (placeId, reviewId) {
         })
         .then(response => response.json())
         .then(data => resolve(data))
-        .catch(error => reject(error));
+        .catch(errorHanlde);
     });
 }
