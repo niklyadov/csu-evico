@@ -2,11 +2,12 @@ import { Place } from "../../components/classes/Place";
 import config from "../../config"
 
 const token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjUyZWVlYWNkLWNiOTMtNGE4Yy05ZjFiLTRmNTBlNTVjZmU3MyIsInN1YiI6IjEiLCJuYW1lIjoiTmlraXRhX2hvdGRvZyIsImVtYWlsIjoiIiwianRpIjoiOWMzNjZjNTctZTlhNC00ODg0LTkwMDUtYWY5MDAwNDE4Mzc5IiwibmJmIjoxNjY4MTU2MzM3LCJleHAiOjE2Njg3NjExMzcsImlhdCI6MTY2ODE1NjMzNywiaXNzIjoiQ1NVLUVWSUNPIiwiYXVkIjoiQ1NVLUVWSUNPIn0.VEAw-QDPRCIQcdqVnRIXmyXrlfm_RE4EYxw-X2dVeomNL7EBDAV5Kn7SzfpZOkDat9Ho1uHfdNkSGm06ZXq_4w";
-const placeRecord = {"locationLatitude": 0, "locationLongitude": 0, "name": "string", "description": "string"};
-const changedPlaceRecord = {"id": 1, "locationLatitude": 1, "locationLongitude": 1, "name": "string123", "description": "string123"};
 
-
-export const createPlace = function () {
+/**
+ * 
+ * @param {Place} placeRecord 
+ */
+export const createPlace = function (placeRecord) {
     return new Promise(async (resolve, reject) => {
         return fetch(`${config.api}place`, {
             method: "POST",
@@ -18,8 +19,11 @@ export const createPlace = function () {
             },
             body: JSON.stringify(placeRecord)
         })
-        .then(response => response.json())
-        .then(data => resolve(data));
+        .then(response => { console.log(response); response.json(); })
+        .then(data => {
+            console.log(data);
+            resolve(data);
+        });
     });
 }
 
@@ -65,8 +69,11 @@ export const getPlaceById = function (placeId) {
     });
 }
 
-
-export const changePlace = function () {
+/**
+ * 
+ * @param {Place} changedPlaceRecord 
+ */
+export const changePlace = function (changedPlaceRecord) {
     return new Promise(async (resolve, reject) => {
         return fetch(`${config.api}place`, {
             method: "PUT",

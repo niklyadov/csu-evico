@@ -2,13 +2,14 @@ import { PlaceReview } from "../../components/classes/PlaceReview";
 import config from "../../config"
 
 const token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjUyZWVlYWNkLWNiOTMtNGE4Yy05ZjFiLTRmNTBlNTVjZmU3MyIsInN1YiI6IjEiLCJuYW1lIjoiTmlraXRhX2hvdGRvZyIsImVtYWlsIjoiIiwianRpIjoiOWMzNjZjNTctZTlhNC00ODg0LTkwMDUtYWY5MDAwNDE4Mzc5IiwibmJmIjoxNjY4MTU2MzM3LCJleHAiOjE2Njg3NjExMzcsImlhdCI6MTY2ODE1NjMzNywiaXNzIjoiQ1NVLUVWSUNPIiwiYXVkIjoiQ1NVLUVWSUNPIn0.VEAw-QDPRCIQcdqVnRIXmyXrlfm_RE4EYxw-X2dVeomNL7EBDAV5Kn7SzfpZOkDat9Ho1uHfdNkSGm06ZXq_4w";
-const placeReview = {"comment":"Comment21312313123123123123", "rate":1};
-const changedPlaceReview = {"id": 1,"comment":"12321323123Comment", "rate":2};
 
-
-export const createPlaceReview = function (placeId) {
+/**
+ * 
+ * @param {PlaceReview} placeReview 
+ */
+export const createPlaceReview = function (placeReview) {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}place/${placeId}/review`, {
+        return fetch(`${config.api}place/${placeReview.placeId}/review`, {
             method: "POST",
             mode: 'cors',
             headers: {
@@ -66,9 +67,14 @@ export const getReviewByIdByPlaceId = function (placeId, reviewId) {
 }
 
 
-export const changePlaceReview = function (placeId) {
+
+/**
+ * 
+ * @param {PlaceReview} changedPlaceReview 
+ */
+export const changePlaceReview = function (changedPlaceReview) {
     return new Promise(async (resolve, reject) => {
-        return fetch(`${config.api}place/${placeId}/review`, {
+        return fetch(`${config.api}place/${changedPlaceReview.placeId}/review`, {
             method: "PUT",
             mode: 'cors',
             headers: {
