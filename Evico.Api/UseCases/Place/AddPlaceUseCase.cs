@@ -13,11 +13,13 @@ public class AddPlaceUseCase
 {
     private readonly AuthService _authService;
     private readonly PlaceService _placeService;
+    private readonly PlaceCategoryService _categoryService;
 
-    public AddPlaceUseCase(PlaceService placeService, AuthService authService)
+    public AddPlaceUseCase(PlaceService placeService, AuthService authService, PlaceCategoryService categoryService)
     {
         _placeService = placeService;
         _authService = authService;
+        _categoryService = categoryService;
     }
 
     public async Task<ActionResult<PlaceRecord>> AddAsync(AddPlaceInputModel inputModel,
@@ -51,6 +53,20 @@ public class AddPlaceUseCase
             var parentPlace = parentPlaceResult.Value;
 
             placeRecord.Parent = parentPlace;
+        }
+        
+        if (inputModel.CategoryIds != null && inputModel.CategoryIds.Any())
+        {
+            var categoriesResult = await _categoryService.GetByIdsAsync(inputModel.CategoryIds);
+            if (categoriesResult.IsFailed)
+            {
+                var categoriesResultError =
+                    new Error($"Failed to get categories with ids {string.Join(',', inputModel.CategoryIds)}").CausedBy(
+                        categoriesResult.Errors);
+                return new BadRequestObjectResult(Result.Fail(categoriesResultError));
+            }
+
+            placeRecord.Categories = categoriesResult.Value;
         }
 
         var canCreateResult = _placeService.CanCreate(placeRecord, currentUser);

@@ -24,6 +24,11 @@ public class PlaceCategoryService
     {
         return await Result.Try(async () => { return await QueryBuilder.WithId(id).SingleAsync(); });
     }
+    
+    public async Task<Result<List<PlaceCategoryRecord>>> GetByIdsAsync(List<long> ids)
+    {
+        return await Result.Try(async () => { return await QueryBuilder.WithIds(ids).ToListAsync(); });
+    }
 
     public async Task<Result<List<PlaceCategoryRecord>>> GetAllAsync()
     {
