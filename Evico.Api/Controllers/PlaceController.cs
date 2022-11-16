@@ -63,9 +63,9 @@ public class PlaceController : BaseController
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<ActionResult<List<PlaceRecord>>> GetAll()
+    public async Task<ActionResult<List<PlaceRecord>>> GetAll(PlaceSearchInputModel inputModel)
     {
-        return await _getPlacesUseCase.GetAllAsync(User);
+        return await _getPlacesUseCase.SearchAsync(inputModel, User);
     }
 
     [HttpPut]

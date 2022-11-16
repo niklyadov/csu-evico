@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Evico.Api.Entities;
 using Evico.Api.Extensions;
+using Evico.Api.InputModels.Place;
 using Evico.Api.Services;
 using Evico.Api.Services.Auth;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ public class GetPlacesUseCase
         _authService = authService;
     }
 
-    public async Task<ActionResult<List<PlaceRecord>>> GetAllAsync(ClaimsPrincipal claimsPrincipal)
+    public async Task<ActionResult<List<PlaceRecord>>> SearchAsync(PlaceSearchInputModel inputMode, ClaimsPrincipal claimsPrincipal)
     {
         var currentUserResult = await _authService.GetCurrentUser(claimsPrincipal);
         var currentUser = currentUserResult.ValueOrDefault;
@@ -30,7 +31,7 @@ public class GetPlacesUseCase
                 StatusCode = StatusCodes.Status403Forbidden
             };
 
-        var placeWithIdResult = await _placeService.GetAllAsync();
+        var placeWithIdResult = await _placeService.SearchAsync(inputMode);
         if (placeWithIdResult.IsFailed)
             return new BadRequestObjectResult(placeWithIdResult.GetReport());
         var places = placeWithIdResult.Value;
