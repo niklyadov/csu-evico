@@ -19,6 +19,9 @@ export function NavMenu(props) {
                         <NavItem>
                             <NavLink tag={Link} className="text-dark" to="/">Главная</NavLink>
                         </NavItem>
+                        <NavItem>
+                            <NavLink tag={Link} className="text-dark" to="/auth">Авторизация</NavLink>
+                        </NavItem>
                     </ul>
                 </Collapse>
             </Container>
