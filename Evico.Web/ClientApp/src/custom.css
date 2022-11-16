@@ -461,8 +461,8 @@ svg:hover > .g-rotate {
 }
 .div-panel {
 
-    display: flex;
     height: var(--height-max);
+    display: flex;
     align-items: center;
     justify-content: space-evenly;
 
@@ -483,6 +483,11 @@ body {
     background-image: linear-gradient(90deg, #70d2ff,#33beff,#33beff);
     background-repeat: no-repeat;
     background-attachment: fixed;
+
+}
+document {
+
+    overflow-y: scroll;
 
 }
 
