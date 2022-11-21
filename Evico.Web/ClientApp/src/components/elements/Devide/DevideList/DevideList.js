@@ -5,6 +5,6 @@ import Devide from "../Devide";
 */
 export default function DevideList(props) {
 
-    return <Devide className="div-devide__list" {...props} />;
+    return <Devide {...props} className="div-devide__list" section={props.section ?? <div className='div-list'>{props.children}</div>} />;
 
 };

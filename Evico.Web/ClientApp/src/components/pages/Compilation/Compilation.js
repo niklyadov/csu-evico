@@ -4,7 +4,6 @@ import DevideListItem from "../../elements/Devide/DevideList/DevideListItem";
 import Progress from "../../elements/Progress/Progress";
 import { ButtonSvg } from "../../elements/Buttons/Button";
 import { SvgSetting } from "../../elements/Svg/Svg";
-import { getEventsList } from "../../../scripts/fetch/event";
 import { useEffect, useState } from "react";
 
 export default function Compilation(props) {
@@ -15,25 +14,18 @@ export default function Compilation(props) {
 
     useEffect(() => {
 
-        const l = getEventsList();
+        try {
 
-        setItems(l);
+            setItems([]);
+
+        } catch (e) {
+
+            setItems([]);
+
+
+        };
 
     }, []);
-
-    // const items = [] ?? [
-
-        // {
-        //     title: 'Мероприятие',
-        // },
-        // {
-        //     title: 'Поход'
-        // },
-        // {
-        //     title: 'Чемпионат'
-        // },
-
-    // ];
 
     return <Main id='main-compilation'>
         <DevideList

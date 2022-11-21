@@ -8,6 +8,7 @@
     --color-5: #33beff;
     --color-6: #00c0b0;
     --color-7: #ffcb5c;
+    --color-8: #92cbad;
     --color-old-1: #266255;
     --color-old-6: #00c0b0;
     --color-gray: #cfcfcf;
@@ -93,6 +94,18 @@
         ". e ."
         ". . .";
 
+}
+#main-home {
+
+    grid-template-areas:
+        ". . . . . . . . ."
+        ". . . . . . . . ."
+        ". . a l l l . . ."
+        ". . a l l l . . ."
+        ". . a l l l . . ."
+        ". . a l l l . . ."
+        ". . . . . . . . ."
+        ". . . . . . . . .";
 }
 #main-setting {
 
@@ -310,7 +323,7 @@ svg:hover > .g-rotate {
     min-width: var(--width-min);
     max-width: var(--width-max);
     border-style: none;
-    background-color: var(--color-1);
+    background-color: var(--color-8);
 
 }
 .button:hover {
@@ -437,6 +450,11 @@ svg:hover > .g-rotate {
     background-color: var(--color-6);
 
 }
+.div-devide__folder_inner {
+
+
+
+}
 .div-devide__folder_section {
 
     width: var(--width-max);
@@ -468,6 +486,12 @@ svg:hover > .g-rotate {
 
 }
 
+.text-left-margin {
+
+    margin-left: 1em;
+    
+}
+
 /* Типы */
 a {
 
@@ -490,7 +514,7 @@ body {
 
     margin: 0;
     padding: 0;
-    /* overflow: hidden; */
+    overflow: hidden;
     white-space: nowrap;
     font-family: var(--font-family);
     text-overflow: clip;

@@ -1,31 +1,48 @@
+import { useState } from "react";
+import { ButtonText } from "../../Buttons/Button";
 import Devide from "../Devide";
+import DevideList from "../DevideList/DevideList";
 
 /**
  * @typedef TDevideFolder
- * @prop {[string]} items
- * @param {import("../Devide").TDevide} props
+ * @prop {Array<TFolder>} folders
+ * @param {import("../Devide").TDevide&TDevideFolder} props
 */
 export default function DevideFolder(props) {
+
+    const [index, setIndex] = useState(0);
 
     return <Devide
 
         {...props}
         className="div-devide__folder"
-        section={<Section {...props} />}
+        section={<Section
+            list={props.folders.map((f, key) => Item({ key, ...f, onClick: _ => changeFolder(key) }))}
+            inner={Inner({ inner: props.folders[index].inner })}
+        />}
 
     />;
+
+    function changeFolder(i) {
+
+        if (i === index) return;
+        
+        setIndex(i);
+
+    };
 
 };
 
 /**
- * @typedef TItem
+ * @typedef TFolder
  * @prop {number} key
  * @prop {string} title
- * @param {TItem} props
+ * @prop {DevideList} list
+ * @param {TFolder} props
 */
 function Item(props) {
 
-    return <div className={`div-devide__folder_item ${(props.key % 2 === 0) ? 'list-item__two' : ''}`} key={props.key}>
+    return <div className={`div-devide__folder_item ${(props.key % 2 === 0) ? 'list-item__two' : ''}`} key={props.key} onClick={props.onClick} >
         {props?.title ?? 'Заголовок'}
     </div>;
 
@@ -33,14 +50,38 @@ function Item(props) {
 function List(props) {
 
     return <div className="div-devide__folder_list">
-        {props?.items?.map((e, i) => Item({ ...e, key: i }))}
+        {props?.list}
     </div>;
 
 };
+/**
+ * @typedef TInner
+ * @prop {JSX.Element} inner
+ * @param {TInner} props
+*/
+function Inner(props) {
+
+    return <section
+        style={{
+
+            gridArea: 's',
+
+        }}
+    >
+        {props.inner}
+    </section>;
+
+};
+/**
+ * @typedef TSection
+ * @prop {Array<JSX.Element>} list
+ * @param {TSection} props
+*/
 function Section(props) {
 
     return <div className="div-devide__folder_section">
-        <List {...props} />
+        <List {...props}/>
+        {props.inner}
     </div>;
 
 };
