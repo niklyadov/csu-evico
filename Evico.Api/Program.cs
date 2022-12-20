@@ -258,7 +258,7 @@ app.UseCors(allowAnyCorsOrigin);
 
 app.UseAuthentication();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
