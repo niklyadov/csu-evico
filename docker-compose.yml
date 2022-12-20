@@ -26,18 +26,6 @@ services:
       - '9001:9001'
     volumes:
       - ./minio-docker/minio-data:/data
-  web: 
-    image: nginx
-    restart: always
-    ports:
-      - "80:80"
-    environment:
-      - NGINX_PORT=80
-    volumes:
-      - ./nginx-docker/templates:/etc/nginx/templates
-    links:
-      - evico-api
-      - evico-web
   evico-api:
     build:
       context: .
