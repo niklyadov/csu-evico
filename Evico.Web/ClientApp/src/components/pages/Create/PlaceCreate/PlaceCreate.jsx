@@ -1,4 +1,5 @@
 import { YMaps, Map } from "react-yandex-maps";
+import { createPlace } from "../../../../scripts/fetch/place";
 import Button, { ButtonText } from "../../../elements/Buttons/Button";
 import Devide from "../../../elements/Devide/Devide";
 import * as SC from './styles';
@@ -59,7 +60,13 @@ export const PlaceCreate = ({ }) => {
                 </SC.Form>
 
                 <SC.Panel className="div-panel">
-                    <SC.Button>Создать</SC.Button>
+                    <SC.Button onclick={_ => {
+                        let form = document.querySelector("form");
+                        let placeName = form.querySelectorAll("input")[0].value;
+                        let placeDescription = form.querySelector("textarea").value;
+                        let placeTags = form.querySelectorAll("input")[1].value;
+                        createPlace({name: eventName, description: eventDescription, tags: eventTags});
+                    }}>Создать</SC.Button>
                     <SC.Button type='button' onclick={_ => window.location = ''}>Отменить</SC.Button>
                 </SC.Panel>
 
