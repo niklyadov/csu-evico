@@ -12,11 +12,11 @@ import AuthVkCallback from "./components/pages/Auth/AuthVkCallback";
 export default function App() {
 
   return <Layout>
-    <Route exact path='#/' component={Home} />
-    <Route exact path='#/auth' component={Auth} />
-    <Route exact path='#/compilation' component={Compilation} />
-    <Route exact path='#/create_place' component={PlaceCreate} />
-    <Route exact path='#/auth/vk-callback' component={AuthVkCallback} />
+    <Route exact path='/' component={Home} />
+    <Route exact path='/auth' component={Auth} />
+    <Route exact path='/compilation' component={Compilation} />
+    <Route exact path='/create_place' component={PlaceCreate} />
+    <Route exact path='/auth/vk-callback' component={AuthVkCallback} />
   </Layout>
 
 };
