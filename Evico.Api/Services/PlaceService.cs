@@ -1,4 +1,5 @@
 using Evico.Api.Entities;
+using Evico.Api.InputModels.Place;
 using Evico.Api.QueryBuilders;
 using FluentResults;
 
@@ -20,14 +21,70 @@ public class PlaceService
         return await Result.Try(async () => { return await PlaceQueryBuilder.AddAsync(place); });
     }
 
-    public async Task<Result<List<PlaceRecord>>> GetAllAsync()
+    public async Task<Result<List<PlaceRecord>>> SearchAsync(PlaceSearchInputModel filters)
     {
         return await Result.Try(async () =>
         {
-            return await PlaceQueryBuilder
+            PlaceQueryBuilder placeQueryBuilder = (PlaceQueryBuilder)PlaceQueryBuilder
                 .Include(x => x.Categories)
-                .ToListAsync();
+                .WhereNotDeleted();
+
+            placeQueryBuilder = WithOwnerId(placeQueryBuilder, filters);
+            placeQueryBuilder = WithSearchQueryFilter(placeQueryBuilder, filters);
+            placeQueryBuilder = WithInCategoriesFilter(placeQueryBuilder, filters);
+            placeQueryBuilder = WithNotInCategoriesFilter(placeQueryBuilder, filters);
+            placeQueryBuilder = placeQueryBuilder.Sort(filters.SortBy, filters.SortOrder);
+            placeQueryBuilder = (PlaceQueryBuilder)placeQueryBuilder.Skip(filters.Offset);
+            placeQueryBuilder = (PlaceQueryBuilder)placeQueryBuilder.Limit(filters.Limit);
+            
+            return await placeQueryBuilder.ToListAsync();
         });
+    }
+    
+    private PlaceQueryBuilder WithSearchQueryFilter(PlaceQueryBuilder queryBuilder, PlaceSearchInputModel filters)
+    {
+        if (!String.IsNullOrEmpty(filters.SearchQuery))
+        {
+            return queryBuilder.SearchString(filters.SearchQuery);
+        }
+        
+        return queryBuilder;
+    }
+    
+    private PlaceQueryBuilder WithOwnerId(PlaceQueryBuilder queryBuilder, PlaceSearchInputModel filters)
+    {
+        if (filters.OwnerId.HasValue)
+        {
+            return queryBuilder.WithOwnerId(filters.OwnerId.Value);
+        }
+        
+        return queryBuilder;
+    }
+    
+    private PlaceQueryBuilder WithInCategoriesFilter(PlaceQueryBuilder queryBuilder, PlaceSearchInputModel filters)
+    { 
+        if (!String.IsNullOrEmpty(filters.InCategories))
+        {
+            var inCategories = filters.InCategories.Split(',')
+                .Select(x=> long.Parse(x)).ToList();
+
+            return queryBuilder.WhereCategoriesIn(inCategories);
+        }
+
+        return queryBuilder;
+    }
+
+    private PlaceQueryBuilder WithNotInCategoriesFilter(PlaceQueryBuilder queryBuilder, PlaceSearchInputModel filters)
+    {
+        if (!String.IsNullOrEmpty(filters.NotInCategories))
+        {
+            var notInCategories = filters.NotInCategories.Split(',')
+                .Select(x=> long.Parse(x)).ToList();
+
+            return queryBuilder.WhereCategoriesNotIn(notInCategories);
+        }
+
+        return queryBuilder;
     }
 
     public async Task<Result<PlaceRecord>> GetByIdAsync(long id)
