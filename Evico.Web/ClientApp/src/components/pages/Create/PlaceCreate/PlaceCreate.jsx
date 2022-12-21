@@ -1,4 +1,5 @@
 import { YMaps, Map } from "react-yandex-maps";
+import Button, { ButtonText } from "../../../elements/Buttons/Button";
 import Devide from "../../../elements/Devide/Devide";
 import * as SC from './styles';
 
@@ -28,7 +29,31 @@ export const PlaceCreate = ({ }) => {
                     </SC.FieldDescription>
 
                     <SC.FieldTag>
-                        
+                        <SC.TagNew>
+                            <label><h4>Теги</h4></label>
+                            <div style={{
+                                width: '100%',
+                            }}>
+                                <ButtonText style={{ borderRadius: '100px', width: '18%' }} onclick={_ => {
+
+                                    const e = document.createElement('label');
+                                    const i = document.querySelector('#tagInput');
+
+                                    if (i.value) {
+
+                                        e.classList.add('tag');
+                                        e.textContent = i.value;
+                                        i.value = '';
+
+                                        document.querySelector('#tags').append(e);
+
+                                    };
+
+                                }}>+</ButtonText>
+                                <SC.FormInput id='tagInput' placeholder="Весна" style={{ marginLeft: '0.2em', }}></SC.FormInput>
+                            </div>
+                            <SC.Tags id='tags'></SC.Tags>
+                        </SC.TagNew>
                     </SC.FieldTag>
 
                 </SC.Form>

@@ -305,6 +305,15 @@ svg:hover > .g-rotate {
 
 }
 
+.tag {
+    color: #fff;
+    border: 2px solid var(--color-1);
+    border-radius: 12px;
+    margin: 5px;
+    padding-inline: 0.3em;
+    background: #00c0b0;
+}
+
 .g-rotate {
 
     /* position: absolute; */

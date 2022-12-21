@@ -89,18 +89,29 @@ export const Button = styled(ButtonText)`
 export const FieldTag = styled(Field)`
 
     width: 100%;
-    heiht: max-content;
-    max-height: 100%;
-    max-width: 100%;
+    height: 100%;
     grid-area: t;
+    max-width: 100%;
+    grid-template-areas: "n n t t";
 
 `;
 export const TagNew = styled.div`
 
-
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    grid-area: t;
 
 `;
 export const Tags = styled.div`
+
+    flex-wrap: wrap;
+    justify-content: center;
+    display: flex;
+
+`;
+export const Tag = styled.div`
 
 
 

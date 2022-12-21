@@ -56,8 +56,8 @@ function ListAction(props) {
             gridArea: 'a',
 
         }}>
-            <ButtonText text="Добавить место" onclick={_ => window.location = 'create_place'} />
-            <ButtonText text="Добавить событие" onclick={_ => window.location = 'create_event'} />
+            <ButtonText text="Добавить место" onclick={_ => window.location = '#/create_place'} />
+            <ButtonText text="Добавить событие" onclick={_ => window.location = '#/create_event'} />
     </DevideList>;
 
 };

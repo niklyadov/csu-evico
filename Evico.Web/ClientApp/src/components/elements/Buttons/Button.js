@@ -5,7 +5,7 @@
 */
 export default function Button(props) {
 
-    return <button id={props.id} className={'button ' + props.className} onClick={props.onclick}>{props.children}{props.text}</button>
+    return <button id={props.id} className={'button ' + props.className} onClick={props.onclick} style={props.style}>{props.children}{props.text}</button>
 
 };
 /**
