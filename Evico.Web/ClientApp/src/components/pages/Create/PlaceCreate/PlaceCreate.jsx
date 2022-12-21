@@ -49,7 +49,8 @@ export const PlaceCreate = ({ }) => {
 
                                     };
 
-                                }}>+</ButtonText>
+                                }}
+                                >+</ButtonText>
                                 <SC.FormInput id='tagInput' placeholder="Весна" style={{ marginLeft: '0.2em', }}></SC.FormInput>
                             </div>
                             <SC.Tags id='tags'></SC.Tags>

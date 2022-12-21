@@ -8,13 +8,12 @@ export default function Header(props) {
             <a href={"#/compilation"}><h5>Подборка</h5></a>
             <a href={"#/auth"}><h5>Авторизация</h5></a>
             <a href={"#/setting"}><h5>Настройки</h5></a>
-            <a href={"#/test"}><h5>Тест</h5></a>
         </section>
         <h3
             id='h3-brand'
-            onClick={_ => window.location.href = config.host }
+            onClick={_ => window.location.href = '/' }
         >
-            <a id='a-brand' href={"/"}>Evico</a>
+            <a id='a-brand' href={'/'}>Evico</a>
         </h3>
 
     </header>
