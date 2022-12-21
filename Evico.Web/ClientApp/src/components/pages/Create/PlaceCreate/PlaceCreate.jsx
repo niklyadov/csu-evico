@@ -65,7 +65,7 @@ export const PlaceCreate = ({ }) => {
                         let placeName = form.querySelectorAll("input")[0].value;
                         let placeDescription = form.querySelector("textarea").value;
                         let placeTags = form.querySelectorAll("input")[1].value;
-                        createPlace({name: eventName, description: eventDescription, tags: eventTags});
+                        createPlace({name: placeName, description: placeDescription, tags: placeTags});
                     }}>Создать</SC.Button>
                     <SC.Button type='button' onclick={_ => window.location = ''}>Отменить</SC.Button>
                 </SC.Panel>
