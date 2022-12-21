@@ -1,4 +1,5 @@
 #!/usr/bin/env bash 
-
-docker-compose build --no-cache
+git checkout -f origin/master
+git pull
+docker-compose build
 docker-compose up
