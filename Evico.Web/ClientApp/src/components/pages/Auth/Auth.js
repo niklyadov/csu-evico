@@ -46,7 +46,6 @@ export function AuthDevide() {
 
                         let awaiterInterval = setInterval(() => {
 
-                            //todo: строковые константы лучше бы вынести (authBearerToken и authRefreshToken)
                             let authBearerToken = localStorage.getItem('authBearerToken');
                             let authRefreshToken = localStorage.getItem('authRefreshToken');
 
