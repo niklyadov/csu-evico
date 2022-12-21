@@ -21,8 +21,32 @@ export default function Compilation(props) {
     useEffect(() => {
 
         try {
-
-            setItems([]);
+            setItems([
+                {
+                    name: "qwe1"
+                    ,participant: 100
+                    ,watchers: 88005553535
+                    ,rait: 1
+                },
+                {
+                    name: "qwe2"
+                    ,participant: 10
+                    ,watchers: 1111
+                    ,rait: 1
+                },
+                {
+                    name: "qwe3"
+                    ,participant: 20
+                    ,watchers: 123213
+                    ,rait: 1
+                },
+                {
+                    name: "rewqty"
+                    ,participant: 50
+                    ,watchers: 100500
+                    ,rait: 1
+                }
+        ]);
 
         } catch (e) {
 
