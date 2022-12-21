@@ -269,6 +269,7 @@ ymaps {
     box-shadow: 0 0 0 0.2em var(--color-5);
 
 }
+.ymaps-2-1-79-map-copyrights-promo, .ymaps-2-1-79-copyright, .ymaps-2-1-79-copyright_logo_no { display: none !important; }
 
 .list-item__two {
 
@@ -564,5 +565,11 @@ body {
 .grid {
 
     display: grid;
+
+}
+
+::placeholder {
+
+    color: #fff;
 
 }

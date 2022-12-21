@@ -14,7 +14,7 @@ export default function Header(props) {
             id='h3-brand'
             onClick={_ => window.location.href = config.host }
         >
-            <a id='a-brand' href={"/"}>Месточка</a>
+            <a id='a-brand' href={"/"}>Evico</a>
         </h3>
 
     </header>

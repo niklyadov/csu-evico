@@ -1,4 +1,5 @@
 import Button, { ButtonText } from "../../elements/Buttons/Button";
+import Devide from "../../elements/Devide/Devide";
 import DevideFolder from "../../elements/Devide/DevideFolder/DevideFolder";
 import DevideList from "../../elements/Devide/DevideList/DevideList";
 import Main from "../../elements/Main";
@@ -14,7 +15,7 @@ export default function Home(props) {
 
 function List(props) {
 
-    return <DevideFolder 
+    return <DevideFolder
         style={{
 
             margin: '0.25em',
@@ -55,8 +56,8 @@ function ListAction(props) {
             gridArea: 'a',
 
         }}>
-            <ButtonText text="Добавить место"/>
-            <ButtonText text="Добавить событие"/>
+            <ButtonText text="Добавить место" onclick={_ => window.location = 'create_place'} />
+            <ButtonText text="Добавить событие" onclick={_ => window.location = 'create_event'} />
     </DevideList>;
 
 };
