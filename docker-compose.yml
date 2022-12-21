@@ -1,18 +1,6 @@
 version: '3.8'
 
 services:
-  web: 
-    image: nginx
-    restart: always
-    ports:
-      - "80:80"
-    environment:
-      - NGINX_PORT=80
-    volumes:
-      - ./nginx-docker/templates:/etc/nginx/templates
-    links:
-      - evico-api
-      - evico-web
   db:
     image: mysql:8.0
     cap_add:
@@ -44,14 +32,15 @@ services:
     volumes:
       - ./evico-api-docker/appsettings.json:/app/appsettings.json
       - ./evico-api-docker/logs:/var/log/csu-evico/
+    ports:
+      - '6661:6661'
   evico-web:
     build:
       context: .
       dockerfile: evico-web.dockerfile
     container_name: evico-web
+    ports:
+      - '3000:3000'
     environment:
       - PORT=3000
-      - HTTPS=true
-      - REACT_APP_API='http://api.csu-evico.lyadov.net'
-      - REACT_APP_HOST='https://csu-evico.lyadov.net'
-      - REACT_APP_REDIRECT_URI_AUTH='https://csu-evico.lyadov.net/auth/vk-callback'
+      - HTTPS=false

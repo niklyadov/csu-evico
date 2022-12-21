@@ -242,12 +242,8 @@ builder.Services.AddMinio(config =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 Result.Setup(config =>
     config.Logger = new FluentResultsLogger(app.Logger));
